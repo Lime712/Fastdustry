@@ -8,7 +8,7 @@ arc = { path = "./arc" }
 
 [workspace]
 members = [
-    "arc",
+#    "arc",
     "mind",
     "mind/core",
     "mind/server"
