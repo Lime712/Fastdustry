@@ -1,0 +1,12 @@
+[package]
+name = "Mindrustry"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+arc = { path = "./arc" }
+
+[workspace]
+members = [
+    "arc"
+]
