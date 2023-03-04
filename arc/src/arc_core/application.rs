@@ -2,7 +2,7 @@ use std::collections::HashSet;
 use std::ptr::null;
 use crate::arc_core::application_listener::ApplicationListener;
 
-trait Application {
+pub trait Application {
     /// Returns a list of all the application listeners used.
     fn get_listeners(&self) -> HashSet<Box<dyn ApplicationListener>>;
 
@@ -50,7 +50,9 @@ trait Application {
     }
 
     /// return the Android API level on Android, the major OS version on iOS (5, 6, 7, ..), or 0 on the Desktop.
-    fn get_version(&self) -> i32;
+    fn get_version(&self) -> i32 {
+        return 0;
+    }
 
     /// return the rust heap memory usage in bytes
     fn get_memory_usage(&self) -> i64;
@@ -78,7 +80,7 @@ trait Application {
     /// Posts a runnable on the main loop thread
     fn post_runnable(&self);
 
-    fn exit(&self);
+    fn exit(&mut self);
 
     fn dispose(&self) {
         // // flush any changes to settings upon dispose

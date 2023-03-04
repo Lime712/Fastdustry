@@ -21,7 +21,7 @@ macro_rules! log {
 
 #[macro_export]
 macro_rules! debug {
-    ($($arg:tt)*) => (arc::arc_core::util::log::log(arc::arc_core::util::log::LogLevel::Debug, format_args!($($arg)*));)
+    ($($arg:tt)*) => ($crate::arc_core::util::log::log($crate::arc_core::util::log::LogLevel::Debug, format_args!($($arg)*));)
 }
 
 #[macro_export]

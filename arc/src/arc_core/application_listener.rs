@@ -11,7 +11,6 @@ use std::hash::{Hash, Hasher};
 /// accordingly.
 /// </p>
 /// **author:** mzechner
-///
 pub trait ApplicationListener {
     /// Called when the [Application] is first created.
     /// Only gets called if the application is created before the listener is added.
@@ -43,5 +42,11 @@ impl Eq for dyn ApplicationListener {}
 impl Hash for dyn ApplicationListener {
     fn hash<H: Hasher>(&self, state: &mut H) {
         std::ptr::hash(self, state)
+    }
+}
+
+impl Clone for Box<dyn ApplicationListener> {
+    fn clone(&self) -> Self {
+        self.clone()
     }
 }
