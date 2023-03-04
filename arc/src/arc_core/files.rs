@@ -55,11 +55,12 @@
 //     fn is_local_storage_available(&self) -> bool;
 // }
 //
-// /// Indicates how to resolve a path to a file.
-// enum FileType {
-//     classpath,
-//     internal,
-//     external,
-//     absolute,
-//     local,
-// }
+/// Indicates how to resolve a path to a file.
+enum FType {
+    Classpath,
+    Internal,
+    External,
+    Absolute,
+    Local,
+}
+pub mod fi;
