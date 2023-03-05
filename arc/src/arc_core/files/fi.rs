@@ -160,7 +160,7 @@ impl Fi {
                 .open(self.absolute_path())
                 .unwrap();
 
-            if let Err(e) = writeln!(file, contents) {
+            if let Err(e) = file.write(contents.as_bytes()) {
                 eprintln!("Couldn't write to file: {}", e);
             }
         } else {
@@ -193,7 +193,7 @@ impl Fi {
             let mut files = Fi::path(&self.file).read_dir().unwrap();
             for f in files {
                 let f = f.unwrap();
-                let mut fi = Fi::new_from_path(f.path().to_str().unwrap().to_string(), FType::Relative);
+                let mut fi = Fi::new_from_path(f.path().to_str().unwrap().to_string(), self.file_type.clone());
                 fi.walk(&cons);
             }
         } else {
