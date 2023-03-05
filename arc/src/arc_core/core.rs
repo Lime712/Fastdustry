@@ -1,11 +1,15 @@
+use lazy_static::lazy_static;
 use crate::arc_core::application::Application;
+use crate::arc_core::settings::Settings;
 
 pub static mut APP: Option<&dyn Application> = None;
 // pub graphics: Graphics,
 // pub audio: Audio,
 // pub input: Input,
 // pub files: Files,
-// pub settings: Settings,
+lazy_static! {
+    pub static ref SETTINGS: Settings = Settings::new();
+}
 // pub keyBinds: Keybinds = new KeyBinds(),
 
 // pub bundle: I18NBundle  = I18NBundle.createEmptyBundle(),

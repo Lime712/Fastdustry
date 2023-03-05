@@ -22,7 +22,7 @@ impl Fi {
         Fi { file, file_type }
     }
 
-    pub fn new_from_path(path: String, file_type: FType) -> Fi {
+    pub fn new_from_path_and_type(path: String, file_type: FType) -> Fi {
         let f = match File::create(path) {
             Ok(f) => f,
             Err(e) => panic!("Error opening file: {}", e),
@@ -34,16 +34,17 @@ impl Fi {
         Fi::new(file, FType::Absolute)
     }
 
-    pub fn new_from_path_and_type(path: String, file_type: FType) -> Fi {
-        Fi::new_from_path(path, file_type)
+    pub fn new_from_path(path: String) -> Fi {
+        Fi::new_from_path_and_type(path, FType::Absolute)
     }
 
     pub fn get(path: String) -> Fi {
-        Fi::new_from_path(path, FType::Absolute)
+        Fi::new_from_path_and_type(path, FType::Absolute)
     }
 
     pub fn empty_directory(file: File, preserver_tree: bool) {
-        let path = Path::new(&file.path().unwrap().to_str().unwrap().to_string());
+        let binding = file.path().unwrap().to_str().unwrap().to_string();
+        let path = Path::new(&binding);
         if path.exists() {
             let mut files = path.read_dir().unwrap();
             for f in files {
@@ -53,16 +54,16 @@ impl Fi {
                 } else if preserver_tree {
                     Fi::empty_directory(File::create(f.path()).unwrap(), true);
                 } else {
-                    Fi::delete_directory(File::create(f.path()).unwrap());
+                    Fi::delete_directory(&File::create(f.path()).unwrap());
                 }
             }
         }
     }
 
-    pub fn delete_directory(file: File) {
-        let path = Fi::path(&file);
+    pub fn delete_directory(file: &File) {
+        let path = Fi::path(file.clone());
         if path.exists() {
-            Fi::empty_directory(file, false);
+            Fi::empty_directory(*file, false);
             fs::remove_dir(path).unwrap();
         }
     }
@@ -193,7 +194,7 @@ impl Fi {
             let mut files = Fi::path(&self.file).read_dir().unwrap();
             for f in files {
                 let f = f.unwrap();
-                let mut fi = Fi::new_from_path(f.path().to_str().unwrap().to_string(), self.file_type.clone());
+                let mut fi = Fi::new_from_path_and_type(f.path().to_str().unwrap().to_string(), self.file_type.clone());
                 fi.walk(&cons);
             }
         } else {
@@ -213,11 +214,11 @@ impl Fi {
 
     /// Returns a handle to the child with the specified name.
     pub fn child(&mut self, name: String) -> Fi {
-        Fi::new_from_path(format!("{}/{}", self.absolute_path(), name), self.file_type.clone())
+        Fi::new_from_path_and_type(format!("{}/{}", self.absolute_path(), name), self.file_type.clone())
     }
 
     pub fn sibling(&mut self, name: String) -> Fi {
-        Fi::new_from_path(format!("{}/{}", self.absolute_path().replace(&self.name(), ""), name), self.file_type.clone())
+        Fi::new_from_path_and_type(format!("{}/{}", self.absolute_path().replace(&self.name(), ""), name), self.file_type.clone())
     }
 
 
@@ -230,14 +231,14 @@ impl Fi {
             let mut fs = Fi::path(&self.file).read_dir().unwrap();
             for f in fs {
                 let f = f.unwrap();
-                files.push(Fi::new_from_path(f.path().to_str().unwrap().to_string(), self.file_type.clone()));
+                files.push(Fi::new_from_path_and_type(f.path().to_str().unwrap().to_string(), self.file_type.clone()));
             }
         }
         files
     }
 
     pub fn parent(&mut self) -> Fi {
-        Fi::new_from_path(self.absolute_path().replace(&self.name(), ""), self.file_type.clone())
+        Fi::new_from_path_and_type(self.absolute_path().replace(&self.name(), ""), self.file_type.clone())
     }
 
     pub fn mkdirs(&mut self) {

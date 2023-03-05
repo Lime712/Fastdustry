@@ -4,15 +4,15 @@ use crate::arc_core::application_listener::ApplicationListener;
 
 pub trait Application {
     /// Returns a list of all the application listeners used.
-    fn get_listeners(&self) -> HashSet<Box<dyn ApplicationListener>>;
+    fn get_listeners(&mut self) -> &mut HashSet<Box<dyn ApplicationListener>>;
 
     /// Adds a new application listener.
-    fn add_listener(&self, listener: Box<dyn ApplicationListener>) {
+    fn add_listener(&mut self, listener: Box<dyn ApplicationListener>) {
         self.get_listeners().insert(listener);
     }
 
     /// Removes an application listener.
-    fn remove_listeners(&self, listener: Box<dyn ApplicationListener>) {
+    fn remove_listeners(&mut self, listener: Box<dyn ApplicationListener>) {
         self.get_listeners().remove(&*listener);
     }
 

@@ -40,7 +40,7 @@ macro_rules! error {
 }
 
 pub fn log(level: LogLevel, args: fmt::Arguments) {
-    let t = Local::now().format("%Y-%m-%d %H:%M:%S").to_string();
+    let t = get_current_time_string();
     let default = "\x1B[0m".to_string();
     match level {
         LogLevel::Debug => println!("[{}] \x1B[36m[D] {}{}", t, args, default),
@@ -49,4 +49,8 @@ pub fn log(level: LogLevel, args: fmt::Arguments) {
         LogLevel::Error => println!("[{}] \x1B[31m[E] {}{}", t, args, default),
         LogLevel::None => {}
     }
+}
+
+pub fn get_current_time_string() -> String {
+    Local::now().format("%Y-%m-%d %H:%M:%S").to_string()
 }

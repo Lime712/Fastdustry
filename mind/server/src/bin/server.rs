@@ -1,9 +1,9 @@
-use std::fs::File;
-use std::thread::Thread;
 use arc::arc_core::application::ApplicationType::Headless;
 use arc::arc_core::application_listener::ApplicationListener;
 use arc::arc_core::backend::headless::HeadlessApplication;
-use arc::debug;
+use arc::{debug, info};
+use std::fs::File;
+use std::thread::Thread;
 
 static ROUND_EXTRA_TIME: i32 = 12;
 static MAX_LOG_LENGTH: i32 = 1024 * 1024 * 5;
@@ -46,34 +46,7 @@ impl ServerLauncher {
 
 impl ApplicationListener for ServerLauncher {
     fn init(&self) {
-        println!("ServerLauncher init");
-    }
-
-    fn resize(&self) {
-        todo!()
-    }
-
-    fn update(&self) {
-        todo!()
-    }
-
-    fn pause(&self) {
-        todo!()
-    }
-
-    fn resume(&self) {
-        todo!()
-    }
-
-    fn dispose(&self) {
-        todo!()
-    }
-
-    fn exit(&self) {
-        todo!()
-    }
-
-    fn file_dropped(&self, fi: &File) {
-        todo!()
+        info!("ServerLauncher init");
+        arc::arc_core::Settings
     }
 }

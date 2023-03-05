@@ -5,4 +5,9 @@ pub static LOAD_LOCALES: bool = true;
 pub static LOADED_LOGGER: bool = false;
 pub static LOADED_FILE_LOGGER: bool = false;
 pub static EXPERIMENTAL: bool = false;
-pub static DEFAULT_CONTENT_ICONS: Vec<ContentType> = vec![ContentType::Item, ContentType::Liquid, ContentType::block, ContentType::unit];
+pub static DEFAULT_CONTENT_ICONS: Vec<ContentType> = vec![
+    ContentType::Item,
+    ContentType::Liquid,
+    ContentType::block,
+    ContentType::unit,
+];

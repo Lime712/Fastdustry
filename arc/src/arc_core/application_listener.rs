@@ -14,21 +14,21 @@ use std::hash::{Hash, Hasher};
 pub trait ApplicationListener {
     /// Called when the [Application] is first created.
     /// Only gets called if the application is created before the listener is added.
-    fn init(&self);
+    fn init(&self) {}
 
-    fn resize(&self);
+    fn resize(&self) {}
 
-    fn update(&self);
+    fn update(&self) {}
 
-    fn pause(&self);
+    fn pause(&self) {}
 
-    fn resume(&self);
+    fn resume(&self) {}
 
-    fn dispose(&self);
+    fn dispose(&self) {}
 
-    fn exit(&self);
+    fn exit(&self) {}
 
-    fn file_dropped(&self, fi: &File);
+    fn file_dropped(&self, fi: &File) {}
 }
 
 impl PartialEq<Self> for dyn ApplicationListener {

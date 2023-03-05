@@ -1,2 +1,2 @@
-pub mod vars;
 mod ctype;
+pub mod vars;

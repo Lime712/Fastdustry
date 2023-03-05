@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod tests {
-    use arc::*;
     use arc::info;
+    use arc::*;
 
     #[test]
     fn it_works() {

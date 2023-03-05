@@ -21,8 +21,8 @@ pub struct HeadlessApplication {
 }
 
 impl Application for HeadlessApplication {
-    fn get_listeners(&self) -> HashSet<Box<dyn ApplicationListener>> {
-        self.listeners.clone()
+    fn get_listeners(&mut self) -> &mut HashSet<Box<dyn ApplicationListener>> {
+        &mut self.listeners
     }
 
     fn get_type(&self) -> ApplicationType {
@@ -70,6 +70,7 @@ impl HeadlessApplication {
             running: true,
         };
         h.add_listener(listener);
+        debug!("listeners len: {}", h.listeners.len());
         unsafe {
             // crate::arc_core::core::APP = Some(&h);
         }
@@ -85,6 +86,7 @@ impl HeadlessApplication {
 
     fn main_loop(&mut self) {
         debug!("start main_loop()");
+        debug!("init listeners len: {}", self.listeners.len());
         for listener in self.listeners.iter() {
             listener.init();
         }
