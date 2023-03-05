@@ -12,6 +12,7 @@ use crate::arc_core::files::FType;
 use crate::arc_core::util::log::get_current_time_string;
 use crate::arc_core::util::os::get_app_data_directory;
 use crate::arc_core::util::time::millis;
+use crate::debug;
 
 const TYPE_BOOL: u8 = 0;
 const TYPE_INT: u8 = 1;
@@ -114,10 +115,25 @@ impl Settings {
 
     fn write_log(&self, message: String) {
         let log_file = self.get_data_directory() + "/settings.log";
-        let mut file = match File::create(log_file) {
+        let mut file = match File::create(log_file.clone()) {
             Ok(file) => file,
             Err(e) => {
-                panic!("Error opening file: {}", e);
+                // first check if the directory exists
+                let dir = self.get_data_directory();
+                debug!("Creating directory: {}", dir);
+                match std::fs::create_dir(dir) {
+                    Ok(_) => {}
+                    Err(e) => {
+                        panic!("Error creating directory: {}", e);
+                    }
+                }
+                // try again
+                match File::create(log_file) {
+                    Ok(file) => file,
+                    Err(e) => {
+                        panic!("Error opening file: {}", e);
+                    }
+                }
             }
         };
         let msg = format!("[{}]: {}", get_current_time_string(), message);
@@ -282,7 +298,7 @@ impl Settings {
         binary
     }
 
-    pub fn write_values(&mut self) {
+    pub fn save_values(&mut self) {
         self.byte_output_stream = Vec::new();
         for (key, value) in self.values.clone().iter() {
             self.write_string(key.clone());
@@ -316,7 +332,7 @@ impl Settings {
 
         self.write_log(format!("Write values: {}", self.byte_output_stream.len()));
 
-        let mut file = File::create(self.get_settings_file().absolute_path()).unwrap();
+        let mut file = File::create(self.get_settings_file().path).unwrap();
         file.write_all(&self.byte_output_stream).unwrap();
 
         self.write_log(format!("Write file: {}", self.get_settings_file().absolute_path()));
@@ -324,13 +340,19 @@ impl Settings {
         // create backup
         // TODO: run this in a thread
         let mut backup_folder = self.get_backup_folder();
-
+        debug!("Backup folder: {}", backup_folder.path);
+        // create a new entry in the backup folder
+        // first check if the folder exists
+        if !backup_folder.exists() || !backup_folder.is_directory() {
+            debug!("exists: {}, is_directory: {}", backup_folder.exists(), backup_folder.is_directory());
+            backup_folder.create_directory();
+        }
 
         let mut files = backup_folder.list();
         // make sure first file is most recent, last is oldest
         files.sort_by(|mut a, b| b.last_modified().cmp(&a.last_modified()));
 
-        // create a new entry in the backup folder
+
         Fi::new_from_file(file).copy_to(backup_folder.child(format!("{}.settings", millis())));
 
         // delete oldest backup if there are more than 10
@@ -523,6 +545,14 @@ impl Settings {
             string.push_str(&format!("{}: {}, ", key, value.to_string()));
         }
         string
+    }
+
+    pub fn force_save(&mut self) {
+        // never loaded, nothing to save
+        if !self.loaded {
+            return;
+        }
+        self.save_values();
     }
 
     // todo: make json stuff

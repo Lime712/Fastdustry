@@ -55,9 +55,10 @@ impl ApplicationListener for ServerLauncher {
                 Some(ref mut s) => s,
                 None => panic!("Settings not initialized"),
             };
-            settings.set_data_directory("config".to_string());
+            settings.set_data_directory("./config".to_string());
             debug!("{}", settings.data_directory);
             // HEAD_LOCALS = false;
+            settings.save_values();
         }
     }
 }

@@ -10,27 +10,23 @@ use std::time::UNIX_EPOCH;
 use filepath::FilePath;
 
 use crate::arc_core::files::FType;
-use crate::arc_core::func::{Cons};
+use crate::arc_core::func::Cons;
 use crate::arc_core::util::Disposable;
+use crate::debug;
 
 pub struct Fi {
-    file: File,
-    path: String,
-    file_type: FType,
+    pub path: String,
+    pub file_type: FType,
 }
 
 impl Fi {
     pub fn new(file: File, file_type: FType) -> Fi {
         let path = file.path().unwrap().to_str().unwrap().to_string();
-        Fi { file, file_type, path }
+        Fi { file_type, path }
     }
 
     pub fn new_from_path_and_type(path: String, file_type: FType) -> Fi {
-        let f = match File::create(path) {
-            Ok(f) => f,
-            Err(e) => panic!("Error opening file: {}", e),
-        };
-        Fi::new(f, file_type)
+        Fi { file_type, path }
     }
 
     pub fn new_from_file(file: File) -> Fi {
@@ -72,12 +68,13 @@ impl Fi {
     }
 
     pub fn path(file: &File) -> PathBuf {
+        debug!("Getting path from file: {:?}", file);
         Path::new(&file.path().unwrap().to_str().unwrap().to_string()).to_path_buf()
     }
 
     pub fn copy_file(source: Fi, destination: Fi) {
-        let source_path = Fi::path(&source.file);
-        let destination_path = Fi::path(&destination.file);
+        let source_path = Fi::path(&source.file());
+        let destination_path = Fi::path(&destination.file());
         if source_path.exists() {
             fs::copy(source_path, destination_path).unwrap();
         } else {
@@ -85,9 +82,24 @@ impl Fi {
         }
     }
 
+    pub fn file_option(&self) -> std::io::Result<File> {
+        debug!("Opening file: {}", self.path);
+        OpenOptions::new().write(true).open(self.path.clone())
+    }
+
+    pub fn file(&self) -> File {
+        match self.file_option() {
+            Ok(file) => file,
+            Err(e) => {
+                debug!("{:?}", e);
+                panic!("File does not exist!");
+            }
+        }
+    }
+
     pub fn copy_directory(source: Fi, destination: Fi) {
-        let source_path = Fi::path(&source.file);
-        let destination_path = Fi::path(&destination.file);
+        let source_path = Fi::path(&source.file());
+        let destination_path = Fi::path(&destination.file());
         if source_path.exists() {
             fs::copy(source_path, destination_path).unwrap();
         } else {
@@ -96,27 +108,46 @@ impl Fi {
     }
 
     pub fn absolute_path(&self) -> String {
-        self.file.path().unwrap().to_str().unwrap().to_string().replace("\\", "/")
+        match self.file_option() {
+            Ok(_) => {
+                debug!("File exists: {}", self.path);
+                Fi::path(&self.file()).canonicalize().unwrap().to_str().unwrap().to_string().replace("\\", "/")
+            },
+            Err(e) => {
+                debug!("{:?}", e);
+                self.path.clone()
+            }
+        }
     }
 
     pub fn exists(&self) -> bool {
-        Fi::path(&self.file).exists()
+        match self.file_option() {
+            Ok(_) => {
+                debug!("File exists: {}", self.path);
+                Fi::path(&self.file()).exists() },
+            Err(e) => {
+                debug!("exists error: {:?}", e);
+                false }
+        }
     }
 
     pub fn is_directory(&self) -> bool {
-        Fi::path(&self.file).is_dir()
+        match File::open(&self.path) {
+            Ok(_) => Fi::path(&self.file()).is_dir(),
+            Err(_) => false
+        }
     }
 
     pub fn is_file(&self) -> bool {
-        Fi::path(&self.file).is_file()
+        Fi::path(&self.file()).is_file()
     }
 
     pub fn name(&self) -> String {
-        Fi::path(&self.file).file_name().unwrap().to_str().unwrap().to_string()
+        Fi::path(&self.file()).file_name().unwrap().to_str().unwrap().to_string()
     }
 
     pub fn extension(&self) -> String {
-        Fi::path(&self.file).extension().unwrap().to_str().unwrap().to_string()
+        Fi::path(&self.file()).extension().unwrap().to_str().unwrap().to_string()
     }
 
     pub fn ext_equals(&self, ext: String) -> bool {
@@ -124,7 +155,7 @@ impl Fi {
     }
 
     pub fn name_without_extension(&self) -> String {
-        Fi::path(&self.file).file_stem().unwrap().to_str().unwrap().to_string()
+        Fi::path(&self.file()).file_stem().unwrap().to_str().unwrap().to_string()
     }
 
     pub fn path_without_extension(&self) -> String {
@@ -138,7 +169,7 @@ impl Fi {
 
     pub fn read(&mut self) -> String {
         let mut contents = String::new();
-        self.file.read_to_string(&mut contents).unwrap();
+        self.file().read_to_string(&mut contents).unwrap();
         contents
     }
 
@@ -148,7 +179,7 @@ impl Fi {
 
     pub fn read_bytes(&mut self) -> Vec<u8> {
         let mut contents = Vec::new();
-        self.file.read_to_end(&mut contents).unwrap();
+        self.file().read_to_end(&mut contents).unwrap();
         contents
     }
 
@@ -168,7 +199,7 @@ impl Fi {
                 eprintln!("Couldn't write to file: {}", e);
             }
         } else {
-            self.file.write_all(contents.as_bytes()).unwrap();
+            self.file().write_all(contents.as_bytes()).unwrap();
         }
     }
 
@@ -188,7 +219,7 @@ impl Fi {
                 eprintln!("Couldn't write to file: {}", e);
             }
         } else {
-            self.file.write_all(contents.as_slice()).unwrap();
+            self.file().write_all(contents.as_slice()).unwrap();
         }
     }
 
@@ -211,7 +242,7 @@ impl Fi {
     pub fn find_all(&mut self) -> Vec<Fi> {
         let mut files = Vec::new();
         if self.is_directory() {
-            let mut fs = Fi::path(&self.file).read_dir().unwrap();
+            let mut fs = Fi::path(&self.file()).read_dir().unwrap();
             for f in fs {
                 let f = f.unwrap();
                 let mut fi = Fi::new_from_path_and_type(f.path().to_str().unwrap().to_string(), self.file_type.clone());
@@ -239,7 +270,7 @@ impl Fi {
     pub fn list(&mut self) -> Vec<Fi> {
         let mut files = Vec::new();
         if self.is_directory() {
-            let mut fs = Fi::path(&self.file).read_dir().unwrap();
+            let mut fs = Fi::path(&self.file()).read_dir().unwrap();
             for f in fs {
                 let f = f.unwrap();
                 files.push(Fi::new_from_path_and_type(f.path().to_str().unwrap().to_string(), self.file_type.clone()));
@@ -250,6 +281,17 @@ impl Fi {
 
     pub fn parent(&mut self) -> Fi {
         Fi::new_from_path_and_type(self.absolute_path().replace(&self.name(), ""), self.file_type.clone())
+    }
+
+    pub fn create_directory(&mut self) {
+        let p = match File::open(self.clone().path) {
+            Ok(p) => self.absolute_path(),
+            Err(_) => {
+                self.path.clone()
+            }
+        };
+        debug!("creating directory: {}", p.clone() + "/");
+        fs::create_dir(p).unwrap();
     }
 
     pub fn mkdirs(&mut self) {
@@ -288,7 +330,6 @@ impl Fi {
 impl Clone for Fi {
     fn clone(&self) -> Fi {
         Fi {
-            file: File::create(self.absolute_path()).unwrap(),
             file_type: self.file_type.clone(),
             path: self.path.clone(),
         }
@@ -297,7 +338,7 @@ impl Clone for Fi {
 
 impl Debug for Fi {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Fi {{ file: {:?}, file_type: {:?} }}", self.file, self.file_type)
+        write!(f, "Fi {{ file: {:?}, file_type: {:?} }}", self.file(), self.file_type)
     }
 }
 
