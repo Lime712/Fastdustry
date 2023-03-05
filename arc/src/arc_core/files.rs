@@ -56,7 +56,8 @@
 // }
 //
 /// Indicates how to resolve a path to a file.
-enum FType {
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum FType {
     Classpath,
     Internal,
     External,
