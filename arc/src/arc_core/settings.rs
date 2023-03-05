@@ -2,6 +2,7 @@ use std::alloc::System;
 use std::collections::HashMap;
 use std::fs::File;
 use std::io::{Read, Write};
+use std::ops::{Deref, DerefMut};
 use std::thread::Thread;
 
 use json::{JsonValue, object};
@@ -128,6 +129,10 @@ impl Settings {
         };
     }
 
+    pub fn set_data_directory(&mut self, data_directory: String) {
+        self.data_directory = data_directory;
+    }
+
     pub fn get_settings_file(&self) -> Fi {
         Fi::new_from_path_and_type(self.get_data_directory() + "/settings.bin", FType::Absolute)
     }
@@ -176,32 +181,47 @@ impl Settings {
     }
 
     pub fn read_values(&mut self) {
-        for value in self.byte_input_stream.iter() {
+        while self.byte_input_stream.len() > 0 {
             let key = self.read_string();
-            match *value {
+            let value = self.read_byte();
+            match value {
                 TYPE_BOOL => {
-                    self.values.insert(key.clone(), Value::Bool(self.read_bool()));
+                    let b = self.read_bool();
+                    self.values.insert(key.clone(), Value::Bool(b));
                 }
                 TYPE_INT => {
-                    self.values.insert(key.clone(), Value::Int(self.read_int()));
+                    let i = self.read_int();
+                    self.values.insert(key.clone(), Value::Int(i));
                 }
                 TYPE_LONG => {
-                    self.values.insert(key.clone(), Value::Long(self.read_long()));
+                    let l = self.read_long();
+                    self.values.insert(key.clone(), Value::Long(l));
                 }
                 TYPE_FLOAT => {
-                    self.values.insert(key.clone(), Value::Float(self.read_float()));
+                    let f = self.read_float();
+                    self.values.insert(key.clone(), Value::Float(f));
                 }
                 TYPE_STRING => {
-                    self.values.insert(key.clone(), Value::String(self.read_string()));
+                    let s = self.read_string();
+                    self.values.insert(key.clone(), Value::String(s));
                 }
                 TYPE_BINARY => {
-                    self.values.insert(key.clone(), Value::Binary(self.read_binary()));
+                    let b = self.read_binary();
+                    self.values.insert(key.clone(), Value::Binary(b));
                 }
                 _ => {
-                    self.write_log(format!("Unknown type: {}", value));
+                    let m = format!("Unknown type: {}", value);
+                    self.write_log(m);
                 }
             }
         }
+    }
+
+    pub fn read_byte(&mut self) -> u8 {
+        let mut bytes = [0; 1];
+        bytes.copy_from_slice(&self.byte_input_stream[0..1]);
+        self.byte_input_stream = self.byte_input_stream[1..].to_vec();
+        bytes[0]
     }
 
     pub fn read_bool(&mut self) -> bool {
@@ -264,7 +284,7 @@ impl Settings {
 
     pub fn write_values(&mut self) {
         self.byte_output_stream = Vec::new();
-        for (key, value) in self.values.iter() {
+        for (key, value) in self.values.clone().iter() {
             self.write_string(key.clone());
             match value {
                 Value::Bool(value) => {
@@ -308,7 +328,7 @@ impl Settings {
 
         let mut files = backup_folder.list();
         // make sure first file is most recent, last is oldest
-        files.sort_by(|mut a, mut b| b.last_modified().cmp(&a.last_modified()));
+        files.sort_by(|mut a, b| b.last_modified().cmp(&a.last_modified()));
 
         // create a new entry in the backup folder
         Fi::new_from_file(file).copy_to(backup_folder.child(format!("{}.settings", millis())));
@@ -374,6 +394,7 @@ impl Settings {
     pub fn get_or_default(&mut self, key: String, value: Value) -> Value {
         if !self.values.contains_key(&key) {
             self.values.insert(key, value.clone());
+            return value;
         }
         self.values.get(&key).unwrap().clone()
     }

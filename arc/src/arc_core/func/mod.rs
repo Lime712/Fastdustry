@@ -1,18 +1,23 @@
 use std::ops::DerefMut;
 use std::sync::{Arc, Mutex};
 
-pub trait Cons<T> {
-    fn get(self, t: T);
+pub struct Cons<T> {
+    function: Arc<Mutex<dyn Fn(T) -> () + Send + 'static>>,
 }
 
-impl<T, F: Fn(T)> Cons<T> for F {
-    fn get(self, t: T) {
-        self(t)
+impl<T> Cons<T> {
+    pub fn new(function: impl Fn(T) -> () + Send + 'static) -> Self {
+        let boxed = Box::new(function);
+        let arc = Arc::new(Mutex::new(boxed));
+        Self { function: arc }
     }
-}
 
-pub fn cons<T, F: Fn(T)>(f: F) -> Box<dyn Cons<T>> {
-    Box::new(f)
+    pub fn run(&self, t: T) {
+        let arc = self.function.clone();
+        let mut lock = arc.lock().unwrap();
+        let boxed = lock.deref_mut();
+        (boxed)(t)
+    }
 }
 
 pub struct FloatP {

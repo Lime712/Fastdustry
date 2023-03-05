@@ -7,9 +7,9 @@ pub static mut APP: Option<&dyn Application> = None;
 // pub audio: Audio,
 // pub input: Input,
 // pub files: Files,
-lazy_static! {
-    pub static ref SETTINGS: Settings = Settings::new();
-}
+// lazy_static! {
+    pub static mut SETTINGS: Option<Settings> = None;
+// }
 // pub keyBinds: Keybinds = new KeyBinds(),
 
 // pub bundle: I18NBundle  = I18NBundle.createEmptyBundle(),

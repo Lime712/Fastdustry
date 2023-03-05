@@ -3,23 +3,26 @@ use std::fs;
 use std::fs::{File, OpenOptions};
 use std::hash::{Hash, Hasher};
 use std::io::{Read, Write};
-use std::path::Path;
+use std::ops::Deref;
+use std::path::{Path, PathBuf};
 use std::time::UNIX_EPOCH;
 
 use filepath::FilePath;
 
 use crate::arc_core::files::FType;
-use crate::arc_core::func::{Cons, cons};
+use crate::arc_core::func::{Cons};
 use crate::arc_core::util::Disposable;
 
 pub struct Fi {
     file: File,
+    path: String,
     file_type: FType,
 }
 
 impl Fi {
     pub fn new(file: File, file_type: FType) -> Fi {
-        Fi { file, file_type }
+        let path = file.path().unwrap().to_str().unwrap().to_string();
+        Fi { file, file_type, path }
     }
 
     pub fn new_from_path_and_type(path: String, file_type: FType) -> Fi {
@@ -54,22 +57,22 @@ impl Fi {
                 } else if preserver_tree {
                     Fi::empty_directory(File::create(f.path()).unwrap(), true);
                 } else {
-                    Fi::delete_directory(&File::create(f.path()).unwrap());
+                    Fi::delete_directory(File::create(f.path()).unwrap());
                 }
             }
         }
     }
 
-    pub fn delete_directory(file: &File) {
-        let path = Fi::path(file.clone());
+    pub fn delete_directory(file: File) {
+        let path = Fi::path(&file);
         if path.exists() {
-            Fi::empty_directory(*file, false);
+            Fi::empty_directory(file, false);
             fs::remove_dir(path).unwrap();
         }
     }
 
-    pub fn path(&file: &'static File) -> &'static Path {
-        Path::new(&file.path().unwrap().to_str().unwrap().to_string())
+    pub fn path(file: &File) -> PathBuf {
+        Path::new(&file.path().unwrap().to_str().unwrap().to_string()).to_path_buf()
     }
 
     pub fn copy_file(source: Fi, destination: Fi) {
@@ -189,26 +192,34 @@ impl Fi {
         }
     }
 
-    pub fn walk(&mut self, &cons: &'static Box<dyn Cons<&mut Fi>>) {
-        if self.is_directory() {
-            let mut files = Fi::path(&self.file).read_dir().unwrap();
-            for f in files {
-                let f = f.unwrap();
-                let mut fi = Fi::new_from_path_and_type(f.path().to_str().unwrap().to_string(), self.file_type.clone());
-                fi.walk(&cons);
-            }
-        } else {
-            cons.get(self);
-        }
-    }
+    // pub fn walk(& mut self, cons: &Cons<&'static mut Fi>) {
+    //     if self.is_directory() {
+    //         let files = Fi::path(&self.file).read_dir().unwrap();
+    //         for f in files {
+    //             let f = f.unwrap();
+    //             let mut fi = Fi::new_from_path_and_type(f.path().to_str().unwrap().to_string(), self.file_type.clone());
+    //             fi.walk(&cons);
+    //         }
+    //     } else {
+    //         let x = self.clone();
+    //         let mut f = Fi::new(x.file.try_clone().unwrap(), x.file_type.clone());
+    //         // cons.run(&mut f);
+    //     }
+    // }
 
     /// Recursively iterates through all files in this directory and adds them to an array.
     pub fn find_all(&mut self) -> Vec<Fi> {
         let mut files = Vec::new();
-        let b = cons(|fi: &mut Fi| {
-            files.push(fi.clone());
-        });
-        self.walk(&b);
+        if self.is_directory() {
+            let mut fs = Fi::path(&self.file).read_dir().unwrap();
+            for f in fs {
+                let f = f.unwrap();
+                let mut fi = Fi::new_from_path_and_type(f.path().to_str().unwrap().to_string(), self.file_type.clone());
+                files.append(&mut fi.find_all());
+            }
+        } else {
+            files.push(self.clone());
+        }
         files
     }
 
@@ -268,7 +279,7 @@ impl Fi {
         fs::rename(self.absolute_path(), dest.absolute_path()).unwrap();
     }
 
-    pub fn last_modified(&mut self) -> u64 {
+    pub fn last_modified(&self) -> u64 {
         let metadata = fs::metadata(self.absolute_path()).unwrap();
         metadata.modified().unwrap().duration_since(UNIX_EPOCH).unwrap().as_secs()
     }
@@ -279,6 +290,7 @@ impl Clone for Fi {
         Fi {
             file: File::create(self.absolute_path()).unwrap(),
             file_type: self.file_type.clone(),
+            path: self.path.clone(),
         }
     }
 }

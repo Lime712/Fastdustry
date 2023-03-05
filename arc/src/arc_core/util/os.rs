@@ -1,10 +1,14 @@
 use std::path::PathBuf;
 
-const CORES: usize = num_cpus::get();
-const NAME: String = whoami::username();
-const USER_HOME: PathBuf = home::home_dir().unwrap();
-const OS_NAME: String = whoami::distro();
-const OS_ARCH: String = whoami::arch().to_string();
+use lazy_static::lazy_static;
+
+lazy_static! {
+static ref CORES: usize = num_cpus::get();
+static ref NAME: String = whoami::username();
+static ref USER_HOME: PathBuf = home::home_dir().unwrap();
+static ref OS_NAME: String = whoami::distro();
+static ref OS_ARCH: String = whoami::arch().to_string();
+}
 const IS_WINDOWS: bool = cfg!(windows);
 const IS_MAC: bool = cfg!(macos);
 const IS_LINUX: bool = cfg!(linux);
