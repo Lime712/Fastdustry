@@ -64,9 +64,12 @@ impl HeadlessApplication {
             runnables: TaskQueue::new(),
             // exception_handler: None,
             render_interval: ri,
-            main_loop_thread: thread::Builder::new().name("HeadlessApplication".to_string()).spawn(move || {
-                // do nothing
-            }).unwrap(),
+            main_loop_thread: thread::Builder::new()
+                .name("HeadlessApplication".to_string())
+                .spawn(move || {
+                    // do nothing
+                })
+                .unwrap(),
             running: true,
         };
         h.add_listener(listener);
@@ -78,9 +81,14 @@ impl HeadlessApplication {
     }
 
     pub fn initialize(this: Arc<Mutex<HeadlessApplication>>) {
-        thread::Builder::new().name("HeadlessApplication".to_string()).spawn(move || {
-            this.lock().unwrap().main_loop();
-        }).unwrap().join().expect("CRASHED");
+        thread::Builder::new()
+            .name("HeadlessApplication".to_string())
+            .spawn(move || {
+                this.lock().unwrap().main_loop();
+            })
+            .unwrap()
+            .join()
+            .expect("CRASHED");
         // self.main_loop_thread.join().unwrap();
     }
 
@@ -92,7 +100,6 @@ impl HeadlessApplication {
         }
 
         let mut t = nanos() + self.render_interval;
-        debug!("{}", t);
         if self.render_interval >= 0 {
             while self.running {
                 // debug!("main_loop()");

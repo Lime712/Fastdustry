@@ -1,6 +1,6 @@
+use json::JsonValue;
 use std::fs::File;
 use std::io::{BufReader, Read};
-use json::JsonValue;
 
 /// not in use
 pub trait BaseJsonReader {

@@ -1,6 +1,6 @@
+use crate::arc_core::application_listener::ApplicationListener;
 use std::collections::HashSet;
 use std::ptr::null;
-use crate::arc_core::application_listener::ApplicationListener;
 
 pub trait Application {
     /// Returns a list of all the application listeners used.

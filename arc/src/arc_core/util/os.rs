@@ -3,11 +3,11 @@ use std::path::PathBuf;
 use lazy_static::lazy_static;
 
 lazy_static! {
-static ref CORES: usize = num_cpus::get();
-static ref NAME: String = whoami::username();
-static ref USER_HOME: PathBuf = home::home_dir().unwrap();
-static ref OS_NAME: String = whoami::distro();
-static ref OS_ARCH: String = whoami::arch().to_string();
+    static ref CORES: usize = num_cpus::get();
+    static ref NAME: String = whoami::username();
+    static ref USER_HOME: PathBuf = home::home_dir().unwrap();
+    static ref OS_NAME: String = whoami::distro();
+    static ref OS_ARCH: String = whoami::arch().to_string();
 }
 const IS_WINDOWS: bool = cfg!(windows);
 const IS_MAC: bool = cfg!(macos);
@@ -23,7 +23,6 @@ const IS_X86: bool = cfg!(target_arch = "x86");
 const IS_X86_64: bool = cfg!(target_arch = "x86_64");
 const IS_32_BIT: bool = cfg!(target_pointer_width = "32");
 const IS_64_BIT: bool = cfg!(target_pointer_width = "64");
-
 
 pub fn get_app_data_directory(app_name: String) -> PathBuf {
     if IS_WINDOWS {

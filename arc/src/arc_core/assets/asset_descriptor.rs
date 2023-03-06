@@ -1,5 +1,5 @@
-use std::fs::File;
 use crate::arc_core::assets::asset_loader_parameters::AssetLoaderParameters;
+use std::fs::File;
 
 pub struct AssetDescriptor<T> {
     pub name: String,

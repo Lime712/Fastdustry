@@ -1,11 +1,13 @@
 use std::alloc::System;
 use std::collections::HashMap;
+use std::error::Error;
+use std::fmt::{Debug, Formatter};
 use std::fs::File;
 use std::io::{Read, Write};
 use std::ops::{Deref, DerefMut};
 use std::thread::Thread;
 
-use json::{JsonValue, object};
+use json::{object, JsonValue};
 
 use crate::arc_core::files::fi::Fi;
 use crate::arc_core::files::FType;
@@ -107,7 +109,10 @@ impl Settings {
 
     pub fn get_data_directory(&self) -> String {
         if self.data_directory == "" {
-            get_app_data_directory(self.app_name.clone()).to_str().unwrap().to_string()
+            get_app_data_directory(self.app_name.clone())
+                .to_str()
+                .unwrap()
+                .to_string()
         } else {
             self.data_directory.clone()
         }
@@ -158,12 +163,19 @@ impl Settings {
     }
 
     pub fn get_backup_settings_file(&self) -> Fi {
-        Fi::new_from_path_and_type(self.get_data_directory() + "/settings_backup.bin", FType::Absolute)
+        Fi::new_from_path_and_type(
+            self.get_data_directory() + "/settings_backup.bin",
+            FType::Absolute,
+        )
     }
 
     pub fn load_values(&mut self) {
         if self.get_settings_file().exists() && !self.get_backup_settings_file().exists() {
-            self.write_log(format!("No Settings file found: {} and {}", self.get_settings_file().absolute_path(), self.get_backup_settings_file().absolute_path()));
+            self.write_log(format!(
+                "No Settings file found: {} and {}",
+                self.get_settings_file().absolute_path(),
+                self.get_backup_settings_file().absolute_path()
+            ));
         }
 
         self.load_values_from_file(self.get_settings_file());
@@ -334,8 +346,12 @@ impl Settings {
 
         let mut file = File::create(self.get_settings_file().path).unwrap();
         file.write_all(&self.byte_output_stream).unwrap();
+        debug!("data: {:?}", self.byte_output_stream);
 
-        self.write_log(format!("Write file: {}", self.get_settings_file().absolute_path()));
+        self.write_log(format!(
+            "Write file: {}",
+            self.get_settings_file().absolute_path()
+        ));
 
         // create backup
         // TODO: run this in a thread
@@ -343,8 +359,12 @@ impl Settings {
         debug!("Backup folder: {}", backup_folder.path);
         // create a new entry in the backup folder
         // first check if the folder exists
-        if !backup_folder.exists() || !backup_folder.is_directory() {
-            debug!("exists: {}, is_directory: {}", backup_folder.exists(), backup_folder.is_directory());
+        if !backup_folder.is_directory() {
+            debug!(
+                "exists: {}, is_directory: {}",
+                backup_folder.exists(),
+                backup_folder.is_directory()
+            );
             backup_folder.create_directory();
         }
 
@@ -352,8 +372,7 @@ impl Settings {
         // make sure first file is most recent, last is oldest
         files.sort_by(|mut a, b| b.last_modified().cmp(&a.last_modified()));
 
-
-        Fi::new_from_file(file).copy_to(backup_folder.child(format!("{}.settings", millis())));
+        Fi::new_from_file(file).copy_to(backup_folder.child(format!("{}.bin", millis())));
 
         // delete oldest backup if there are more than 10
         while files.len() > 10 {

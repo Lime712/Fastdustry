@@ -27,7 +27,6 @@ lazy_static! {
 }
 static mut MARKS: Vec<i64> = Vec::new();
 
-
 /// Runs a task with a delay of several ticks. If Time.clear() is called, this task will be cancelled.
 pub fn run(delay: i64, finish: Box<dyn Fn() + Send + 'static>) {
     unsafe {
@@ -104,12 +103,18 @@ pub fn set_delta_provider(provider: FloatP) {
 
 /// return The current value of the system timer, in nanoseconds.
 pub fn nanos() -> i64 {
-    return std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_nanos() as i64;
+    return std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap()
+        .as_nanos() as i64;
 }
 
 /// return The time in milliseconds
 pub fn millis() -> i64 {
-    return std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_millis() as i64;
+    return std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap()
+        .as_millis() as i64;
 }
 
 pub fn nanos_to_millis(nanos: i64) -> i64 {
@@ -135,10 +140,7 @@ pub struct DelayRun {
 
 impl DelayRun {
     pub fn new(delay: i64, finish: Box<dyn Fn() + Send + 'static>) -> DelayRun {
-        DelayRun {
-            delay,
-            finish,
-        }
+        DelayRun { delay, finish }
     }
 }
 

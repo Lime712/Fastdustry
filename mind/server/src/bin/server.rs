@@ -1,10 +1,10 @@
 use arc::arc_core::application::ApplicationType::Headless;
 use arc::arc_core::application_listener::ApplicationListener;
 use arc::arc_core::backend::headless::HeadlessApplication;
+use arc::arc_core::settings::Settings;
 use arc::{debug, info};
 use std::fs::File;
 use std::thread::Thread;
-use arc::arc_core::settings::Settings;
 
 static ROUND_EXTRA_TIME: i32 = 12;
 static MAX_LOG_LENGTH: i32 = 1024 * 1024 * 5;
@@ -56,6 +56,9 @@ impl ApplicationListener for ServerLauncher {
                 None => panic!("Settings not initialized"),
             };
             settings.set_data_directory("./config".to_string());
+            settings.load_values();
+            // settings.set_string("test".to_string(), "test".to_string());
+            debug!("settings: {}", settings.to_string());
             debug!("{}", settings.data_directory);
             // HEAD_LOCALS = false;
             settings.save_values();
