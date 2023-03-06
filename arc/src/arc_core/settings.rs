@@ -1,14 +1,10 @@
-use std::alloc::System;
 use std::collections::HashMap;
-use std::error::Error;
-use std::fmt::{Debug, Formatter};
 use std::fs::File;
 use std::io::{Read, Write};
-use std::ops::{Deref, DerefMut};
-use std::thread::Thread;
 
-use json::{object, JsonValue};
+use json::{JsonValue, object};
 
+use crate::arc_core::core::SETTINGS;
 use crate::arc_core::files::fi::Fi;
 use crate::arc_core::files::FType;
 use crate::arc_core::util::log::get_current_time_string;
@@ -343,10 +339,11 @@ impl Settings {
         }
 
         self.write_log(format!("Write values: {}", self.byte_output_stream.len()));
+        debug!("write values: {}", self.byte_output_stream.len());
 
         let mut file = File::create(self.get_settings_file().path).unwrap();
         file.write_all(&self.byte_output_stream).unwrap();
-        debug!("data: {:?}", self.byte_output_stream);
+        debug!("data len: {:?}", self.byte_output_stream.len());
 
         self.write_log(format!(
             "Write file: {}",
@@ -575,4 +572,17 @@ impl Settings {
     }
 
     // todo: make json stuff
+}
+
+/// utility function to get settings
+#[macro_export]
+macro_rules! get_settings {
+    ($data:expr) => {
+        unsafe {
+            $data = match SETTINGS {
+                Some(ref mut s) => s,
+                None => panic!("Settings not initialized"),
+            }
+        };
+    }
 }

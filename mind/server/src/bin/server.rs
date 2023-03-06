@@ -1,10 +1,7 @@
-use arc::arc_core::application::ApplicationType::Headless;
+use arc::{debug, get_settings, info};
 use arc::arc_core::application_listener::ApplicationListener;
 use arc::arc_core::backend::headless::HeadlessApplication;
 use arc::arc_core::settings::Settings;
-use arc::{debug, info};
-use std::fs::File;
-use std::thread::Thread;
 
 static ROUND_EXTRA_TIME: i32 = 12;
 static MAX_LOG_LENGTH: i32 = 1024 * 1024 * 5;
@@ -51,17 +48,21 @@ impl ApplicationListener for ServerLauncher {
         use arc::arc_core::core::*;
         unsafe {
             SETTINGS = Some(Settings::new());
-            let mut settings = match SETTINGS {
-                Some(ref mut s) => s,
-                None => panic!("Settings not initialized"),
-            };
+            let settings;
+            get_settings!(settings);
             settings.set_data_directory("./config".to_string());
-            settings.load_values();
+            // settings.load_values();
             // settings.set_string("test".to_string(), "test".to_string());
-            debug!("settings: {}", settings.to_string());
-            debug!("{}", settings.data_directory);
-            // HEAD_LOCALS = false;
-            settings.save_values();
+            // settings.set_float("test2".to_string(), 1.0);
+            // settings.set_bool("test3".to_string(), true);
+            // settings.set_int("test4".to_string(), 1);
+            // debug!("settings: {}", settings.to_string());
+            // debug!("{}", settings.data_directory);
+            // // HEAD_LOCALS = false;
+            // settings.save_values();
+            // settings.save_values();
+            core::vars::load_settings();
+            core::vars::init();
         }
     }
 }
