@@ -63,6 +63,7 @@ impl ApplicationListener for ServerLauncher {
             // settings.save_values();
             core::vars::load_settings();
             core::vars::init();
+            settings.save_values();
         }
     }
 }

@@ -3,7 +3,7 @@ use std::collections::HashSet;
 use std::ptr::null;
 
 pub trait Application {
-    /// Returns a list of all the application listeners used.
+    /// Returns a list of ALL the application listeners used.
     fn get_listeners(&mut self) -> &mut HashSet<Box<dyn ApplicationListener>>;
 
     /// Adds a new application listener.

@@ -267,7 +267,7 @@ impl Fi {
     //     }
     // }
 
-    /// Recursively iterates through all files in this directory and adds them to an array.
+    /// Recursively iterates through ALL files in this directory and adds them to an array.
     pub fn find_all(&mut self) -> Vec<Fi> {
         let mut files = Vec::new();
         if self.is_directory() {

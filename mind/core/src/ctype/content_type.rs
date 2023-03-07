@@ -18,24 +18,24 @@
 // }
 //
 // impl ContentType {
-//     fn all() -> Vec<ContentType> {
+//     fn ALL() -> Vec<ContentType> {
 //         vec![
-//             ContentType::Item(Item::all()),
-//             ContentType::Block(Block::all()),
-//             ContentType::MechUnused(Mech::all()),
-//             ContentType::Bullet(BulletType::all()),
-//             ContentType::Liquid(Liquid::all()),
-//             ContentType::Status(StatusEffect::all()),
-//             ContentType::Unit(UnitType::all()),
-//             ContentType::Weather(Weather::all()),
-//             ContentType::EffectUnused(Effect::all()),
-//             ContentType::Sector(SectorPreset::all()),
-//             ContentType::LoadOutUnused(Loadout::all()),
-//             ContentType::TypeIdUnused(TypeID::all()),
-//             ContentType::Error(Error::all()),
-//             ContentType::Planet(Planet::all()),
-//             ContentType::AmmoUnused(AmmoType::all()),
-//             ContentType::Team(TeamEntry::all()),
+//             ContentType::Item(Item::ALL()),
+//             ContentType::Block(Block::ALL()),
+//             ContentType::MechUnused(Mech::ALL()),
+//             ContentType::Bullet(BulletType::ALL()),
+//             ContentType::Liquid(Liquid::ALL()),
+//             ContentType::Status(StatusEffect::ALL()),
+//             ContentType::Unit(UnitType::ALL()),
+//             ContentType::Weather(Weather::ALL()),
+//             ContentType::EffectUnused(Effect::ALL()),
+//             ContentType::Sector(SectorPreset::ALL()),
+//             ContentType::LoadOutUnused(Loadout::ALL()),
+//             ContentType::TypeIdUnused(TypeID::ALL()),
+//             ContentType::Error(Error::ALL()),
+//             ContentType::Planet(Planet::ALL()),
+//             ContentType::AmmoUnused(AmmoType::ALL()),
+//             ContentType::Team(TeamEntry::ALL()),
 //         ]
 //     }
 // }

@@ -200,14 +200,38 @@ impl Settings {
             }
         };
 
-        self.byte_input_stream = buffer;
+        self.byte_input_stream = buffer.clone();
         self.read_values();
     }
 
     pub fn read_values(&mut self) {
+        //current theory: when corruptions happen, the only things written to the stream are a bunch of zeroes
+        //try to anticipate this case and throw an exception when 0 values are written
+        let n = 16;
+        // self.byte_input_stream = self.byte_input_stream[2..].to_vec();
+        let mut temp: Vec<u8> = vec![];
+        let mut number_start = self.byte_input_stream.len();
+        for i in 0..n {
+            temp.push(self.byte_input_stream[i].clone());
+            if self.byte_input_stream[i] != 0 && number_start == self.byte_input_stream.len() {
+                number_start = i;
+            }
+        }
+        debug!("byte input stream[1..{}]: {:x?}",n, temp);
+        debug!("number start: {}", number_start);
+        let amount = self.read_int();
+        debug!("amount: {}", amount);
+        debug!("amount as hex: {:x?}", amount);
+        if amount <= 0 {
+            self.write_log("Settings file is corrupted".to_string());
+            return;
+        }
         while self.byte_input_stream.len() > 0 {
-            let key = self.read_string();
+            let key = self.read_string_without_prefix();
+            debug!("current key: {}", key);
+            debug!("current key as hex: {:x?}", key.as_bytes());
             let value = self.read_byte();
+            debug!("current value: {}", value);
             match value {
                 TYPE_BOOL => {
                     let b = self.read_bool();
@@ -259,6 +283,7 @@ impl Settings {
         let mut bytes = [0; 4];
         bytes.copy_from_slice(&self.byte_input_stream[0..4]);
         self.byte_input_stream = self.byte_input_stream[4..].to_vec();
+        debug!("read int bytes: {:x?}", bytes);
         i32::from_be_bytes(bytes)
     }
 
@@ -276,11 +301,27 @@ impl Settings {
         f32::from_be_bytes(bytes)
     }
 
+    pub fn read_string_without_prefix(&mut self) -> String {
+        // first there are 2 bytes that say how many bytes are in the string
+        let mut bytes = [0; 2];
+        bytes.copy_from_slice(&self.byte_input_stream[0..2]);
+        self.byte_input_stream = self.byte_input_stream[2..].to_vec();
+        let length = i16::from_be_bytes(bytes);
+        let mut bytes = [0; 1];
+        let mut string = String::new();
+        for _ in 0..length {
+            bytes.copy_from_slice(&self.byte_input_stream[0..1]);
+            self.byte_input_stream = self.byte_input_stream[1..].to_vec();
+            string.push(bytes[0] as char);
+        }
+        string
+    }
+
     pub fn read_string(&mut self) -> String {
-        let mut bytes = [0; 4];
-        bytes.copy_from_slice(&self.byte_input_stream[0..4]);
-        self.byte_input_stream = self.byte_input_stream[4..].to_vec();
-        let length = i32::from_be_bytes(bytes);
+        let mut bytes = [0; 2];
+        bytes.copy_from_slice(&self.byte_input_stream[0..2]);
+        self.byte_input_stream = self.byte_input_stream[2..].to_vec();
+        let length = i16::from_be_bytes(bytes);
         let mut bytes = [0; 1];
         let mut string = String::new();
         for _ in 0..length {
@@ -308,6 +349,7 @@ impl Settings {
 
     pub fn save_values(&mut self) {
         self.byte_output_stream = Vec::new();
+        self.write_int(self.values.len() as i32);
         for (key, value) in self.values.clone().iter() {
             self.write_string(key.clone());
             match value {
@@ -367,12 +409,12 @@ impl Settings {
 
         let mut files = backup_folder.list();
         // make sure first file is most recent, last is oldest
-        files.sort_by(|mut a, b| b.last_modified().cmp(&a.last_modified()));
+        files.sort_by(|a, b| b.last_modified().cmp(&a.last_modified()));
 
         Fi::new_from_file(file).copy_to(backup_folder.child(format!("{}.bin", millis())));
 
         // delete oldest backup if there are more than 10
-        while files.len() > 10 {
+        while files.len() > MAX_BACKUPS {
             let mut file = files.pop().unwrap();
             file.delete();
         }
@@ -391,6 +433,11 @@ impl Settings {
         self.write_bytes(bytes.to_vec());
     }
 
+    pub fn write_i16(&mut self, value: i16) {
+        let bytes = value.to_be_bytes();
+        self.write_bytes(bytes.to_vec());
+    }
+
     pub fn write_long(&mut self, value: i64) {
         let bytes = value.to_be_bytes();
         self.write_bytes(bytes.to_vec());
@@ -402,16 +449,16 @@ impl Settings {
     }
 
     pub fn write_string(&mut self, value: String) {
-        let length = value.len() as i32;
-        self.write_int(length);
+        let length = value.len() as i16;
+        self.write_i16(length);
         for byte in value.bytes() {
             self.write_byte(byte);
         }
     }
 
     pub fn write_binary(&mut self, value: Vec<u8>) {
-        let length = value.len() as i32;
-        self.write_int(length);
+        let length = value.len() as i16;
+        self.write_i16(length);
         self.write_bytes(value);
     }
 
