@@ -37,7 +37,7 @@ macro_rules! trace {
 
 #[macro_export]
 macro_rules! info {
-    ($($arg:tt)*) => (arc::arc_core::util::log::log(arc::arc_core::util::log::LogLevel::Info, format_args!($($arg)*));)
+    ($($arg:tt)*) => ($crate::arc_core::util::log::log($crate::arc_core::util::log::LogLevel::Info, format_args!($($arg)*));)
 }
 
 #[macro_export]

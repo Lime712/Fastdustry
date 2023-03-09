@@ -4,13 +4,13 @@ use std::io::{Read, Write};
 
 use json::{JsonValue, object};
 
+use crate::{debug, info};
 use crate::arc_core::core::SETTINGS;
 use crate::arc_core::files::fi::Fi;
 use crate::arc_core::files::FType;
 use crate::arc_core::util::log::get_current_time_string;
 use crate::arc_core::util::os::get_app_data_directory;
 use crate::arc_core::util::time::millis;
-use crate::debug;
 
 const TYPE_BOOL: u8 = 0;
 const TYPE_INT: u8 = 1;
@@ -207,31 +207,18 @@ impl Settings {
     pub fn read_values(&mut self) {
         //current theory: when corruptions happen, the only things written to the stream are a bunch of zeroes
         //try to anticipate this case and throw an exception when 0 values are written
-        let n = 16;
-        // self.byte_input_stream = self.byte_input_stream[2..].to_vec();
-        let mut temp: Vec<u8> = vec![];
-        let mut number_start = self.byte_input_stream.len();
-        for i in 0..n {
-            temp.push(self.byte_input_stream[i].clone());
-            if self.byte_input_stream[i] != 0 && number_start == self.byte_input_stream.len() {
-                number_start = i;
-            }
-        }
-        debug!("byte input stream[1..{}]: {:x?}",n, temp);
-        debug!("number start: {}", number_start);
         let amount = self.read_int();
-        debug!("amount: {}", amount);
-        debug!("amount as hex: {:x?}", amount);
+        info!("loading {} values from {}",amount,self.get_settings_file().path);
         if amount <= 0 {
             self.write_log("Settings file is corrupted".to_string());
             return;
         }
         while self.byte_input_stream.len() > 0 {
             let key = self.read_string_without_prefix();
-            debug!("current key: {}", key);
-            debug!("current key as hex: {:x?}", key.as_bytes());
+            // debug!("current key: {}", key);
+            // debug!("current key as hex: {:x?}", key.as_bytes());
             let value = self.read_byte();
-            debug!("current value: {}", value);
+            // debug!("current value: {}", value);
             match value {
                 TYPE_BOOL => {
                     let b = self.read_bool();
@@ -283,7 +270,7 @@ impl Settings {
         let mut bytes = [0; 4];
         bytes.copy_from_slice(&self.byte_input_stream[0..4]);
         self.byte_input_stream = self.byte_input_stream[4..].to_vec();
-        debug!("read int bytes: {:x?}", bytes);
+        // debug!("read int bytes: {:x?}", bytes);
         i32::from_be_bytes(bytes)
     }
 
@@ -333,10 +320,7 @@ impl Settings {
     }
 
     pub fn read_binary(&mut self) -> Vec<u8> {
-        let mut bytes = [0; 4];
-        bytes.copy_from_slice(&self.byte_input_stream[0..4]);
-        self.byte_input_stream = self.byte_input_stream[4..].to_vec();
-        let length = i32::from_be_bytes(bytes);
+        let length = self.read_int();
         let mut bytes = [0; 1];
         let mut binary = Vec::new();
         for _ in 0..length {
@@ -457,8 +441,8 @@ impl Settings {
     }
 
     pub fn write_binary(&mut self, value: Vec<u8>) {
-        let length = value.len() as i16;
-        self.write_i16(length);
+        let length = value.len() as i32;
+        self.write_int(length);
         self.write_bytes(value);
     }
 
