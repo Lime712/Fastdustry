@@ -57,7 +57,7 @@
 //     public boolean logicUnitBuild = true;
 //     /** If true, world processors no longer update. Used for testing. */
 //     public boolean disableWorldProcessors = false;
-//     /** How much health blocks start with. */
+//     /** How much HEALTH blocks start with. */
 //     public float blockHealthMultiplier = 1f;
 //     /** How much damage blocks (turrets) deal. */
 //     public float blockDamageMultiplier = 1f;
@@ -230,7 +230,7 @@ pub struct Rules {
     pub logic_unit_build: bool,
     /// If true, world processors no longer update. Used for testing.
     pub disable_world_processors: bool,
-    /// How much health blocks start with.
+    /// How much HEALTH blocks start with.
     pub block_health_multiplier: f32,
     /// How much damage blocks (turrets) deal.
     pub block_damage_multiplier: f32,

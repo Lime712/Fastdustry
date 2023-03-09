@@ -42,6 +42,23 @@ impl Stats {
         self.dirty = true;
     }
 
+    pub fn add_percent(&mut self, stat: Stat, percent: f64) {
+        self.add_percent_cat(stat, StatCat::GENERAL, percent);
+    }
+
+    pub fn add_percent_cat(&mut self, stat: Stat, category: StatCat, percent: f64) {
+        if !self.initialized {
+            self.init();
+        }
+        let mut map = self.map.entry(category).or_insert(HashMap::new());
+        let mut set = map.entry(stat).or_insert(HashSet::new());
+        set.insert(StatValue {
+            value: percent,
+            display: format!("{}%", percent),
+        });
+        self.dirty = true;
+    }
+
     pub fn get(&self, stat: Stat) -> Option<&HashSet<StatValue>> {
         self.get_cat(stat, StatCat::GENERAL)
     }

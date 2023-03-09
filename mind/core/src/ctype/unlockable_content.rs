@@ -4,22 +4,22 @@ pub struct UnlockableContent {
     /// Stat storage for this content. Initialized on demand.
     pub stats: Stats,
     /// Localized, formal name. Never null. Set to internal name if not found in bundle.
-    pub localizedName: String,
+    pub localized_name: String,
     /// Localized description & details. May be null.
     pub description: String,
     pub details: String,
     /// Whether this content is always unlocked in the tech tree.
-    pub alwaysUnlocked: bool,
+    pub always_unlocked: bool,
     /// Whether to show the description in the research dialog preview.
-    pub inlineDescription: bool,
+    pub inline_description: bool,
     /// Whether details of blocks are hidden in custom games if they haven't been unlocked in campaign mode.
-    pub hideDetails: bool,
+    pub hide_details: bool,
     /// If false, ALL icon generation is disabled for this content; createIcons is not called.
-    pub generateIcons: bool,
+    pub generate_icons: bool,
     /// Special logic icon ID.
-    pub iconId: i32,
+    pub icon_id: i32,
     /// How big the content appears in certain selection menus
-    pub selectionSize: f32,
+    pub selection_size: f32,
     // /// Icon of the content to use in UI.
     // pub uiIcon: TextureRegion,
     // /// Icon of the full content. Unscaled.
@@ -34,15 +34,15 @@ impl Default for UnlockableContent {
     fn default() -> Self {
         Self {
             stats: Stats::new(),
-            localizedName: String::default(),
+            localized_name: String::default(),
             description: String::default(),
             details: String::default(),
-            alwaysUnlocked: false,
-            inlineDescription: false,
-            hideDetails: false,
-            generateIcons: true,
-            iconId: 0,
-            selectionSize: 1.0,
+            always_unlocked: false,
+            inline_description: false,
+            hide_details: false,
+            generate_icons: true,
+            icon_id: 0,
+            selection_size: 1.0,
             unlocked: false,
         }
     }

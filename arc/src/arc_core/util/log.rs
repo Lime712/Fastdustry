@@ -20,18 +20,21 @@ macro_rules! log {
 }
 
 #[macro_export]
+#[cfg(debug_assertions)]
 macro_rules! debug {
     ($($arg:tt)*) => ($crate::arc_core::util::log::log($crate::arc_core::util::log::LogLevel::Debug, format_args!($($arg)*));)
 }
 
 #[macro_export]
+#[cfg(not(debug_assertions))]
+macro_rules! debug {
+    ($($arg:tt)*) => ()
+}
+
+#[macro_export]
 macro_rules! trace {
     ($($arg:tt)*) => {
-        use crate::arc_core::util::log::get_current_time_string;
-        let t = get_current_time_string();
-        print!("[{}] \x1B[36m[D] [TRACE]: [{}:{}] ", t, file!(), line!());
-        print!("{}", format_args!($($arg)*));
-        println!("\x1B[0m"); // to get a new line at the end
+        debug!("[TRACE]: [{}:{}] {}\x1B[0m", file!(), line!(), format_args!($($arg)*));
     }
 }
 

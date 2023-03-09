@@ -1,21 +1,25 @@
+use crate::ctype::content_type::ContentType;
 use crate::ctype::unlockable_content::UnlockableContent;
+use crate::world::meta::stat::*;
 
 pub struct Item {
     // pub color: Color,
     pub super_struct: UnlockableContent,
 
     /// how explosive this item is.
-    pub explosiveness: f32,
+    pub explosiveness: f64,
     /// flammability above 0.3 makes this eligible for item burners.
-    pub flammability: f32,
+    pub flammability: f64,
     /// how radioactive this item is.
-    pub radioactivity: f32,
+    pub radioactivity: f64,
+    /// how electrically potent this item is.
+    pub charge: f64,
     /// drill hardness of the item
     pub hardness: i32,
     /// base material cost of this item, used for calculating place times
     /// 1 cost = 1 tick added to build time
     pub cost: f64,
-    /// When this item is present in the build cost, a block's <b>default</b> health is multiplied by 1 + scaling, where 'scaling' is summed together for ALL item requirement types.
+    /// When this item is present in the build cost, a block's <b>default</b> HEALTH is multiplied by 1 + scaling, where 'scaling' is summed together for ALL item requirement types.
     pub health_scaling: f64,
     /// if true, this item is of the lowest priority to drills.
     pub low_priority: bool,
@@ -40,6 +44,7 @@ impl Default for Item {
             explosiveness: 0.0,
             flammability: 0.0,
             radioactivity: 0.0,
+            charge: 0.0,
             hardness: 0,
             cost: 1.0,
             health_scaling: 0.0,
@@ -54,7 +59,28 @@ impl Default for Item {
 }
 
 impl Item {
-    pub fn new(name: String) {
+    pub fn new(name: String) -> Self {
+        Self {
+            super_struct: UnlockableContent {
+                localized_name: name,
+                ..Default::default()
+            },
+            ..Default::default()
+        }
+    }
 
+    pub fn set_stats(&mut self) {
+        self.super_struct.stats.add_percent(explosiveness.clone(), self.explosiveness);
+        self.super_struct.stats.add_percent(flammability.clone(), self.flammability);
+        self.super_struct.stats.add_percent(radioactivity.clone(), self.radioactivity);
+        self.super_struct.stats.add_percent(charge.clone(), self.charge);
+    }
+
+    pub fn to_string(&self) -> String {
+        format!("Item: {}", self.super_struct.localized_name)
+    }
+
+    pub fn get_content_type(&self) -> ContentType {
+        ContentType::Item
     }
 }

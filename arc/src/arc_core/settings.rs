@@ -208,7 +208,7 @@ impl Settings {
         //current theory: when corruptions happen, the only things written to the stream are a bunch of zeroes
         //try to anticipate this case and throw an exception when 0 values are written
         let amount = self.read_int();
-        info!("loading {} values from {}",amount,self.get_settings_file().path);
+        info!("loading {} values from {}", amount, self.get_settings_file().path);
         if amount <= 0 {
             self.write_log("Settings file is corrupted".to_string());
             return;

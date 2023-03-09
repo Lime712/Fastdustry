@@ -7,12 +7,16 @@ static ROUND_EXTRA_TIME: i32 = 12;
 static MAX_LOG_LENGTH: i32 = 1024 * 1024 * 5;
 
 static mut ARGS: Vec<String> = Vec::new();
+static mut START_TIME: i64 = 0;
 
 fn main() {
-    println!("Hello, world!");
-    debug!("hello");
+    info!("ServerLauncher main");
     unsafe {
         ARGS = std::env::args().collect();
+        START_TIME = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_nanos() as i64;
     }
     HeadlessApplication::start(Box::new(ServerLauncher::new()), 1.0 / 60.0);
 }
@@ -64,6 +68,14 @@ impl ApplicationListener for ServerLauncher {
             core::vars::load_settings();
             core::vars::init();
             settings.save_values();
+
+            // print how long it took to load
+            let end_time = std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos() as i64;
+            let time = end_time - START_TIME;
+            info!("ServerLauncher init complete in {:.2} ms", time as f64/ 1000000.0);
         }
     }
 }
