@@ -5,11 +5,11 @@ pub struct Item {
     pub super_struct: UnlockableContent,
 
     /// how explosive this item is.
-    pub explosiveness: i32,
+    pub explosiveness: f32,
     /// flammability above 0.3 makes this eligible for item burners.
     pub flammability: f32,
     /// how radioactive this item is.
-    pub radioactivity: i32,
+    pub radioactivity: f32,
     /// drill hardness of the item
     pub hardness: i32,
     /// base material cost of this item, used for calculating place times
@@ -37,9 +37,9 @@ impl Default for Item {
         Self {
             super_struct: UnlockableContent::default(),
             // color: Color::default(),
-            explosiveness: 0,
+            explosiveness: 0.0,
             flammability: 0.0,
-            radioactivity: 0,
+            radioactivity: 0.0,
             hardness: 0,
             cost: 1.0,
             health_scaling: 0.0,
