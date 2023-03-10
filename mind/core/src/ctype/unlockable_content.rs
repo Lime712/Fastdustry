@@ -63,7 +63,7 @@ impl MappableContent for UnlockableContent {
 }
 
 impl UnlockableContent {
-    fn new(name: &'static str) -> Self {
+    pub(crate) fn new(name: &'static str) -> Self {
         Self {
             localized_name: name,
             ..Default::default()

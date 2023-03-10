@@ -1,10 +1,10 @@
-use std::sync::{Mutex, MutexGuard};
+use std::sync::{Mutex};
 
 use lazy_static::lazy_static;
 
 use crate::r#type::item::Item;
 
-// original code
+/*// original code
 // package mindustry.content;
 //
 // import arc.graphics.*;
@@ -155,7 +155,7 @@ use crate::r#type::item::Item;
 //         EREKIR_ONLY_ITEMS.addAll(EREKIR_ITEMS).removeAll(SERPULO_ITEMS);
 //
 //     }
-// }
+// }*/
 
 pub static mut SERPULO_ITEMS: Vec<Item> = Vec::new();
 pub static mut EREKIR_ITEMS: Vec<Item> = Vec::new();

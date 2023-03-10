@@ -3,7 +3,7 @@ use crate::ctype::unlockable_content::UnlockableContent;
 use crate::logic::sensible;
 use crate::logic::sensible::{LAccess, Sensible};
 use crate::world::meta::stat::*;
-use std::ops::{Deref, DerefMut};
+
 
 #[derive(Debug, Clone)]
 pub struct Item {

@@ -1,8 +1,12 @@
+use std::collections::{HashMap, HashSet};
+
+use arc::arc_core::func::Cons;
+
+use crate::content::items::Items;
+use crate::content::liquids::Liquids;
 use crate::ctype::content::Content;
 use crate::ctype::content_type::ContentType;
 use crate::ctype::unlockable_content::MappableContent;
-use arc::arc_core::func::Cons;
-use std::collections::{HashMap, HashSet};
 
 pub struct ContentLoader {
     content_name_map: Vec<HashMap<String, Box<dyn MappableContent>>>,
@@ -32,5 +36,7 @@ impl ContentLoader {
 
     pub fn create_base_content() {
         // TeamEntries.load();
+        Items::load();
+        Liquids::load();
     }
 }
