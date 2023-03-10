@@ -2,6 +2,7 @@ use std::collections::{HashMap, HashSet};
 
 use crate::world::meta::stat::{Stat, StatCat, StatValue};
 
+#[derive(Debug, Clone)]
 pub struct Stats {
     /// Whether to display stats with categories. If false, categories are completely ignored during display.
     pub use_categories: bool,

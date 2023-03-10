@@ -1,3 +1,5 @@
+pub mod content;
+pub mod core;
 pub mod ctype;
 pub mod game;
 pub mod logic;

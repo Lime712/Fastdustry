@@ -118,7 +118,7 @@
 //     /** Unlocked content names. Only used in multiplayer when the campaign is enabled. */
 //     public ObjectSet<String> researched = new ObjectSet<>();
 //     /** Block containing these items as requirements are hidden. */
-//     public ObjectSet<Item> hiddenBuildItems = Items.erekirOnlyItems.asSet();
+//     public ObjectSet<Item> hiddenBuildItems = Items.EREKIR_ONLY_ITEMS.asSet();
 //     /** In-map objective executor. */
 //     public MapObjectives objectives = new MapObjectives();
 //     /** Flags set by objectives. Used in world processors. */

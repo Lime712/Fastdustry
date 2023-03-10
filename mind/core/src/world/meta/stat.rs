@@ -2,7 +2,7 @@ use std::hash::{Hash, Hasher};
 
 use lazy_static::lazy_static;
 
-#[derive(Eq, Hash, PartialEq, Clone, Copy)]
+#[derive(Eq, Hash, PartialEq, Clone, Copy, Debug)]
 pub enum StatCat {
     GENERAL,
     POWER,
@@ -13,7 +13,7 @@ pub enum StatCat {
     OPTIONAL,
 }
 
-#[derive(PartialEq)]
+#[derive(PartialEq, Clone, Debug)]
 pub struct StatValue {
     pub value: f64,
     pub display: String,
@@ -30,7 +30,7 @@ impl Hash for StatValue {
 // pub static mut ALL: Vec<Stat> = Vec::new();
 static mut COUNTER: u32 = 0;
 
-#[derive(Eq, Hash, PartialEq)]
+#[derive(Eq, Hash, PartialEq, Debug)]
 pub struct Stat {
     pub category: StatCat,
     pub name: String,

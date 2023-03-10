@@ -3,7 +3,9 @@ use crate::ctype::unlockable_content::UnlockableContent;
 use crate::logic::sensible;
 use crate::logic::sensible::{LAccess, Sensible};
 use crate::world::meta::stat::*;
+use std::ops::{Deref, DerefMut};
 
+#[derive(Debug, Clone)]
 pub struct Item {
     // pub color: Color,
     pub super_struct: UnlockableContent,
@@ -61,7 +63,7 @@ impl Default for Item {
 }
 
 impl Item {
-    pub fn new(name: String) -> Self {
+    pub fn new(name: &'static str) -> Self {
         Self {
             super_struct: UnlockableContent {
                 localized_name: name,

@@ -16,26 +16,26 @@ pub enum ContentType {
     AmmoUnused,
     Team,
 }
-//
-// impl ContentType {
-//     fn ALL -> Vec<ContentType> {
-//         vec![
-//             ContentType::Item,
-//             ContentType::Block,
-//             ContentType::MechUnused,
-//             ContentType::Bullet,
-//             ContentType::Liquid,
-//             ContentType::Status,
-//             ContentType::Unit,
-//             ContentType::Weather,
-//             ContentType::EffectUnused,
-//             ContentType::Sector,
-//             ContentType::LoadOutUnused,
-//             ContentType::TypeIdUnused,
-//             ContentType::Error,
-//             ContentType::Planet,
-//             ContentType::AmmoUnused,
-//             ContentType::Team,
-//         ]
-//     }
-// }
+
+impl ContentType {
+    pub(crate) fn all() -> Vec<ContentType> {
+        vec![
+            ContentType::Item,
+            ContentType::Block,
+            ContentType::MechUnused,
+            ContentType::Bullet,
+            ContentType::Liquid,
+            ContentType::Status,
+            ContentType::Unit,
+            ContentType::Weather,
+            ContentType::EffectUnused,
+            ContentType::Sector,
+            ContentType::LoadOutUnused,
+            ContentType::TypeIdUnused,
+            ContentType::Error,
+            ContentType::Planet,
+            ContentType::AmmoUnused,
+            ContentType::Team,
+        ]
+    }
+}

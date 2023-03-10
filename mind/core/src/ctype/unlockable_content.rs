@@ -1,10 +1,18 @@
 use crate::world::meta::stats::Stats;
 
+pub trait MappableContent {
+    fn get_name(&self) -> &str;
+    fn to_string(&self) -> String {
+        self.get_name().to_string()
+    }
+}
+
+#[derive(Clone, Debug)]
 pub struct UnlockableContent {
     /// Stat storage for this content. Initialized on demand.
     pub stats: Stats,
     /// Localized, formal name. Never null. Set to internal name if not found in bundle.
-    pub localized_name: String,
+    pub localized_name: &'static str,
     /// Localized description & details. May be null.
     pub description: String,
     pub details: String,
@@ -34,7 +42,7 @@ impl Default for UnlockableContent {
     fn default() -> Self {
         Self {
             stats: Stats::new(),
-            localized_name: String::default(),
+            localized_name: "unknown",
             description: String::default(),
             details: String::default(),
             always_unlocked: false,
@@ -45,5 +53,32 @@ impl Default for UnlockableContent {
             selection_size: 1.0,
             unlocked: false,
         }
+    }
+}
+
+impl MappableContent for UnlockableContent {
+    fn get_name(&self) -> &str {
+        &self.localized_name
+    }
+}
+
+impl UnlockableContent {
+    fn new(name: &'static str) -> Self {
+        Self {
+            localized_name: name,
+            ..Default::default()
+        }
+    }
+    pub fn check_status(&mut self) {
+        if self.stats.initialized {
+            self.set_stats();
+            self.stats.initialized = true;
+        }
+    }
+
+    pub fn set_stats(&mut self) {}
+
+    pub fn locked(&self) -> bool {
+        !self.always_unlocked && !self.unlocked
     }
 }
