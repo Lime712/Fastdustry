@@ -4,9 +4,9 @@ use arc::arc_core::files::fi::Fi;
 
 use crate::vars::DATA_DIRECTORY;
 
-pub struct Map {
+pub struct Map<'a> {
     pub custom: bool,
-    pub tags: HashMap<String, String>,
+    pub tags: HashMap<&'a str, &'a str>,
     pub file: Fi,
     pub version: i32,
     pub width: i32,
@@ -18,8 +18,26 @@ pub struct Map {
     // pub loaded_mod: mod,
 }
 
-impl Map {
-    pub fn new(custom: bool, tags: HashMap<String, String>, file: Fi, version: i32, width: i32, height: i32, build: i32, teams: Vec<i32>, spawns: i32) -> Map {
+impl<'a> Default for Map<'a> {
+    fn default() -> Self {
+        let mut tags = HashMap::new();
+        tags.insert("name", "unknown");
+        Map {
+            custom: false,
+            tags,
+            file: Fi::new_from_path(unsafe { DATA_DIRECTORY.to_string() }),
+            version: 0,
+            width: 0,
+            height: 0,
+            build: -1,
+            teams: vec![],
+            spawns: 0,
+        }
+    }
+}
+
+impl<'a> Map<'a> {
+    pub fn new(custom: bool, tags: HashMap<&'a str, &'a str>, file: Fi, version: i32, width: i32, height: i32, build: i32, teams: Vec<i32>, spawns: i32) -> Map<'a> {
         Map {
             custom,
             tags,
@@ -33,7 +51,7 @@ impl Map {
         }
     }
 
-    pub fn new_tags(tags: HashMap<String, String>) -> Map {
+    pub fn new_tags(tags: HashMap<&'a str, &'a str>) -> Map<'a> {
         if !tags.contains_key("name") {
             panic!("Map must have a name");
         }

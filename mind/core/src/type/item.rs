@@ -1,5 +1,8 @@
+use crate::ctype::content::Content;
 use crate::ctype::content_type::ContentType;
 use crate::ctype::unlockable_content::UnlockableContent;
+use crate::logic::sensible;
+use crate::logic::sensible::{color, LAccess, Sensible};
 use crate::world::meta::stat::*;
 
 pub struct Item {
@@ -83,4 +86,20 @@ impl Item {
     pub fn get_content_type(&self) -> ContentType {
         ContentType::Item
     }
+}
+
+impl Sensible for Item {
+    fn sense(&self, sensor: LAccess) -> f64 {
+        if sensor == *sensible::color {
+            // self.color
+            todo!()
+        } else {
+            0.0
+        }
+    }
+
+    // todo: implement this
+    // fn sense_object(&self, sensor: LAccess) -> Option<&dyn Content> {
+    //     None
+    // }
 }

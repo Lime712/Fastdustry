@@ -1,5 +1,6 @@
 // use crate::ctype::content_type::ContentType;
 
+use std::collections::HashMap;
 use std::sync::Mutex;
 use std::string::ToString;
 use lazy_static::lazy_static;
@@ -7,6 +8,7 @@ use lazy_static::lazy_static;
 use arc::{get_settings, info};
 use arc::arc_core::core::SETTINGS;
 use arc::arc_core::settings::Value;
+use crate::maps::map::Map;
 
 pub static FAILED_TO_LAUNCH: bool = false;
 pub static LOAD_LOCALES: bool = true;
@@ -21,6 +23,7 @@ lazy_static! {
     pub static ref CUSTOM_MAP_DIRECTORY: Mutex<String> = Mutex::new("./".to_string());
     pub static ref SAVE_DIRECTORY: Mutex<String>= Mutex::new("./".to_string());
     pub static ref MOD_DIRECTORY: Mutex<String> = Mutex::new("./".to_string());
+    pub static ref EMPTY_MAP: Map<'static> = Map::default();
 }
 // pub static DEFAULT_CONTENT_ICONS: Vec<ContentType> = vec![
 //     ContentType::Item,
@@ -56,5 +59,7 @@ pub fn init() {
         *CUSTOM_MAP_DIRECTORY.lock().unwrap() = DATA_DIRECTORY.clone().to_owned() + "maps/";
         *SAVE_DIRECTORY.lock().unwrap() = DATA_DIRECTORY.clone().to_owned() + "saves/";
         *MOD_DIRECTORY.lock().unwrap() = DATA_DIRECTORY.clone().to_owned() + "mods/";
+
+        // todo: load mods
     }
 }
