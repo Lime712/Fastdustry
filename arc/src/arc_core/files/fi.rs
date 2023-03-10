@@ -135,8 +135,8 @@ impl Fi {
                 // debug!("File exists: {}", self.path);
                 Fi::path(&self.file()).exists()
             }
-            Err(e) => {
-                trace!("File does not exist: {}, {}", self.path, e);
+            Err(_e) => {
+                trace!("File does not exist: {}", self.path);
                 false
             }
         }

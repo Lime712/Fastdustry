@@ -53,6 +53,7 @@ macro_rules! error {
     ($($arg:tt)*) => (arc::arc_core::util::log::log(arc::arc_core::util::log::LogLevel::Error, format_args!($($arg)*));)
 }
 
+/// This function does not check if debug is enabled it just prints the message
 pub fn log(level: LogLevel, args: fmt::Arguments) {
     let t = get_current_time_string();
     let default = "\x1B[0m".to_string();

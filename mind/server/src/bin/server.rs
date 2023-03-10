@@ -82,4 +82,8 @@ impl ApplicationListener for ServerLauncher {
             );
         }
     }
+
+    fn id(&self) -> u64 {
+        0
+    }
 }
