@@ -1,7 +1,7 @@
-use arc::{debug, get_settings, info};
 use arc::arc_core::application_listener::ApplicationListener;
 use arc::arc_core::backend::headless::HeadlessApplication;
 use arc::arc_core::settings::Settings;
+use arc::{debug, get_settings, info};
 
 pub static ROUND_EXTRA_TIME: i32 = 12;
 pub static MAX_LOG_LENGTH: i32 = 1024 * 1024 * 5;
@@ -76,7 +76,10 @@ impl ApplicationListener for ServerLauncher {
                 .unwrap()
                 .as_nanos() as i64;
             let time = end_time - START_TIME;
-            info!("ServerLauncher init complete in {:.2} ms", time as f64/ 1000000.0);
+            info!(
+                "ServerLauncher init complete in {:.2} ms",
+                time as f64 / 1000000.0
+            );
         }
     }
 }

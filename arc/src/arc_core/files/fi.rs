@@ -8,8 +8,8 @@ use std::time::UNIX_EPOCH;
 
 use filepath::FilePath;
 
-use crate::{debug, trace};
 use crate::arc_core::files::FType;
+use crate::{debug, trace};
 
 // todo: error handling is currently not implemented
 pub struct Fi {
@@ -120,7 +120,7 @@ impl Fi {
                     .to_str()
                     .unwrap()
                     .to_string()
-                    .replace("\\", "/")
+                    .replace('\\', "/")
             }
             Err(_e) => {
                 // debug!("absolute path error: {:?}", e);
@@ -143,13 +143,7 @@ impl Fi {
     }
 
     pub fn is_directory(&self) -> bool {
-        if Path::new(&self.path).is_dir() {
-            return true;
-        } else if Path::new(&self.path).is_file() {
-            return false;
-        } else {
-            return false;
-        }
+        Path::new(&self.path).is_dir()
     }
 
     pub fn is_file(&self) -> bool {
@@ -193,7 +187,7 @@ impl Fi {
     }
 
     pub fn file_type(&self) -> FType {
-        self.file_type.clone()
+        self.file_type
     }
 
     pub fn read(&mut self) -> String {
@@ -276,7 +270,7 @@ impl Fi {
                 let f = f.unwrap();
                 let mut fi = Fi::new_from_path_and_type(
                     f.path().to_str().unwrap().to_string(),
-                    self.file_type.clone(),
+                    self.file_type,
                 );
                 files.append(&mut fi.find_all());
             }
@@ -288,7 +282,7 @@ impl Fi {
 
     /// Returns a handle to the child with the specified name.
     pub fn child(&mut self, name: String) -> Fi {
-        Fi::new_from_path_and_type(format!("{}/{}", self.path, name), self.file_type.clone())
+        Fi::new_from_path_and_type(format!("{}/{}", self.path, name), self.file_type)
     }
 
     pub fn sibling(&mut self, name: String) -> Fi {
@@ -298,7 +292,7 @@ impl Fi {
                 self.absolute_path().replace(&self.name(), ""),
                 name
             ),
-            self.file_type.clone(),
+            self.file_type,
         )
     }
 
@@ -313,7 +307,7 @@ impl Fi {
                 let f = f.unwrap();
                 files.push(Fi::new_from_path_and_type(
                     f.path().to_str().unwrap().to_string(),
-                    self.file_type.clone(),
+                    self.file_type,
                 ));
             }
         }
@@ -323,7 +317,7 @@ impl Fi {
     pub fn parent(&mut self) -> Fi {
         Fi::new_from_path_and_type(
             self.absolute_path().replace(&self.name(), ""),
-            self.file_type.clone(),
+            self.file_type,
         )
     }
 
@@ -377,7 +371,7 @@ impl Fi {
 impl Clone for Fi {
     fn clone(&self) -> Fi {
         Fi {
-            file_type: self.file_type.clone(),
+            file_type: self.file_type,
             path: self.path.clone(),
         }
     }

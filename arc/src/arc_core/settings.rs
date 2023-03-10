@@ -1,8 +1,10 @@
 use std::collections::HashMap;
+
+use std::fmt::{Display, Formatter};
 use std::fs::File;
 use std::io::{Read, Write};
 
-use json::{JsonValue, object};
+use json::{object, JsonValue};
 
 use crate::{debug, info};
 
@@ -42,15 +44,15 @@ impl Clone for Value {
     }
 }
 
-impl Value {
-    pub fn to_string(&self) -> String {
+impl Display for Value {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
-            Value::Bool(b) => b.to_string(),
-            Value::Int(i) => i.to_string(),
-            Value::Long(l) => l.to_string(),
-            Value::Float(f) => f.to_string(),
-            Value::String(s) => s.clone(),
-            Value::Binary(b) => String::from_utf8(b.clone()).unwrap(),
+            Value::Bool(b) => write!(f, "{}", b),
+            Value::Int(i) => write!(f, "{}", i),
+            Value::Long(l) => write!(f, "{}", l),
+            Value::Float(fl) => write!(f, "{}", fl),
+            Value::String(s) => write!(f, "{}", s),
+            Value::Binary(b) => write!(f, "{}", b.len()),
         }
     }
 }
@@ -69,6 +71,12 @@ pub struct Settings {
     pub byte_output_stream: Vec<u8>,
     // pub executor: Thread,
     pub json: JsonValue,
+}
+
+impl Default for Settings {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl Settings {
@@ -104,7 +112,7 @@ impl Settings {
     }
 
     pub fn get_data_directory(&self) -> String {
-        if self.data_directory == "" {
+        if self.data_directory.is_empty() {
             get_app_data_directory(self.app_name.clone())
                 .to_str()
                 .unwrap()
@@ -208,12 +216,16 @@ impl Settings {
         //current theory: when corruptions happen, the only things written to the stream are a bunch of zeroes
         //try to anticipate this case and throw an exception when 0 values are written
         let amount = self.read_int();
-        info!("loading {} values from {}", amount, self.get_settings_file().path);
+        info!(
+            "loading {} values from {}",
+            amount,
+            self.get_settings_file().path
+        );
         if amount <= 0 {
             self.write_log("Settings file is corrupted".to_string());
             return;
         }
-        while self.byte_input_stream.len() > 0 {
+        while !self.byte_input_stream.is_empty() {
             let key = self.read_string_without_prefix();
             // debug!("current key: {}", key);
             // debug!("current key as hex: {:x?}", key.as_bytes());
@@ -393,7 +405,7 @@ impl Settings {
 
         let mut files = backup_folder.list();
         // make sure first file is most recent, last is oldest
-        files.sort_by(|a, b| b.last_modified().cmp(&a.last_modified()));
+        files.sort_by_key(|b| std::cmp::Reverse(b.last_modified()));
 
         Fi::new_from_file(file).copy_to(backup_folder.child(format!("{}.bin", millis())));
 
@@ -450,19 +462,17 @@ impl Settings {
         self.byte_output_stream.push(value);
     }
 
-    pub fn write_bytes(&mut self, value: Vec<u8>) {
-        self.byte_output_stream.append(&mut value.clone());
+    pub fn write_bytes(&mut self, mut value: Vec<u8>) {
+        self.byte_output_stream.append(&mut value);
     }
 
     pub fn default(&mut self, key: String, value: Value) {
-        if !self.values.contains_key(&key) {
-            self.values.insert(key, value);
-        }
+        self.values.entry(key).or_insert(value);
     }
 
     pub fn get_or_default(&mut self, key: String, value: Value) -> Value {
-        if !self.values.contains_key(&key) {
-            self.values.insert(key, value.clone());
+        if let std::collections::hash_map::Entry::Vacant(e) = self.values.entry(key.clone()) {
+            e.insert(value.clone());
             return value;
         }
         self.values.get(&key).unwrap().clone()
@@ -586,14 +596,6 @@ impl Settings {
         self.values.is_empty()
     }
 
-    pub fn to_string(&mut self) -> String {
-        let mut string = String::new();
-        for (key, value) in self.values.iter() {
-            string.push_str(&format!("{}: {}, ", key, value.to_string()));
-        }
-        string
-    }
-
     pub fn force_save(&mut self) {
         // never loaded, nothing to save
         if !self.loaded {
@@ -603,6 +605,16 @@ impl Settings {
     }
 
     // todo: make json stuff
+}
+
+impl Display for Settings {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        let mut string = String::new();
+        for (key, value) in self.values.iter() {
+            string.push_str(&format!("{}: {}, ", key, value));
+        }
+        write!(f, "{}", string)
+    }
 }
 
 /// utility function to get settings
@@ -615,5 +627,5 @@ macro_rules! get_settings {
                 None => panic!("Settings not initialized"),
             }
         };
-    }
+    };
 }

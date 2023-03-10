@@ -1,7 +1,6 @@
 use crate::arc_core::application::Application;
 use crate::arc_core::settings::Settings;
 
-
 pub static mut APP: Option<&dyn Application> = None;
 // pub graphics: Graphics,
 // pub audio: Audio,

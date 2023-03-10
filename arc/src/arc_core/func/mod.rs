@@ -2,11 +2,11 @@ use std::ops::DerefMut;
 use std::sync::{Arc, Mutex};
 
 pub struct Cons<T> {
-    function: Arc<Mutex<dyn Fn(T) -> () + Send + 'static>>,
+    function: Arc<Mutex<dyn Fn(T) + Send + 'static>>,
 }
 
 impl<T> Cons<T> {
-    pub fn new(function: impl Fn(T) -> () + Send + 'static) -> Self {
+    pub fn new(function: impl Fn(T) + Send + 'static) -> Self {
         let boxed = Box::new(function);
         let arc = Arc::new(Mutex::new(boxed));
         Self { function: arc }

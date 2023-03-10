@@ -51,7 +51,7 @@ pub trait Application {
 
     /// return the Android API level on Android, the major OS version on iOS (5, 6, 7, ..), or 0 on the Desktop.
     fn get_version(&self) -> i32 {
-        return 0;
+        0
     }
 
     /// return the rust heap memory usage in bytes

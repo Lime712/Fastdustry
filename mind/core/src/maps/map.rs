@@ -1,4 +1,4 @@
-use std::collections::{HashMap};
+use std::collections::HashMap;
 
 use arc::arc_core::files::fi::Fi;
 
@@ -37,7 +37,17 @@ impl<'a> Default for Map<'a> {
 }
 
 impl<'a> Map<'a> {
-    pub fn new(custom: bool, tags: HashMap<&'a str, &'a str>, file: Fi, version: i32, width: i32, height: i32, build: i32, teams: Vec<i32>, spawns: i32) -> Map<'a> {
+    pub fn new(
+        custom: bool,
+        tags: HashMap<&'a str, &'a str>,
+        file: Fi,
+        version: i32,
+        width: i32,
+        height: i32,
+        build: i32,
+        teams: Vec<i32>,
+        spawns: i32,
+    ) -> Map<'a> {
         Map {
             custom,
             tags,
@@ -55,7 +65,19 @@ impl<'a> Map<'a> {
         if !tags.contains_key("name") {
             panic!("Map must have a name");
         }
-        let map = Map::new(false, tags.clone(), Fi::new_from_path(unsafe { DATA_DIRECTORY.to_string() } + tags.get("name").clone().unwrap()), 0, 0, 0, -1, vec![], 0);
+        let map = Map::new(
+            false,
+            tags.clone(),
+            Fi::new_from_path(
+                unsafe { DATA_DIRECTORY.to_string() } + tags.get("name").clone().unwrap(),
+            ),
+            0,
+            0,
+            0,
+            -1,
+            vec![],
+            0,
+        );
         map
     }
 

@@ -29,8 +29,7 @@ static mut MARKS: Vec<i64> = Vec::new();
 
 /// Runs a task with a delay of several ticks. If Time.clear() is called, this task will be cancelled.
 pub fn run(delay: i64, finish: Box<dyn Fn() + Send + 'static>) {
-        RUNS.lock().unwrap().insert(DelayRun::new(delay, finish));
-
+    RUNS.lock().unwrap().insert(DelayRun::new(delay, finish));
 }
 
 /// Runs a task with a delay of several ticks. Unless the application is closed, this task will always complete.
@@ -46,11 +45,11 @@ pub fn mark() {
 
 /// A value of -1 means mark() wasn't called beforehand.
 pub fn elapsed() -> f64 {
-    return if unsafe { MARKS.len() } == 0 {
+    if unsafe { MARKS.len() } == 0 {
         -1.0
     } else {
         time_since_nanos(&unsafe { MARKS.pop().unwrap() }) as f64 / 1_000_000.0
-    };
+    }
 }
 
 pub fn update_global() {
@@ -88,8 +87,7 @@ pub fn update() {
 }
 
 pub fn clear() {
-        RUNS.lock().unwrap().clear();
-
+    RUNS.lock().unwrap().clear();
 }
 
 pub fn set_delta_provider(provider: FloatP) {
@@ -101,34 +99,34 @@ pub fn set_delta_provider(provider: FloatP) {
 
 /// return The current value of the system timer, in nanoseconds.
 pub fn nanos() -> i64 {
-    return std::time::SystemTime::now()
+    std::time::SystemTime::now()
         .duration_since(std::time::UNIX_EPOCH)
         .unwrap()
-        .as_nanos() as i64;
+        .as_nanos() as i64
 }
 
 /// return The time in milliseconds
 pub fn millis() -> i64 {
-    return std::time::SystemTime::now()
+    std::time::SystemTime::now()
         .duration_since(std::time::UNIX_EPOCH)
         .unwrap()
-        .as_millis() as i64;
+        .as_millis() as i64
 }
 
 pub fn nanos_to_millis(nanos: i64) -> i64 {
-    return nanos / NANOS_PER_MILLI;
+    nanos / NANOS_PER_MILLI
 }
 
 pub fn millis_to_nanos(millis: i64) -> i64 {
-    return millis * NANOS_PER_MILLI;
+    millis * NANOS_PER_MILLI
 }
 
 pub fn time_since_nanos(prev: &i64) -> i64 {
-    return nanos() - prev;
+    nanos() - prev
 }
 
 pub fn time_since_millis(prev: &i64) -> i64 {
-    return millis() - prev;
+    millis() - prev
 }
 
 pub struct DelayRun {

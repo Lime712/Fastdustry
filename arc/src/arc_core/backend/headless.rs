@@ -1,7 +1,7 @@
 use std::collections::HashSet;
 use std::sync::{Arc, Mutex};
 use std::thread;
-use std::thread::{JoinHandle};
+use std::thread::JoinHandle;
 
 use crate::arc_core::application::{Application, ApplicationType};
 use crate::arc_core::application_listener::ApplicationListener;
@@ -75,7 +75,7 @@ impl HeadlessApplication {
         h.add_listener(listener);
         debug!("listeners len: {}", h.listeners.len());
         // unsafe {
-            // crate::arc_core::core::APP = Some(&h);
+        // crate::arc_core::core::APP = Some(&h);
         // }
         HeadlessApplication::initialize(Arc::new(Mutex::new(h)));
     }

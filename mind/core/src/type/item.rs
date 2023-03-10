@@ -1,4 +1,3 @@
-
 use crate::ctype::content_type::ContentType;
 use crate::ctype::unlockable_content::UnlockableContent;
 use crate::logic::sensible;
@@ -73,10 +72,18 @@ impl Item {
     }
 
     pub fn set_stats(&mut self) {
-        self.super_struct.stats.add_percent(EXPLOSIVENESS.clone(), self.explosiveness);
-        self.super_struct.stats.add_percent(FLAMMABILITY.clone(), self.flammability);
-        self.super_struct.stats.add_percent(RADIOACTIVITY.clone(), self.radioactivity);
-        self.super_struct.stats.add_percent(CHARGE.clone(), self.charge);
+        self.super_struct
+            .stats
+            .add_percent(EXPLOSIVENESS.clone(), self.explosiveness);
+        self.super_struct
+            .stats
+            .add_percent(FLAMMABILITY.clone(), self.flammability);
+        self.super_struct
+            .stats
+            .add_percent(RADIOACTIVITY.clone(), self.radioactivity);
+        self.super_struct
+            .stats
+            .add_percent(CHARGE.clone(), self.charge);
     }
 
     pub fn to_string(&self) -> String {

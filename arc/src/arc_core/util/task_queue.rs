@@ -6,6 +6,12 @@ pub struct TaskQueue {
     executed_runnables: HashSet<Option<Runnable>>,
 }
 
+impl Default for TaskQueue {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl TaskQueue {
     pub fn new() -> Self {
         Self {

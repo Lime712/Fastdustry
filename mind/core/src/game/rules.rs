@@ -170,7 +170,6 @@
 //     /** Parameters for planet rendered in the background. Cannot be changed once a map is loaded. */
 //     public @Nullable PlanetParams planetBackground;
 
-
 pub struct Rules {
     /// Sandbox mode: Enables infinite resources, build range and build speed.
     pub infinite_resources: bool,

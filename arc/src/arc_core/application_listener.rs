@@ -29,11 +29,14 @@ pub trait ApplicationListener {
     fn exit(&self) {}
 
     fn file_dropped(&self, _fi: &File) {}
+
+    fn id(&self) -> u64;
 }
 
 impl PartialEq<Self> for dyn ApplicationListener {
     fn eq(&self, other: &Self) -> bool {
-        std::ptr::eq(self, other)
+        // check ids
+        self.id() == other.id()
     }
 }
 

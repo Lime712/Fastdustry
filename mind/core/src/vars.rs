@@ -1,14 +1,13 @@
 // use crate::ctype::content_type::ContentType;
 
-
-use std::sync::Mutex;
-use std::string::ToString;
 use lazy_static::lazy_static;
+use std::string::ToString;
+use std::sync::Mutex;
 
-use arc::{get_settings, info};
+use crate::maps::map::Map;
 use arc::arc_core::core::SETTINGS;
 use arc::arc_core::settings::Value;
-use crate::maps::map::Map;
+use arc::{get_settings, info};
 
 pub static FAILED_TO_LAUNCH: bool = false;
 pub static LOAD_LOCALES: bool = true;
@@ -21,7 +20,7 @@ pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 pub static mut DATA_DIRECTORY: &str = "./";
 lazy_static! {
     pub static ref CUSTOM_MAP_DIRECTORY: Mutex<String> = Mutex::new("./".to_string());
-    pub static ref SAVE_DIRECTORY: Mutex<String>= Mutex::new("./".to_string());
+    pub static ref SAVE_DIRECTORY: Mutex<String> = Mutex::new("./".to_string());
     pub static ref MOD_DIRECTORY: Mutex<String> = Mutex::new("./".to_string());
     pub static ref EMPTY_MAP: Map<'static> = Map::default();
 }
@@ -31,7 +30,6 @@ lazy_static! {
 //     ContentType::block,
 //     ContentType::unit,
 // ];
-
 
 pub fn load_settings() {
     let mut settings;

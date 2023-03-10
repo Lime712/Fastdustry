@@ -24,7 +24,11 @@ impl LAccess {
     pub fn new(is_obj: bool, params: Vec<&'static str>) -> LAccess {
         unsafe {
             COUNTER += 1;
-            LAccess { params, is_obj, id: COUNTER }
+            LAccess {
+                params,
+                is_obj,
+                id: COUNTER,
+            }
         }
     }
 
