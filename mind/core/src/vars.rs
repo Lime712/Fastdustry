@@ -1,6 +1,6 @@
 // use crate::ctype::content_type::ContentType;
 
-use std::collections::HashMap;
+
 use std::sync::Mutex;
 use std::string::ToString;
 use lazy_static::lazy_static;
@@ -52,7 +52,7 @@ pub fn init() {
     // Groups.init();
 
     info!("[Mindustry] Version: {}", VERSION);
-    let mut settings;
+    let settings;
     get_settings!(settings);
     unsafe {
         DATA_DIRECTORY = settings.data_directory.as_str();

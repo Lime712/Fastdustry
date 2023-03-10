@@ -5,7 +5,7 @@ use std::io::{Read, Write};
 use json::{JsonValue, object};
 
 use crate::{debug, info};
-use crate::arc_core::core::SETTINGS;
+
 use crate::arc_core::files::fi::Fi;
 use crate::arc_core::files::FType;
 use crate::arc_core::util::log::get_current_time_string;
@@ -118,7 +118,7 @@ impl Settings {
         let log_file = self.get_data_directory() + "/settings.log";
         let mut file = match File::create(log_file.clone()) {
             Ok(file) => file,
-            Err(e) => {
+            Err(_e) => {
                 // first check if the directory exists
                 let dir = self.get_data_directory();
                 debug!("Creating directory: {}", dir);

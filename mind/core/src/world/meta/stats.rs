@@ -36,8 +36,8 @@ impl Stats {
         if !self.initialized {
             self.init();
         }
-        let mut map = self.map.entry(category).or_insert(HashMap::new());
-        let mut set = map.entry(stat).or_insert(HashSet::new());
+        let map = self.map.entry(category).or_insert(HashMap::new());
+        let set = map.entry(stat).or_insert(HashSet::new());
         set.insert(value);
         self.dirty = true;
     }
@@ -50,8 +50,8 @@ impl Stats {
         if !self.initialized {
             self.init();
         }
-        let mut map = self.map.entry(category).or_insert(HashMap::new());
-        let mut set = map.entry(stat).or_insert(HashSet::new());
+        let map = self.map.entry(category).or_insert(HashMap::new());
+        let set = map.entry(stat).or_insert(HashSet::new());
         set.insert(StatValue {
             value: percent,
             display: format!("{}%", percent),

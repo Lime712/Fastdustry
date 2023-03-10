@@ -35,7 +35,7 @@ impl TaskQueue {
     }
 }
 
-static mut counter: usize = 0;
+static mut COUNTER: usize = 0;
 
 pub struct Runnable {
     id: usize,
@@ -45,8 +45,8 @@ pub struct Runnable {
 impl Runnable {
     pub fn new(f: Box<dyn Fn()>) -> Self {
         unsafe {
-            counter += 1;
-            Self { id: counter, f }
+            COUNTER += 1;
+            Self { id: COUNTER, f }
         }
     }
 }

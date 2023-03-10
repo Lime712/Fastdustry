@@ -9,20 +9,20 @@ lazy_static! {
     static ref OS_NAME: String = whoami::distro();
     static ref OS_ARCH: String = whoami::arch().to_string();
 }
-const IS_WINDOWS: bool = cfg!(windows);
-const IS_MAC: bool = cfg!(macos);
-const IS_LINUX: bool = cfg!(linux);
-const IS_ANDROID: bool = cfg!(target_os = "android");
-const IS_IOS: bool = cfg!(target_os = "ios");
-const IS_WEB: bool = cfg!(target_os = "web");
-const IS_WASM: bool = cfg!(target_os = "wasm");
-const IS_UNIX: bool = cfg!(unix);
-const IS_ARM: bool = cfg!(target_arch = "arm");
-const IS_ARM64: bool = cfg!(target_arch = "arm64");
-const IS_X86: bool = cfg!(target_arch = "x86");
-const IS_X86_64: bool = cfg!(target_arch = "x86_64");
-const IS_32_BIT: bool = cfg!(target_pointer_width = "32");
-const IS_64_BIT: bool = cfg!(target_pointer_width = "64");
+pub const IS_WINDOWS: bool = cfg!(windows);
+pub const IS_MAC: bool = cfg!(macos);
+pub const IS_LINUX: bool = cfg!(linux);
+pub const IS_ANDROID: bool = cfg!(target_os = "android");
+pub const IS_IOS: bool = cfg!(target_os = "ios");
+pub const IS_WEB: bool = cfg!(target_os = "web");
+pub const IS_WASM: bool = cfg!(target_os = "wasm");
+pub const IS_UNIX: bool = cfg!(unix);
+pub const IS_ARM: bool = cfg!(target_arch = "arm");
+pub const IS_ARM64: bool = cfg!(target_arch = "arm64");
+pub const IS_X86: bool = cfg!(target_arch = "x86");
+pub const IS_X86_64: bool = cfg!(target_arch = "x86_64");
+pub const IS_32_BIT: bool = cfg!(target_pointer_width = "32");
+pub const IS_64_BIT: bool = cfg!(target_pointer_width = "64");
 
 pub fn get_app_data_directory(app_name: String) -> PathBuf {
     if IS_WINDOWS {

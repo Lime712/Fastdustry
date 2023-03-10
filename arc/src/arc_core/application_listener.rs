@@ -28,7 +28,7 @@ pub trait ApplicationListener {
 
     fn exit(&self) {}
 
-    fn file_dropped(&self, fi: &File) {}
+    fn file_dropped(&self, _fi: &File) {}
 }
 
 impl PartialEq<Self> for dyn ApplicationListener {
@@ -42,11 +42,5 @@ impl Eq for dyn ApplicationListener {}
 impl Hash for dyn ApplicationListener {
     fn hash<H: Hasher>(&self, state: &mut H) {
         std::ptr::hash(self, state)
-    }
-}
-
-impl Clone for Box<dyn ApplicationListener> {
-    fn clone(&self) -> Self {
-        self.clone()
     }
 }

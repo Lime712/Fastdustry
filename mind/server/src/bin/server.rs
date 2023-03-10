@@ -3,14 +3,15 @@ use arc::arc_core::application_listener::ApplicationListener;
 use arc::arc_core::backend::headless::HeadlessApplication;
 use arc::arc_core::settings::Settings;
 
-static ROUND_EXTRA_TIME: i32 = 12;
-static MAX_LOG_LENGTH: i32 = 1024 * 1024 * 5;
+pub static ROUND_EXTRA_TIME: i32 = 12;
+pub static MAX_LOG_LENGTH: i32 = 1024 * 1024 * 5;
 
 static mut ARGS: Vec<String> = Vec::new();
 static mut START_TIME: i64 = 0;
 
 fn main() {
     info!("ServerLauncher main");
+    debug!("Debugging enabled");
     unsafe {
         ARGS = std::env::args().collect();
         START_TIME = std::time::SystemTime::now()
@@ -21,7 +22,7 @@ fn main() {
     HeadlessApplication::start(Box::new(ServerLauncher::new()), 1.0 / 60.0);
 }
 
-struct ServerControl {
+pub struct ServerControl {
     // pub handler: CommandHandler,
     // pub log_folder: File,
     // current_log_file: File,

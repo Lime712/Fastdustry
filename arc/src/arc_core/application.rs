@@ -1,6 +1,6 @@
-use crate::arc_core::application_listener::ApplicationListener;
 use std::collections::HashSet;
-use std::ptr::null;
+
+use crate::arc_core::application_listener::ApplicationListener;
 
 pub trait Application {
     /// Returns a list of ALL the application listeners used.
@@ -63,7 +63,7 @@ pub trait Application {
 
     /// open a folder in the system's file browser.
     /// * returns true if the folder was opened successfully.
-    fn open_folder(&self, path: String) -> bool {
+    fn open_folder(&self, _path: String) -> bool {
         false
     }
 
@@ -73,7 +73,7 @@ pub trait Application {
     /// can be made as to whether the URI was actually opened. If it is known that the URI was not opened, false will be returned;
     /// otherwise, true will be returned.
     /// return false if it is known the uri was not opened, true otherwise
-    fn open_uri(&self, uri: String) -> bool {
+    fn open_uri(&self, _uri: String) -> bool {
         false
     }
 

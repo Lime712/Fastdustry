@@ -1,11 +1,11 @@
 use std::collections::HashSet;
 use std::sync::{Arc, Mutex};
 use std::thread;
-use std::thread::{JoinHandle, Thread};
+use std::thread::{JoinHandle};
 
 use crate::arc_core::application::{Application, ApplicationType};
 use crate::arc_core::application_listener::ApplicationListener;
-use crate::arc_core::func::Cons;
+
 use crate::arc_core::util::task_queue::TaskQueue;
 use crate::arc_core::util::time::nanos;
 use crate::debug;
@@ -13,10 +13,10 @@ use crate::debug;
 pub struct HeadlessApplication {
     // graphics: MockGraphics,
     listeners: HashSet<Box<dyn ApplicationListener>>,
-    runnables: TaskQueue,
+    pub runnables: TaskQueue,
     // exception_handler: Option<dyn Cons<Exception>>,
     render_interval: i64,
-    main_loop_thread: JoinHandle<()>,
+    pub main_loop_thread: JoinHandle<()>,
     running: bool,
 }
 
@@ -37,7 +37,7 @@ impl Application for HeadlessApplication {
         "".to_string()
     }
 
-    fn set_clipboard_text(&self, text: String) {
+    fn set_clipboard_text(&self, _text: String) {
         // do nothing
     }
 
@@ -74,9 +74,9 @@ impl HeadlessApplication {
         };
         h.add_listener(listener);
         debug!("listeners len: {}", h.listeners.len());
-        unsafe {
+        // unsafe {
             // crate::arc_core::core::APP = Some(&h);
-        }
+        // }
         HeadlessApplication::initialize(Arc::new(Mutex::new(h)));
     }
 
@@ -105,7 +105,7 @@ impl HeadlessApplication {
                 // debug!("main_loop()");
                 let n = nanos();
                 if t > n {
-                    let sleep_time = (t - n);
+                    let sleep_time = t - n;
                     thread::sleep(std::time::Duration::from_nanos(sleep_time as u64));
 
                     t += self.render_interval;

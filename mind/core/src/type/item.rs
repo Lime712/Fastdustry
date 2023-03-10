@@ -1,8 +1,8 @@
-use crate::ctype::content::Content;
+
 use crate::ctype::content_type::ContentType;
 use crate::ctype::unlockable_content::UnlockableContent;
 use crate::logic::sensible;
-use crate::logic::sensible::{color, LAccess, Sensible};
+use crate::logic::sensible::{LAccess, Sensible};
 use crate::world::meta::stat::*;
 
 pub struct Item {
@@ -73,10 +73,10 @@ impl Item {
     }
 
     pub fn set_stats(&mut self) {
-        self.super_struct.stats.add_percent(explosiveness.clone(), self.explosiveness);
-        self.super_struct.stats.add_percent(flammability.clone(), self.flammability);
-        self.super_struct.stats.add_percent(radioactivity.clone(), self.radioactivity);
-        self.super_struct.stats.add_percent(charge.clone(), self.charge);
+        self.super_struct.stats.add_percent(EXPLOSIVENESS.clone(), self.explosiveness);
+        self.super_struct.stats.add_percent(FLAMMABILITY.clone(), self.flammability);
+        self.super_struct.stats.add_percent(RADIOACTIVITY.clone(), self.radioactivity);
+        self.super_struct.stats.add_percent(CHARGE.clone(), self.charge);
     }
 
     pub fn to_string(&self) -> String {
@@ -90,7 +90,7 @@ impl Item {
 
 impl Sensible for Item {
     fn sense(&self, sensor: LAccess) -> f64 {
-        if sensor == *sensible::color {
+        if sensor == *sensible::COLOR {
             // self.color
             todo!()
         } else {

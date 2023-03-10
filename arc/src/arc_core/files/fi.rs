@@ -43,7 +43,7 @@ impl Fi {
         let binding = file.path().unwrap().to_str().unwrap().to_string();
         let path = Path::new(&binding);
         if path.exists() {
-            let mut files = path.read_dir().unwrap();
+            let files = path.read_dir().unwrap();
             for f in files {
                 let f = f.unwrap();
                 if !f.path().is_dir() {
@@ -95,7 +95,7 @@ impl Fi {
             Ok(file) => file,
             Err(e) => {
                 // debug!("{:?}", e);
-                panic!("File does not exist!");
+                panic!("File does not exist! {e}");
             }
         }
     }
@@ -122,7 +122,7 @@ impl Fi {
                     .to_string()
                     .replace("\\", "/")
             }
-            Err(e) => {
+            Err(_e) => {
                 // debug!("absolute path error: {:?}", e);
                 self.path.clone()
             }
@@ -136,7 +136,7 @@ impl Fi {
                 Fi::path(&self.file()).exists()
             }
             Err(e) => {
-                trace!("File does not exist: {}", self.path);
+                trace!("File does not exist: {}, {}", self.path, e);
                 false
             }
         }
@@ -188,7 +188,7 @@ impl Fi {
     }
 
     pub fn path_without_extension(&self) -> String {
-        let mut path = self.absolute_path();
+        let path = self.absolute_path();
         path.replace(&format!(".{}", self.extension()), "")
     }
 
@@ -202,7 +202,7 @@ impl Fi {
         contents
     }
 
-    pub fn read_with_charset(&mut self, charset: String) -> String {
+    pub fn read_with_charset(&mut self, _charset: String) -> String {
         todo!("Implement read_with_charset")
     }
 
@@ -232,7 +232,7 @@ impl Fi {
         }
     }
 
-    pub fn write_charset(&mut self, contents: String, charset: String, append: bool) {
+    pub fn write_charset(&mut self, _contents: String, _charset: String, _append: bool) {
         todo!("Implement write_charset")
     }
 
@@ -271,7 +271,7 @@ impl Fi {
     pub fn find_all(&mut self) -> Vec<Fi> {
         let mut files = Vec::new();
         if self.is_directory() {
-            let mut fs = Fi::path(&self.file()).read_dir().unwrap();
+            let fs = Fi::path(&self.file()).read_dir().unwrap();
             for f in fs {
                 let f = f.unwrap();
                 let mut fi = Fi::new_from_path_and_type(
@@ -308,7 +308,7 @@ impl Fi {
     pub fn list(&mut self) -> Vec<Fi> {
         let mut files = Vec::new();
         if self.is_directory() {
-            let mut fs = Path::new(&self.path.clone()).read_dir().unwrap();
+            let fs = Path::new(&self.path.clone()).read_dir().unwrap();
             for f in fs {
                 let f = f.unwrap();
                 files.push(Fi::new_from_path_and_type(
@@ -329,7 +329,7 @@ impl Fi {
 
     pub fn create_directory(&mut self) {
         let p = match File::open(self.clone().path) {
-            Ok(p) => self.absolute_path(),
+            Ok(_p) => self.absolute_path(),
             Err(_) => self.path.clone(),
         };
         // debug!("creating directory: {}", p.clone() + "/");
@@ -349,7 +349,7 @@ impl Fi {
     }
 
     pub fn delete_directory_contents(&mut self) {
-        let mut files = self.list();
+        let files = self.list();
         for mut f in files {
             f.delete_recursive();
         }

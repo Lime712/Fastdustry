@@ -1,6 +1,6 @@
 use crate::arc_core::application::Application;
 use crate::arc_core::settings::Settings;
-use lazy_static::lazy_static;
+
 
 pub static mut APP: Option<&dyn Application> = None;
 // pub graphics: Graphics,

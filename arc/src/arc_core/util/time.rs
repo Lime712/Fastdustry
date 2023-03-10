@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 use std::hash::Hash;
-use std::ops::DerefMut;
+
 use std::sync::{Arc, Mutex};
 
 use lazy_static::lazy_static;
@@ -29,13 +29,12 @@ static mut MARKS: Vec<i64> = Vec::new();
 
 /// Runs a task with a delay of several ticks. If Time.clear() is called, this task will be cancelled.
 pub fn run(delay: i64, finish: Box<dyn Fn() + Send + 'static>) {
-    unsafe {
         RUNS.lock().unwrap().insert(DelayRun::new(delay, finish));
-    }
+
 }
 
 /// Runs a task with a delay of several ticks. Unless the application is closed, this task will always complete.
-pub fn runTask(delay: i64, finish: Box<dyn Fn()>) {
+pub fn run_task(_delay: i64, _finish: Box<dyn Fn()>) {
     todo!()
 }
 
@@ -89,9 +88,8 @@ pub fn update() {
 }
 
 pub fn clear() {
-    unsafe {
         RUNS.lock().unwrap().clear();
-    }
+
 }
 
 pub fn set_delta_provider(provider: FloatP) {
