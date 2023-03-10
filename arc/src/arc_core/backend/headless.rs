@@ -51,10 +51,10 @@ impl Application for HeadlessApplication {
 }
 
 impl HeadlessApplication {
-    pub fn start(listener: Box<dyn ApplicationListener>, render_interval_sec: f64) {
+    pub fn start(listener: Box<dyn ApplicationListener>, render_interval_sec: f32) {
         let mut ri: i64 = 0;
         if render_interval_sec > 0.0 {
-            ri = (render_interval_sec * 1000000000f64) as i64;
+            ri = (render_interval_sec * 1000000000 as f32) as i64;
         } else if render_interval_sec < 0.0 {
             ri = -1;
         }

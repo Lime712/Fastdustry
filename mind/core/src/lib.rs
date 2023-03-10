@@ -7,3 +7,5 @@ pub mod maps;
 pub mod r#type;
 pub mod vars;
 pub mod world;
+pub mod entities;
+pub mod gen;

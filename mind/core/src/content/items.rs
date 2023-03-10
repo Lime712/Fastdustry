@@ -110,7 +110,7 @@ use crate::r#type::item::Item;
 //             buildable = false;
 //         }};
 //
-//         beryllium = new Item("beryllium", Color.valueOf("3a8f64")){{
+//         beryllium = new Item("beryllium", Color.valueOf("3a8f32")){{
 //             hardness = 3;
 //             cost = 1.2f;
 //             healthScaling = 0.6f;

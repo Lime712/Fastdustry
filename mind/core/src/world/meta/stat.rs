@@ -15,7 +15,7 @@ pub enum StatCat {
 
 #[derive(PartialEq, Clone, Debug)]
 pub struct StatValue {
-    pub value: f64,
+    pub value: f32,
     pub display: String,
 }
 

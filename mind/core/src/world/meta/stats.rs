@@ -9,7 +9,7 @@ pub struct Stats {
     /// Whether these stats are initialized yet.
     pub initialized: bool,
     /// Production time period in ticks. Used for crafters.
-    pub time_period: f64,
+    pub time_period: f32,
     pub map: HashMap<StatCat, HashMap<Stat, HashSet<StatValue>>>,
     pub dirty: bool,
 }
@@ -43,11 +43,11 @@ impl Stats {
         self.dirty = true;
     }
 
-    pub fn add_percent(&mut self, stat: Stat, percent: f64) {
+    pub fn add_percent(&mut self, stat: Stat, percent: f32) {
         self.add_percent_cat(stat, StatCat::GENERAL, percent);
     }
 
-    pub fn add_percent_cat(&mut self, stat: Stat, category: StatCat, percent: f64) {
+    pub fn add_percent_cat(&mut self, stat: Stat, category: StatCat, percent: f32) {
         if !self.initialized {
             self.init();
         }

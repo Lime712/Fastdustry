@@ -5,8 +5,8 @@ use crate::ctype::content::Content;
 static mut COUNTER: u32 = 0;
 
 pub trait Sensible {
-    fn sense(&self, sensor: LAccess) -> f64;
-    fn sense_content(&self, _content: Content) -> f64 {
+    fn sense(&self, sensor: LAccess) -> f32;
+    fn sense_content(&self, _content: Content) -> f32 {
         0.0
     }
     fn sense_object<T: Default>(&self, _sensor: LAccess) -> T {

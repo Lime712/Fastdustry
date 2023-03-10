@@ -21,17 +21,17 @@ impl<T> Cons<T> {
 }
 
 pub struct FloatP {
-    pub get: Arc<Mutex<dyn Fn() -> f64 + Send + 'static>>,
+    pub get: Arc<Mutex<dyn Fn() -> f32 + Send + 'static>>,
 }
 
 impl FloatP {
-    pub fn new(float_p: impl Fn() -> f64 + Send + 'static) -> Self {
+    pub fn new(float_p: impl Fn() -> f32 + Send + 'static) -> Self {
         let boxed = Box::new(float_p);
         let arc = Arc::new(Mutex::new(boxed));
         Self { get: arc }
     }
 
-    pub fn run(&self) -> f64 {
+    pub fn run(&self) -> f32 {
         let arc = self.get.clone();
         let mut lock = arc.lock().unwrap();
         let boxed = lock.deref_mut();

@@ -10,3 +10,4 @@ pub mod func;
 pub mod serialization;
 pub mod settings;
 pub mod util;
+pub mod math;

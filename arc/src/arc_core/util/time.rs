@@ -8,19 +8,19 @@ use lazy_static::lazy_static;
 use crate::arc_core::func::FloatP;
 
 /// Conversion factors for ticks to other unit values.
-pub const TO_SECONDS: f64 = 60.0;
-pub const TO_MINUTES: f64 = 60.0 * 60.0;
-pub const TO_HOURS: f64 = 60.0 * 60.0 * 60.0;
+pub const TO_SECONDS: f32 = 60.0;
+pub const TO_MINUTES: f32 = 60.0 * 60.0;
+pub const TO_HOURS: f32 = 60.0 * 60.0 * 60.0;
 
 /// Global delta value. Do not change.
-pub static mut DELTA: f64 = 1.0;
+pub static mut DELTA: f32 = 1.0;
 /// Global time values. Do not change.
-pub static mut TIME: f64 = 0.0;
-pub static mut GLOBAL_TIME: f64 = 0.0;
+pub static mut TIME: f32 = 0.0;
+pub static mut GLOBAL_TIME: f32 = 0.0;
 pub const NANOS_PER_MILLI: i64 = 1_000_000;
 
-pub static mut TIME_RAW: f64 = 0.0;
-const GLOBAL_TIME_RAW: f64 = 0.0;
+pub static mut TIME_RAW: f32 = 0.0;
+const GLOBAL_TIME_RAW: f32 = 0.0;
 lazy_static! {
     static ref RUNS: Arc<Mutex<HashSet<DelayRun>>> = Arc::new(Mutex::new(HashSet::new()));
     static ref DELTAIMPL: Arc<Mutex<FloatP>> = Arc::new(Mutex::new(FloatP::new(|| { 0.0 }))); // Math.min(Core.graphics.getDeltaTime() * 60f, 3f)
@@ -44,11 +44,11 @@ pub fn mark() {
 }
 
 /// A value of -1 means mark() wasn't called beforehand.
-pub fn elapsed() -> f64 {
+pub fn elapsed() -> f32 {
     if unsafe { MARKS.len() } == 0 {
         -1.0
     } else {
-        time_since_nanos(&unsafe { MARKS.pop().unwrap() }) as f64 / 1_000_000.0
+        time_since_nanos(&unsafe { MARKS.pop().unwrap() }) as f32 / 1_000_000.0
     }
 }
 

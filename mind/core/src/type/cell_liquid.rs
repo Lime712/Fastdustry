@@ -5,10 +5,10 @@ pub struct CellLiquid {
     pub liquid: Liquid,
     pub cells: u8,
     pub spread_target: Option<Liquid>,
-    pub max_spread:f64,
-    pub spread_conversion: f64,
-    pub spread_damage: f64,
-    pub remove_scaling: f64,
+    pub max_spread:f32,
+    pub spread_conversion: f32,
+    pub spread_damage: f32,
+    pub remove_scaling: f32,
 }
 
 impl Default for CellLiquid {

@@ -11,20 +11,20 @@ pub struct Item {
     pub super_struct: UnlockableContent,
 
     /// how explosive this item is.
-    pub explosiveness: f64,
+    pub explosiveness: f32,
     /// flammability above 0.3 makes this eligible for item burners.
-    pub flammability: f64,
+    pub flammability: f32,
     /// how radioactive this item is.
-    pub radioactivity: f64,
+    pub radioactivity: f32,
     /// how electrically potent this item is.
-    pub charge: f64,
+    pub charge: f32,
     /// drill hardness of the item
     pub hardness: i32,
     /// base material cost of this item, used for calculating place times
     /// 1 cost = 1 tick added to build time
-    pub cost: f64,
+    pub cost: f32,
     /// When this item is present in the build cost, a block's <b>default</b> HEALTH is multiplied by 1 + scaling, where 'scaling' is summed together for ALL item requirement types.
-    pub health_scaling: f64,
+    pub health_scaling: f32,
     /// if true, this item is of the lowest priority to drills.
     pub low_priority: bool,
     /// If >0, this item is animated.
@@ -98,7 +98,7 @@ impl Item {
 }
 
 impl Sensible for Item {
-    fn sense(&self, sensor: LAccess) -> f64 {
+    fn sense(&self, sensor: LAccess) -> f32 {
         if sensor == *sensible::COLOR {
             // self.color
             todo!()

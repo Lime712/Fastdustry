@@ -21,15 +21,15 @@ pub struct Liquid {
     /// Color used to draw lights. Note that the alpha channel is used to dictate brightness.
     ///to be finished
     /// 0-1, 0 is completely not flammable, anything above that may catch fire when exposed to heat, 0.5+ is very flammable.
-    pub flammability: f64,
+    pub flammability: f32,
     /// temperature: 0.5 is 'room' temperature, 0 is very cold, 1 is molten hot
-    pub temperature: f64,
+    pub temperature: f32,
     /// how much heat this liquid can store. 0.4=water (decent), anything lower is probably less dense and bad at cooling.
-    pub heat_capacity: f64,
+    pub heat_capacity: f32,
     /// how thick this liquid is. 0.5=water (relatively viscous), 1 would be something like tar (very slow).
-    pub viscosity: f64,
+    pub viscosity: f32,
     /// how prone to exploding this liquid is, when heated. 0 = nothing, 1 = nuke
-    pub explosiveness: f64,
+    pub explosiveness: f32,
     /// whether this fluid reacts in blocks at all (e.g. slag with water)
     pub block_reactive: bool,
     /// if false, this liquid cannot be a coolant
@@ -45,7 +45,7 @@ pub struct Liquid {
     /// Particle effect rate spacing in ticks.
     pub particle_spacing: i32,
     /// Temperature at which this liquid vaporizes. This isn't just boiling.
-    pub boil_point: f64,
+    pub boil_point: f32,
     /// If true, puddle size is capped.
     pub cap_puddles: bool,
     /// Effect when this liquid vaporizes.
@@ -110,7 +110,7 @@ impl Liquid {
 
 impl Sensible for Liquid {
     // TODO: implement rest of the functions
-    fn sense(&self, sensor: LAccess) -> f64 {
+    fn sense(&self, sensor: LAccess) -> f32 {
         if sensor == *COLOR {
             // return color;
             0.0

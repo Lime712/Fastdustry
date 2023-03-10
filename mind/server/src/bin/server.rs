@@ -78,7 +78,7 @@ impl ApplicationListener for ServerLauncher {
             let time = end_time - START_TIME;
             info!(
                 "ServerLauncher init complete in {:.2} ms",
-                time as f64 / 1000000.0
+                time as f32 / 1000000.0
             );
         }
     }
