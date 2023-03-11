@@ -16,3 +16,22 @@ pub const DOUBLE_RAD_DEG: f64 = 57.29577951308232;
 pub const SIN_BITS: i32 = 14; // 16KB. Adjust for accuracy.
 pub const SIN_MASK: i32 = !(-1 << SIN_BITS);
 pub const SIN_COUNT: i32 = SIN_MASK + 1;
+
+
+pub fn slope(a: f32) -> f32 {
+    1.0 - (a - 0.5).abs() * 2.0
+}
+
+pub fn clamp(value: f32, min: f32, max: f32) -> f32 {
+    if value < min {
+        min
+    } else if value > max {
+        max
+    } else {
+        value
+    }
+}
+
+pub fn zero(f: f32, tolerance: Option<f32>) ->bool {
+    f.abs() < tolerance.unwrap_or(FLOAT_ROUNDING_ERROR)
+}

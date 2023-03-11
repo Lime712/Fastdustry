@@ -1,4 +1,8 @@
-pub trait Boundec: Entityc + Flyingc + Healthc + Hitboxc + Posc + Velc {
+use arc::arc_core::math::geom::vec2::Vec2;
+
+pub trait Boundec: Entityc + Flyingc +
+// Healthc + Hitboxc + Posc + Velc
+{
     fn update();
 }
 
@@ -23,7 +27,7 @@ pub trait Entityc {
 }
 
 pub trait Flyingc {
-    fn last_drown_floor() -> Option<Floor>;
+    // fn last_drown_floor() -> Option<Floor>;
     fn can_drown() -> bool;
     fn check_target(target_air: bool, target_ground: bool) -> bool;
     fn emit_walk_sound() -> bool;
@@ -34,7 +38,7 @@ pub trait Flyingc {
     fn splash_timer() -> f32;
     fn drown_time() -> f32;
     fn elevation() -> f32;
-    fn drown_floor() -> Floor;
+    // fn drown_floor() -> Floor;
     fn move_at(vector: Vec2, acceleration: f32);
     fn update();
     fn update_drowning();

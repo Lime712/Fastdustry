@@ -59,10 +59,10 @@
 //     public boolean disableWorldProcessors = false;
 //     /** How much HEALTH blocks start with. */
 //     public float blockHealthMultiplier = 1f;
-//     /** How much damage blocks (turrets) deal. */
+//     /** How much damage blocks (Turrets) deal. */
 //     public float blockDamageMultiplier = 1f;
 //     /** Multiplier for buildings resource cost. */
-//     public float buildCostMultiplier = 1f;
+//     public float build_cost_multiplier = 1f;
 //     /** Multiplier for building speed. */
 //     public float buildSpeedMultiplier = 1f;
 //     /** Multiplier for percentage of materials refunded when deconstructing. */
@@ -170,6 +170,10 @@
 //     /** Parameters for planet rendered in the background. Cannot be changed once a map is loaded. */
 //     public @Nullable PlanetParams planetBackground;
 
+use crate::vars;
+use crate::world::blocks::attributes::Attributes;
+use crate::world::meta::block_enums::Env;
+
 pub struct Rules {
     /// Sandbox mode: Enables infinite resources, build range and build speed.
     pub infinite_resources: bool,
@@ -231,7 +235,7 @@ pub struct Rules {
     pub disable_world_processors: bool,
     /// How much HEALTH blocks start with.
     pub block_health_multiplier: f32,
-    /// How much damage blocks (turrets) deal.
+    /// How much damage blocks (Turrets) deal.
     pub block_damage_multiplier: f32,
     /// Multiplier for buildings resource cost.
     pub build_cost_multiplier: f32,
@@ -270,11 +274,67 @@ pub struct Rules {
     /// Environment drag multiplier.
     pub drag_multiplier: f32,
     /// Environmental flags that dictate visuals & how blocks function.
-    pub environment: i32,
-    // Attributes of the environment.
-    // pub attributes: Attributes,
-    // /// Spawn layout.
+    pub env: Env,
+    /// Attributes of the environment.
+    pub attributes: Attributes,
+    /// Spawn layout.
     // pub spawns: Vec<SpawnGroup>,
-    // /// Starting items put in cores.
-    // pub loadout: Vec<ItemStack>,
+    /// Starting items put in cores.
+    pub loadout: Vec<ItemStack>,
+}
+
+impl Default for Rules {
+    fn default() -> Self {
+        Self {
+            infinite_resources: false,
+            wave_timer: true,
+            wave_sending: true,
+            waves: true,
+            pvp: false,
+            pvp_auto_pause: true,
+            wait_enemies: true,
+            attack_mode: false,
+            editor: false,
+            can_game_over: true,
+            core_capture: true,
+            reactor_explosions: true,
+            possession_allowed: true,
+            schematics_allowed: true,
+            damage_explosions: true,
+            fire: true,
+            unit_ammo: true,
+            unit_payload_update: false,
+            unit_cap_variable: false,
+            show_spawns: false,
+            solar_multiplier: 1.0,
+            unit_build_speed_multiplier: 1.0,
+            unit_cost_multiplier: 1.0,
+            unit_damage_multiplier: 1.0,
+            unit_crash_damage_multiplier: 1.0,
+            ghost_blocks: true,
+            logic_unit_build: false,
+            disable_world_processors: false,
+            block_health_multiplier: 1.0,
+            block_damage_multiplier: 1.0,
+            build_cost_multiplier: 1.0,
+            build_speed_multiplier: 1.0,
+            deconstruct_refund_multiplier: 1.0,
+            enemy_core_build_radius: 0.0,
+            polygon_core_protection: false,
+            place_range_check: false,
+            cleanup_dead_teams: false,
+            only_deposit_core: false,
+            core_destroy_clear: false,
+            hide_banned_blocks: false,
+            block_whitelist: false,
+            unit_whitelist: false,
+            drop_zone_radius: 0.0,
+            wave_spacing: 0.0,
+            initial_wave_spacing: 0.0,
+            win_wave: 0.0,
+            unit_cap: 0.0,
+            drag_multiplier: 1.0,
+            env: vars::DEFAULT_ENV.clone(),
+        }
+    }
 }
