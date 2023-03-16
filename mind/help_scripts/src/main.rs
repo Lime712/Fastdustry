@@ -232,7 +232,7 @@ fn main() {
     // now we have all the methods
     // println!("methods: {:?}", methods);
 
-    for mut method in methods {
+    for mut method in methods.clone() {
         let mut method_code = String::new();
         method_code.push_str("\n");
         // format the comment a little bit
@@ -242,6 +242,13 @@ fn main() {
             method_code.push_str(&format!("    /// {}\n", line.trim()));
         }
         // convert the method name to snake case
+        // check if there is another method with the same name
+        if methods.iter().filter(|x| x.name == method.name).count() > 1 {
+            // if there is, we need to add the parameters to the method name
+            if method.parameters.len() != 0 {
+                method.name = format!("{}_{}", method.name.to_case(Case::Snake), method.parameters.first().unwrap().to_case(Case::Snake));
+            }
+        }
         method_code.push_str(&format!("    fn {}(", method.name.to_case(Case::Snake)));
         for (i, parameter) in method.parameters.iter().enumerate() {
             // get name of the parameter
