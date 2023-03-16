@@ -1,13 +1,6 @@
-use std::collections::HashSet;
-use arc::arc_core::math::geom::vec2::Vec2;
-use crate::ctype::content::Content;
-use crate::logic::sensible::LAccess;
-use crate::r#type::item::Item;
-use crate::r#type::liquid::Liquid;
-
 /// Interface for {@link mindustry.entities.comp.BuildingComp}
 pub trait Buildingc {
-    /// #Returns
+    /// # Returns
     /// the building's 'warmup', a smooth value from 0 to 1.
     /// usually used for crafters and things that need to spin up before reaching full efficiency.
     /// many blocks will just return 0.
@@ -19,12 +12,12 @@ pub trait Buildingc {
 
     /// Called when a position is tapped while this building is selected.
     /// 
-    /// #Returns
+    /// # Returns
     /// whether the tap event is consumed - if true, the player will not start shooting or interact with things under the cursor.
     fn on_configure_tapped(x: f32, y: f32) -> bool;
 
     /// Called when another tile is tapped while this building is selected.
-    /// #Returns
+    /// # Returns
     /// whether this block should be deselected.
     fn on_configure_build_tapped(other: Building) -> bool;
 
@@ -33,13 +26,13 @@ pub trait Buildingc {
 
     /// Tries dumping a payload to any adjacent block.
     /// @param todump payload to dump.
-    /// #Returns
+    /// # Returns
     /// whether the payload was moved successfully
     fn dump_payload(todump: Payload) -> bool;
 
     /// Tries moving a payload forwards.
     /// @param todump payload to dump.
-    /// #Returns
+    /// # Returns
     /// whether the payload was moved successfully
     fn move_payload(todump: Payload) -> bool;
 
@@ -57,63 +50,63 @@ pub trait Buildingc {
     /// @param outputDir output liquid direction relative to rotation, or -1 to use any direction.
     fn dump_liquid_liquid_liquid(liquid: Liquid, scaling: f32, output_dir: i32);
 
-    /// #Returns
+    /// # Returns
     /// ambient sound volume scale.
     fn ambient_volume() -> f32;
 
-    /// #Returns
+    /// # Returns
     /// preferred rotation of main texture region to be drawn
     fn drawrot() -> f32;
 
-    /// #Returns
+    /// # Returns
     /// the cap for item amount calculations, used when this block explodes.
     fn explosion_item_cap() -> i32;
 
-    /// #Returns
+    /// # Returns
     /// the item module to use for flow rate calculations
     fn flow_items() -> ItemModule;
 
-    /// #Returns
+    /// # Returns
     /// the position that this block points to for commands, or null.
     fn get_command_position() -> Vec2;
 
-    /// #Returns
+    /// # Returns
     /// total time this block has been producing something; non-crafter blocks usually return Time.time.
     fn total_progress() -> f32;
 
-    /// #Returns
+    /// # Returns
     /// volume cale of active sound.
     fn active_sound_volume() -> f32;
 
-    /// #Returns
+    /// # Returns
     /// whether a building has regen/healing suppressed; if so, spawns particles on it.
     fn check_suppression() -> bool;
 
-    /// #Returns
+    /// # Returns
     /// whether the player can select (but not actually control) this building.
     fn can_control_select(player: Unit) -> bool;
 
-    /// #Returns
+    /// # Returns
     /// whether this block is allowed to update based on team/environment
     fn allow_update() -> bool;
 
-    /// #Returns
+    /// # Returns
     /// whether this block is currently "active" and should be consuming requirements.
     fn should_consume() -> bool;
 
-    /// #Returns
+    /// # Returns
     /// whether this block should play its active sound.
     fn should_active_sound() -> bool;
 
-    /// #Returns
+    /// # Returns
     /// whether this block should play its idle sound.
     fn should_ambient_sound() -> bool;
 
-    /// #Returns
+    /// # Returns
     /// whether this building is currently "burning" a trigger consumer (an item) - if true, valid() on those will return true.
     fn consume_trigger_valid() -> bool;
 
-    /// #Returns
+    /// # Returns
     /// whether this building is in a payload
     fn is_payload() -> bool;
 
@@ -151,7 +144,7 @@ pub trait Buildingc {
     fn on_proximity_added();
 
     /// Called clientside when the client taps a block to config.
-    /// #Returns
+    /// # Returns
     /// whether the configuration UI should be shown.
     fn config_tapped() -> bool;
 
@@ -223,7 +216,7 @@ pub trait Buildingc {
     fn edelta() -> f32;
 
     /// Handle a bullet collision.
-    /// #Returns
+    /// # Returns
     /// whether the bullet should be removed.
     fn collision(other: Bullet) -> bool;
 

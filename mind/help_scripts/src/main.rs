@@ -237,7 +237,7 @@ fn main() {
         method_code.push_str("\n");
         // format the comment a little bit
         method.comment = method.comment.trim().to_string();
-        method.comment = method.comment.replace("@return", "#Returns\n");
+        method.comment = method.comment.replace("@return", "# Returns\n");
         for line in method.comment.lines() {
             method_code.push_str(&format!("    /// {}\n", line.trim()));
         }
