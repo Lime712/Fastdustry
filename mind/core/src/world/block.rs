@@ -7,6 +7,7 @@ use crate::r#type::item_stack::ItemStack;
 use crate::r#type::liquid::Liquid;
 use crate::world::blocks::attributes::Attributes;
 use crate::world::meta::block_enums::{BlockFlag, BlockGroup, Env};
+use crate::world::meta::build_visibility::BuildVisibility;
 
 pub struct Block {
     /// If true, buildings have an ItemModule.

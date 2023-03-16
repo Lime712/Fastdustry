@@ -1,8 +1,9 @@
 use std::collections::HashMap;
 use std::fmt::Display;
-use lazy_static::lazy_static;
-use crate::vars;
 
+use lazy_static::lazy_static;
+
+use crate::vars;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Attribute {
@@ -31,11 +32,11 @@ impl Attribute {
     /// # Return
     /// the environmental value for this attribute.
     pub fn env(&self) -> f32 {
-        return if vars::state == None {
+        return if unsafe { vars::STATE.is_none() } {
             0.0
         } else {
-            vars::state::env_attributes.get(self).unwrap_or(0.0)
-        }
+            unsafe { vars::STATE.unwrap().env_attrs.get(self) }
+        };
     }
 }
 

@@ -33,7 +33,7 @@ pub struct  GameState<'a> {
     /// Map being playtested (not edited!)
     pub playtesting_map: Option<Map<'a>>, // = None;
     /// Current game state.
-    pub state: State, // = State::Menu;
+    state: State, // = State::Menu;
 }
 pub enum State {
     Paused,

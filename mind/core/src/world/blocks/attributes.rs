@@ -1,3 +1,4 @@
+use crate::vars;
 use crate::world::meta::attribute::{ALL_ATTRIBUTES, Attribute};
 
 pub struct Attributes {

@@ -4,6 +4,7 @@ use arc::arc_core::files::fi::Fi;
 
 use crate::vars::DATA_DIRECTORY;
 
+#[derive(Debug, Clone)]
 pub struct Map<'a> {
     pub custom: bool,
     pub tags: HashMap<&'a str, &'a str>,
