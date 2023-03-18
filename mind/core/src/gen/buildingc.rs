@@ -1,5 +1,20 @@
+use crate::gen::quad_tree_object::QuadTreeObject;
+use crate::gen::sized::Sized;
+use crate::gen::entityc::Entityc;
+use crate::gen::healthc::Healthc;
+use crate::gen::posc::Posc;
+use crate::gen::teamc::Teamc;
+use crate::gen::timerc::Timerc;
+use crate::gen::controllable::Controllable;
+use crate::gen::senseable::Senseable;
+use crate::gen::displayable::Displayable;
+use crate::r#type::item::Item;
+use arc::arc_core::math::geom::vec2::Vec2;
+use crate::r#type::liquid::Liquid;
+use std::u8;
+use std::collections::HashSet;
 /// Interface for {@link mindustry.entities.comp.BuildingComp}
-pub trait Buildingc {
+pub trait Buildingc : QuadTreeObject + Sized + Entityc + Healthc + Posc + Teamc + Timerc + Controllable + Senseable + Displayable {
     /// # Returns
     /// the building's 'warmup', a smooth value from 0 to 1.
     /// usually used for crafters and things that need to spin up before reaching full efficiency.
@@ -45,10 +60,10 @@ pub trait Buildingc {
 
     /// Try dumping a specific item near the building.
     /// @param todump Item to dump. Can be null to dump anything.
-    fn dump_item_todump(todump: Item) -> bool;
+    fn dump(todump: Item) -> bool;
 
     /// @param outputDir output liquid direction relative to rotation, or -1 to use any direction.
-    fn dump_liquid_liquid_liquid(liquid: Liquid, scaling: f32, output_dir: i32);
+    fn dump_liquid(liquid: Liquid, scaling: f32, output_dir: i32);
 
     /// # Returns
     /// ambient sound volume scale.
@@ -117,7 +132,7 @@ pub trait Buildingc {
     fn efficiency() -> f32;
 
     /// Base efficiency. Takes the minimum value of all consumers.
-    fn efficiency_float_efficiency(efficiency: f32);
+    fn efficiency_efficiency(efficiency: f32);
 
     /// Calculate your own efficiency multiplier. By default, this is applied in updateEfficiencyMultiplier.
     fn efficiency_scale() -> f32;
@@ -210,7 +225,7 @@ pub trait Buildingc {
     fn dump_accumulate() -> bool;
 
     /// Dumps any item with an accumulator. May dump multiple times per frame. Use with care.
-    fn dump_accumulate_item_item(item: Item) -> bool;
+    fn dump_accumulate_item(item: Item) -> bool;
 
     /// Efficiency  delta.
     fn edelta() -> f32;
@@ -224,7 +239,7 @@ pub trait Buildingc {
     fn handle_stack(item: Item, amount: i32, source: Teamc);
 
     /// Handles splash damage with a bullet source.
-    fn damage_bullet_bullet(bullet: Bullet, source: Team, damage: f32);
+    fn damage(bullet: Bullet, source: Team, damage: f32);
 
     /// Multiblock back.
     fn back() -> Building;
@@ -260,7 +275,7 @@ pub trait Buildingc {
     fn optional_efficiency() -> f32;
 
     /// Same as efficiency, but for optional consumers only.
-    fn optional_efficiency_float_optional_efficiency(optional_efficiency: f32);
+    fn optional_efficiency_optional_efficiency(optional_efficiency: f32);
 
     /// Scaled delta.
     fn delta() -> f32;
@@ -275,13 +290,13 @@ pub trait Buildingc {
     fn visible_flags() -> i64;
 
     /// TODO Each bit corresponds to a team ID. Only 64 are supported. Does not work on servers.
-    fn visible_flags_long_visible_flags(visible_flags: i64);
+    fn visible_flags_visible_flags(visible_flags: i64);
 
     /// The efficiency this block would have if shouldConsume() returned true.
     fn potential_efficiency() -> f32;
 
     /// The efficiency this block would have if shouldConsume() returned true.
-    fn potential_efficiency_float_potential_efficiency(potential_efficiency: f32);
+    fn potential_efficiency_potential_efficiency(potential_efficiency: f32);
 
     /// This is for logic blocks.
     fn handle_string(value: Object);
@@ -305,7 +320,7 @@ pub trait Buildingc {
     fn can_dump(to: Building, item: Item) -> bool;
 
     /// Used to handle damage from splash damage for certain types of blocks.
-    fn damage_team_source(source: Team, damage: f32);
+    fn damage_source(source: Team, damage: f32);
 
     /// Whether this configuration should be hidden now. Called every frame the config is open.
     fn should_hide_configure(player: Player) -> bool;
@@ -320,9 +335,9 @@ pub trait Buildingc {
 
     fn get_liquid_destination(from: Building, liquid: Liquid) -> Building;
 
-    fn nearby_int_dx(dx: i32, dy: i32) -> Building;
+    fn nearby(dx: i32, dy: i32) -> Building;
 
-    fn nearby_int_rotation(rotation: i32) -> Building;
+    fn nearby_rotation(rotation: i32) -> Building;
 
     fn get_display_icon() -> TextureRegion;
 
@@ -382,21 +397,21 @@ pub trait Buildingc {
 
     fn was_visible() -> bool;
 
-    fn relative_to_building_build(build: Building) -> u8;
+    fn relative_to(build: Building) -> u8;
 
-    fn relative_to_int_cx(cx: i32, cy: i32) -> u8;
+    fn relative_to_cx(cx: i32, cy: i32) -> u8;
 
-    fn relative_to_tile_tile(tile: Tile) -> u8;
+    fn relative_to_tile(tile: Tile) -> u8;
 
     fn relative_to_edge(other: Tile) -> u8;
 
-    fn sense_content_content(content: Content) -> f64;
+    fn sense(content: Content) -> f64;
 
-    fn sense_l_access_sensor(sensor: LAccess) -> f64;
+    fn sense_sensor(sensor: LAccess) -> f64;
 
-    fn calculate_heat_float[]_side_heat(side_heat: float[]) -> f32;
+    fn calculate_heat(side_heat: float[]) -> f32;
 
-    fn calculate_heat_float[]_side_heat(side_heat: float[], came_from: IntSet) -> f32;
+    fn calculate_heat_side_heat(side_heat: float[], came_from: IntSet) -> f32;
 
     fn get_display_efficiency() -> f32;
 
@@ -464,9 +479,9 @@ pub trait Buildingc {
 
     fn add();
 
-    fn add_plan_boolean_check_previous(check_previous: bool);
+    fn add_plan(check_previous: bool);
 
-    fn add_plan_boolean_check_previous(check_previous: bool, ignore_conditions: bool);
+    fn add_plan_check_previous(check_previous: bool, ignore_conditions: bool);
 
     fn apply_boost(intensity: f32, duration: f32);
 
@@ -474,19 +489,19 @@ pub trait Buildingc {
 
     fn apply_slowdown(intensity: f32, duration: f32);
 
-    fn block_block_block(block: Block);
+    fn block_block(block: Block);
 
-    fn cdump_int_cdump(cdump: i32);
+    fn cdump_cdump(cdump: i32);
 
     fn consume();
 
-    fn control_l_access_type(type: LAccess, p_1: f64, p_2: f64, p_3: f64, p_4: f64);
+    fn control(type: LAccess, p_1: f64, p_2: f64, p_3: f64, p_4: f64);
 
-    fn control_l_access_type(type: LAccess, p_1: Object, p_2: f64, p_3: f64, p_4: f64);
+    fn control_type(type: LAccess, p_1: Object, p_2: f64, p_3: f64, p_4: f64);
 
     fn created();
 
-    fn damage_float_damage(damage: f32);
+    fn damage_damage(damage: f32);
 
     fn display(table: Table);
 
@@ -512,11 +527,11 @@ pub trait Buildingc {
 
     fn draw_team_top();
 
-    fn dump_liquid_liquid_liquid(liquid: Liquid);
+    fn dump_liquid_liquid(liquid: Liquid);
 
-    fn dump_liquid_liquid_liquid(liquid: Liquid, scaling: f32);
+    fn dump_liquid_liquid_scaling(liquid: Liquid, scaling: f32);
 
-    fn enabled_boolean_enabled(enabled: bool);
+    fn enabled_enabled(enabled: bool);
 
     fn handle_item(source: Building, item: Item);
 
@@ -528,9 +543,9 @@ pub trait Buildingc {
 
     fn heal();
 
-    fn heal_float_amount(amount: f32);
+    fn heal_amount(amount: f32);
 
-    fn heal_suppression_time_float_heal_suppression_time(heal_suppression_time: f32);
+    fn heal_suppression_time_heal_suppression_time(heal_suppression_time: f32);
 
     fn health_changed();
 
@@ -538,35 +553,35 @@ pub trait Buildingc {
 
     fn increment_dump(prox: i32);
 
-    fn items_@nullable_item_module_items(items: Option<ItemModule>);
+    fn items_items(items: Option<ItemModule>);
 
     fn kill();
 
     fn killed();
 
-    fn last_accessed_string_last_accessed(last_accessed: String);
+    fn last_accessed_last_accessed(last_accessed: String);
 
-    fn last_disabler_@nullable_building_last_disabler(last_disabler: Option<Building>);
+    fn last_disabler_last_disabler(last_disabler: Option<Building>);
 
-    fn last_heal_time_float_last_heal_time(last_heal_time: f32);
+    fn last_heal_time_last_heal_time(last_heal_time: f32);
 
-    fn liquids_@nullable_liquid_module_liquids(liquids: Option<LiquidModule>);
+    fn liquids_liquids(liquids: Option<LiquidModule>);
 
     fn on_removed();
 
     fn payload_draw();
 
-    fn payload_rotation_float_payload_rotation(payload_rotation: f32);
+    fn payload_rotation_payload_rotation(payload_rotation: f32);
 
-    fn power_@nullable_power_module_power(power: Option<PowerModule>);
+    fn power_power(power: Option<PowerModule>);
 
     fn power_graph_removed();
 
-    fn produced_item_item(item: Item);
+    fn produced(item: Item);
 
-    fn produced_item_item(item: Item, amount: i32);
+    fn produced_item(item: Item, amount: i32);
 
-    fn proximity_seq<building>_proximity(proximity: HashSet<Building>);
+    fn proximity_proximity(proximity: HashSet<Building>);
 
     fn read(read: Reads, revision: u8);
 
@@ -580,9 +595,9 @@ pub trait Buildingc {
 
     fn remove_from_proximity();
 
-    fn rotation_int_rotation(rotation: i32);
+    fn rotation_rotation(rotation: i32);
 
-    fn tile_tile_tile(tile: Tile);
+    fn tile_tile(tile: Tile);
 
     fn transfer_liquid(next: Building, amount: f32, liquid: Liquid);
 
@@ -598,11 +613,11 @@ pub trait Buildingc {
 
     fn update_tile();
 
-    fn visual_liquid_float_visual_liquid(visual_liquid: f32);
+    fn visual_liquid_visual_liquid(visual_liquid: f32);
 
-    fn was_damaged_boolean_was_damaged(was_damaged: bool);
+    fn was_damaged_was_damaged(was_damaged: bool);
 
-    fn was_visible_boolean_was_visible(was_visible: bool);
+    fn was_visible_was_visible(was_visible: bool);
 
     fn write(write: Writes);
 
