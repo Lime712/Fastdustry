@@ -5,10 +5,10 @@ use std::fs::{File, OpenOptions};
 use std::io::{Read, Write};
 
 use convert_case::{Case, Casing};
-use convert_case::Case::Snake;
+use convert_case::Case::{Camel, Pascal, Snake};
 
 use help_scripts::scanner;
-use help_scripts::scanner::{advance_to_next_char, advance_to_next_string, advance_to_next_string_or_string, next_string, print_s};
+use help_scripts::scanner::{advance_to_next_char, advance_to_next_string, advance_to_next_string_or_string, next_string, print_s, skip_whitespace_and_newline};
 
 #[derive(Debug, Clone)]
 struct Method {
@@ -61,7 +61,10 @@ fn main() {
         // but first we need to get the comments
         // println!("s: {}", s);
         // check if there is a comment
-        let i = advance_to_next_string_or_string(s, "public", "/*");
+        let mut i = advance_to_next_string_or_string(s, "public", "/*");
+        if i == None {
+            i = advance_to_next_string_or_string(s, "interface", "/*");
+        }
         if i == None {
             println!("Error: expected public or /*");
             continue;
@@ -78,19 +81,26 @@ fn main() {
 
         // println!("{}", next_string(s).unwrap()); // public
         // search for the public keyword
-        let i = scanner::advance_to_next_string(s, "public").unwrap();
-        s = &s[i..];
-        s = s.trim();
-        s = &s[next_string(s).unwrap().len()..];
-        s = s.trim();
-        println!("{}", next_string(s).unwrap()); // interface
+        let p = advance_to_next_string(s, "public");
+        if let Some(i) = p {
+            s = &s[i..];
+            s = s.trim();
+            s = &s[next_string(s).unwrap().len()..];
+            s = s.trim();
+        }
+        let i = advance_to_next_string(s, "interface");
+        if let Some(i) = i {
+            s = &s[i..];
+            s = s.trim();
+        }
+        println!("interface: {}", next_string(s).unwrap()); // interface
         if next_string(s).unwrap() != "interface" {
             println!("Error: expected interface");
             continue;
         }
         s = &s[next_string(s).unwrap().len()..];
         s = s.trim();
-        let interface_name = next_string(s).unwrap();
+        let interface_name = next_string(s).unwrap().to_case(Pascal);
         s = &s[interface_name.len()..];
         s = s.trim();
 
@@ -329,7 +339,7 @@ fn main() {
             // first check if its void, because then we can just skip it
             let mut return_type = method.return_type.clone();
             println!("method: {:?}", method);
-            if return_type != "void" && return_type != "{"{
+            if return_type != "void" && return_type != "{" {
                 return_type = scanner::convert_to_rust_type(&return_type);
                 method_code.push_str(&format!(") -> {}", return_type));
             } else {

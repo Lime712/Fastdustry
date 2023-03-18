@@ -1,4 +1,3 @@
-
 pub mod block_unitc;
 pub mod boundedc;
 pub mod builderc;
@@ -47,3 +46,16 @@ pub mod water_movec;
 pub mod weaponsc;
 pub mod weather_statec;
 pub mod world_labelc;
+pub mod indexable_entity_all;
+pub mod indexable_entity_build;
+pub mod indexable_entity_bullet;
+pub mod indexable_entity_draw;
+pub mod indexable_entity_fire;
+pub mod indexable_entity_label;
+pub mod indexable_entity_player;
+pub mod indexable_entity_power_graph;
+pub mod indexable_entity_puddle;
+pub mod indexable_entity_sync;
+pub mod indexable_entity_unit;
+pub mod indexable_entity_weather;
+pub mod building;
