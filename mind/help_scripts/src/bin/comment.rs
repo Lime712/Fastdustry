@@ -2,7 +2,7 @@ use help_scripts::scanner::{get_comment, get_comment_option, print_s};
 
 fn main() {
     // todo: change this, ill do it today evening
-    let path = "C:\\Users\\janwi\\mindustryServer\\v7\\mods\\Mindustry\\core\\src\\mindustry\\world\\modules\\ItemModule.java";
+    let path = "~\\mindustryServer\\v7\\mods\\Mindustry\\core\\src\\mindustry\\world\\modules\\ItemModule.java";
     let mut s = &*std::fs::read_to_string(path).unwrap();
     let max = 20;
     let mut i = 0;
@@ -51,6 +51,6 @@ fn main() {
 
     println!("{}", final_code);
     // same here
-    let mut out_path = "C:\\Users\\janwi\\rust\\MindRustry\\mind\\help_scripts\\output\\comments.rs";
+    let out_path = "~\\rust\\MindRustry\\mind\\help_scripts\\output\\comments.rs";
     std::fs::write(out_path, final_code).unwrap();
 }

@@ -1,7 +1,7 @@
-use std::cmp::{max, min};
+use std::cmp::min;
 use std::collections::HashSet;
 
-pub fn get_comment(mut s: &str) -> (&str, &str) {
+pub fn get_comment(s: &str) -> (&str, &str) {
     // get the comment
     match get_comment_option(s) {
         Some((comment, s)) => (comment, s),
@@ -11,9 +11,9 @@ pub fn get_comment(mut s: &str) -> (&str, &str) {
 
 pub fn get_comment_option(mut s: &str) -> Option<(&str, &str)> {
     // get the comment
-    let comment = if let Some(start) = advance_to_next_string(s, "/**") {
+    let comment = if let Some(start) = s.find("/**") {
         s = &s[start + 3..];
-        let end = match advance_to_next_string(&s[0..], "*/") {
+        let end = match s.find("*/") {
             Some(end) => end,
             None => return None,
         };

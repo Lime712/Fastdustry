@@ -1,14 +1,13 @@
-use std::collections::HashSet;
-use std::error::Error;
-use std::fs;
 use std::fs::{File, OpenOptions};
 use std::io::{Read, Write};
+use std::{collections::HashSet, fs};
 
-use convert_case::{Case, Casing};
-use convert_case::Case::{Camel, Pascal, Snake};
+use convert_case::{
+    Case::{Pascal, Snake},
+    Casing,
+};
 
-use help_scripts::scanner;
-use help_scripts::scanner::{advance_to_next_char, advance_to_next_string, advance_to_next_string_or_string, next_string, print_s, skip_whitespace_and_newline};
+use help_scripts::scanner::*;
 
 #[derive(Debug, Clone)]
 struct Method {
@@ -37,12 +36,14 @@ impl Default for Method {
     }
 }
 
-
 fn main() {
     // usage: <name> <input_folder> <output_folder>
     let args: Vec<String> = std::env::args().collect();
     if args.len() != 3 {
-        println!("Usage: {} <input_folder> <output_folder>", args[0].split("\\").last().unwrap());
+        println!(
+            "Usage: {} <input_folder> <output_folder>",
+            args[0].split("\\").last().unwrap()
+        );
         return;
     }
 
@@ -61,16 +62,15 @@ fn main() {
         // but first we need to get the comments
         // println!("s: {}", s);
         // check if there is a comment
-        let mut i = advance_to_next_string_or_string(s, "public", "/*");
-        if i == None {
-            i = advance_to_next_string_or_string(s, "interface", "/*");
-        }
-        if i == None {
-            println!("Error: expected public or /*");
-            continue;
-        }
-        if &s[i.unwrap()..i.unwrap() + 1] == "/" {
-            let (mut comment, mut s) = scanner::get_comment(s);
+        let i = match s.find("public").or(s.find("interface").or(s.find("/*"))) {
+            None => {
+                println!("Error: expected public, interface, or /*");
+                continue;
+            }
+            Some(idx) => idx,
+        };
+        if &s[i..=i] == "/" {
+            let (mut comment, mut s) = get_comment(s);
             let r = comment.replace("*", "").replace("*/", "");
             let b = r.trim();
             comment = &*b;
@@ -81,61 +81,57 @@ fn main() {
 
         // println!("{}", next_string(s).unwrap()); // public
         // search for the public keyword
-        let p = advance_to_next_string(s, "public");
+        let p = s.find("public");
         if let Some(i) = p {
-            s = &s[i..];
-            s = s.trim();
-            s = &s[next_string(s).unwrap().len()..];
-            s = s.trim();
+            s = &s[i..].trim()[s.find(' ').unwrap()..].trim();
         }
-        let i = advance_to_next_string(s, "interface");
+        let i = s.find("interface");
         if let Some(i) = i {
-            s = &s[i..];
-            s = s.trim();
+            s = &s[i..].trim();
         }
         println!("interface: {}", next_string(s).unwrap()); // interface
         if next_string(s).unwrap() != "interface" {
             println!("Error: expected interface");
             continue;
         }
-        s = &s[next_string(s).unwrap().len()..];
-        s = s.trim();
+        s = &s[s.find(' ').unwrap()..].trim();
         let interface_name = next_string(s).unwrap().to_case(Pascal);
-        s = &s[interface_name.len()..];
-        s = s.trim();
+        s = &s[interface_name.len()..].trim();
 
         print_s(s);
-        let mut extends: Vec<String> = Vec::new();
+        let mut extends = vec![];
         let mut imports = String::new();
-        if let Some(start) = advance_to_next_string(s, "extends") {
+        if let Some(start) = s.find("extends") {
             // check if its still on this line
-            let mut exit = false;
-            for i in 0..start {
-                if &s[i..i + 1] == "\n" {
-                    exit = true;
-                    break;
-                }
+            if s[0..start].find('\n').is_some() {
+                break;
             }
-            if !exit {
-                let end = advance_to_next_char(&s[start..], '{').unwrap();
-                extends = s[start..start + end].split(", ").map(|x| { x.replace("extends", "").trim().to_string() }).collect::<Vec<String>>();
-                for e in extends.clone() {
-                    // add to imports
-                    imports.push_str(&*format!("use crate::gen::{}::{};\n", e.to_string().to_case(Snake), e.to_string()));
-                }
-                println!("extends: {:?}", extends);
-                s = &s[start + end..];
+            let end = (&s[start..]).find('{').unwrap();
+            extends = s[start..start + end]
+                .split(", ")
+                .map(|x| x.replace("extends", "").trim().to_string())
+                .collect::<Vec<String>>();
+            for e in extends.clone() {
+                // add to imports
+                imports.push_str(&*format!(
+                    "use crate::gen::{}::{};\n",
+                    e.to_string().to_case(Snake),
+                    e.to_string()
+                ));
             }
+            println!("extends: {:?}", extends);
+            s = &s[start + end..];
         }
         if extends.len() > 0 {
-            final_code += &*format!("pub trait {} : {} {{", interface_name, extends.join(" + ")).to_string();
+            final_code +=
+                &*format!("pub trait {} : {} {{", interface_name, extends.join(" + ")).to_string();
         } else {
             final_code += &*format!("pub trait {} {{", interface_name).to_string();
         }
 
         let mut interface = "";
-        while let Some(start) = advance_to_next_char(s, '{') {
-            let end = advance_to_next_char(&s[start..], '}').unwrap();
+        while let Some(start) = s.find('{') {
+            let end = (&s[start..]).find('}').unwrap();
             interface = &s[start..start + end];
             // println!("i: {}", interface);
             s = &s[start + end..];
@@ -158,7 +154,7 @@ fn main() {
         let mut types = HashSet::new();
         let mut methods = Vec::new();
         let mut method_names = HashSet::new();
-        while let Some(char) = scanner::next_char(s) {
+        while let Some(char) = next_char(s) {
             if char == '{' {
                 s = &s[1..];
             }
@@ -169,13 +165,13 @@ fn main() {
             }
             // get the comment
             // let (mut comment, mut s) = get_comment(s);
-            let mut comment = if let Some(start) = advance_to_next_char(s, '/') {
+            let mut comment = if let Some(start) = s.find('/') {
                 // println!("\nstart: {}", start);
                 // skip the first 2 *
                 s = &s[start + 3..];
                 // print_s(s);
                 // save to comment until / occurs
-                let end = advance_to_next_string(&s[0..], "*/").unwrap();
+                let end = s.find("*/").unwrap();
                 let comment = &s[0..end - 2];
                 // println!("end: {}: {}", end, s.char_indices().nth(end).unwrap().1);
                 s = &s[end + 2..];
@@ -190,12 +186,12 @@ fn main() {
             comment = &*b;
             // println!("comment: {}", comment);
             method.comment = comment.to_string();
-            s = scanner::skip_whitespace_and_newline(s);
+            s = skip_whitespace_and_newline(s);
             // println!("s: {}", s);
             // check if theres something like "@Nullable" or "@Override" before it, just skip everything if the line starts with @
             // then we change the return type to Option<return_type>
             let mut option = false;
-            if let Some(char) = scanner::next_char(s) {
+            if let Some(char) = next_char(s) {
                 if char == '@' {
                     let mut i = 0;
                     for ch in s.chars() {
@@ -205,7 +201,7 @@ fn main() {
                         i += 1;
                     }
                     s = &s[i..];
-                    s = scanner::skip_whitespace_and_newline(s);
+                    s = skip_whitespace_and_newline(s);
                     option = true;
                 }
             }
@@ -237,10 +233,10 @@ fn main() {
             // println!("method_name: {}", method_name);
             method.name = method_name.to_string();
             s = s.trim();
-            s = scanner::skip(s, '(');
+            s = skip(s, '(');
             // get the parameters
             let mut parameters = Vec::new();
-            while let Some(char) = scanner::next_char(s) {
+            while let Some(char) = next_char(s) {
                 if char == ')' {
                     s = &s[1..];
                     break;
@@ -258,7 +254,7 @@ fn main() {
                 s = &s[parameter.len()..];
                 s = s.trim();
                 parameters.push(parameter);
-                if let Some(char) = scanner::next_char(s) {
+                if let Some(char) = next_char(s) {
                     if char == ',' {
                         s = &s[1..];
                     } else if char == ')' {
@@ -268,26 +264,38 @@ fn main() {
                 }
             }
             // println!("parameters: {:?}", parameters);
-            method.parameters = parameters.iter().map(|parameter| {
-                // get name of the parameter
-                let name = parameter.split(' ').last().unwrap().to_case(Case::Snake).to_string();
-                // get the type of the parameter
-                let parameter = parameter.split(' ').take(parameter.split(' ').count() - 1).collect::<Vec<&str>>().join(" ");
-                // convert the type to rust
-                let parameter = scanner::convert_to_rust_type(&parameter);
-                // add the type to the types
-                types.insert(parameter.clone());
-                Parameter {
-                    name,
-                    type_: parameter.to_string(),
-                }
-            }).collect();
+            method.parameters = parameters
+                .iter()
+                .map(|parameter| {
+                    // get name of the parameter
+                    let name = parameter
+                        .split(' ')
+                        .last()
+                        .unwrap()
+                        .to_case(Snake)
+                        .to_string();
+                    // get the type of the parameter
+                    let parameter = parameter
+                        .split(' ')
+                        .take(parameter.split(' ').count() - 1)
+                        .collect::<Vec<&str>>()
+                        .join(" ");
+                    // convert the type to rust
+                    let parameter = convert_to_rust_type(&parameter);
+                    // add the type to the types
+                    types.insert(parameter.clone());
+                    Parameter {
+                        name,
+                        type_: parameter.to_string(),
+                    }
+                })
+                .collect();
             s = s.trim();
-            if let Some(char) = scanner::next_char(s) {
+            if let Some(char) = next_char(s) {
                 if char != ';' {
                     // get the body
                     let mut body = String::new();
-                    while let Some(char) = scanner::next_char(s) {
+                    while let Some(char) = next_char(s) {
                         if char == '}' {
                             s = &s[1..];
                             break;
@@ -323,12 +331,16 @@ fn main() {
                 // if there is, we need to add the parameters to the method name
                 let mut i = 0;
                 while method_names.contains(&method.name) && i < method.parameters.len() {
-                    method.name = format!("{}_{}", method.name.to_case(Case::Snake), method.parameters[i].name);
+                    method.name = format!(
+                        "{}_{}",
+                        method.name.to_case(Snake),
+                        method.parameters[i].name
+                    ); // {}_{} []_[] ()_() o_o
                     i += 1;
                 }
             }
             method_names.insert(method.name.clone());
-            method_code.push_str(&format!("    fn {}(", method.name.to_case(Case::Snake)));
+            method_code.push_str(&format!("    fn {}(", method.name.to_case(Snake)));
             for (i, parameter) in method.parameters.iter().enumerate() {
                 method_code.push_str(&format!("{}: {}", parameter.name, parameter.type_));
                 if i != method.parameters.len() - 1 {
@@ -340,15 +352,18 @@ fn main() {
             let mut return_type = method.return_type.clone();
             println!("method: {:?}", method);
             if return_type != "void" && return_type != "{" {
-                return_type = scanner::convert_to_rust_type(&return_type);
+                return_type = convert_to_rust_type(&return_type);
                 method_code.push_str(&format!(") -> {}", return_type));
             } else {
                 method_code.push_str(")");
             }
 
             if method.body.len() > 0 {
-                method_code.push_str(&format!(" {{
-        {}  }}", method.body));
+                method_code.push_str(&format!(
+                    " {{
+        {}  }}",
+                    method.body
+                ));
             } else {
                 method_code.push_str(";");
             }
@@ -360,39 +375,45 @@ fn main() {
 
         // print all used types
         println!("types: {:?}", types);
-        imports.push_str(&scanner::convert_to_imports(types));
+        imports.push_str(&convert_to_imports(types));
         final_code = format!("{}{}", imports, final_code);
 
         // println!("final code: {}", final_code);
 
         // write the code to a file
-        let path = format!("{}/{}.rs", args[2], interface_name.to_case(Case::Snake));
+        let path = format!("{}/{}.rs", args[2], interface_name.to_case(Snake));
         let mut file = File::create(path.clone()).unwrap();
         println!("writing to file: {}", path);
         match file.write_all(final_code.as_bytes()) {
-            Err(why) => panic!("couldn't write to {}: {}", path, why.description()),
+            Err(why) => panic!("couldn't write to {}: {}", path, why),
             Ok(_) => println!("successfully wrote to {}", path),
         }
         // search for mod.rs in that directory
         let path = format!("{}/mod.rs", args[2]);
-        let mut module_file = OpenOptions::new().write(true).append(true).read(true).open(path.clone()).unwrap();
+        let mut module_file = OpenOptions::new()
+            .write(true)
+            .append(true)
+            .read(true)
+            .open(path.clone())
+            .unwrap();
         let mut module_code = String::new();
         // read the file
         match module_file.read_to_string(&mut module_code) {
-            Err(why) => panic!("couldn't read {}: {}", path, why.description()),
+            Err(why) => panic!("couldn't read {}: {}", path, why),
             Ok(_) => println!("successfully read {}", path),
         }
-        if module_code.contains(&format!("pub mod {};", interface_name.to_case(Case::Snake))) {
+        if module_code.contains(&format!("pub mod {};", interface_name.to_case(Snake))) {
             println!("module already exists");
             continue;
         }
         let mut module_code = String::new();
         // append the new module
-        module_code.push_str(&format!("\npub mod {};", interface_name.to_case(Case::Snake)));
+        module_code.push_str(&format!("\npub mod {};", interface_name.to_case(Snake)));
         // write the file
         match module_file.write_all(module_code.as_bytes()) {
-            Err(why) => panic!("couldn't write to {}: {}", path, why.description()),
+            Err(why) => panic!("couldn't write to {}: {}", path, why),
             Ok(_) => println!("successfully wrote to {}", path),
         }
     }
 }
+
