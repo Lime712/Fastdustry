@@ -2,6 +2,7 @@ pub mod log;
 pub mod os;
 pub mod task_queue;
 pub mod time;
+pub mod interval;
 
 /// A trait for objects that can be disposed
 pub trait Disposable {

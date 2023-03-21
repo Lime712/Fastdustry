@@ -35,3 +35,8 @@ pub fn clamp(value: f32, min: f32, max: f32) -> f32 {
 pub fn zero(f: f32, tolerance: Option<f32>) ->bool {
     f.abs() < tolerance.unwrap_or(FLOAT_ROUNDING_ERROR)
 }
+
+/// Mod function that works properly for negative numbers.
+pub fn modulo(x: i32, n: i32) -> i32 {
+    ((x % n) + n) % n
+}

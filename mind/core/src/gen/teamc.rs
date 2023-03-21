@@ -10,11 +10,11 @@ pub trait Teamc : Entityc + Posc {
 
     fn team() -> Team;
 
-    fn closest_core() -> CoreBlock.CoreBuild;
+    fn closest_core() -> CoreBuild;
 
-    fn closest_enemy_core() -> CoreBlock.CoreBuild;
+    fn closest_enemy_core() -> CoreBuild;
 
-    fn core() -> CoreBlock.CoreBuild;
+    fn core() -> CoreBuild;
 
     fn team_team(team: Team);
 }

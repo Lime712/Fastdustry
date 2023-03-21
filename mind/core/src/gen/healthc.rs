@@ -12,7 +12,7 @@ pub trait Healthc : Entityc + Posc {
     fn heal_fract(amount: f32);
 
     /// Heals by a flat amount.
-    fn heal(amount: f32);
+    fn heal_amount(amount: f32);
 
     fn damaged() -> bool;
 

@@ -1,10 +1,16 @@
 use std::collections::HashSet;
+use arc::arc_core::math::geom::position::Position;
+
 use arc::arc_core::math::geom::vec2::Vec2;
+
 use crate::gen::buildingc::Buildingc;
+use crate::gen::entityc::Entityc;
+use crate::gen::healthc::Healthc;
+use crate::gen::posc::Posc;
 use crate::gen::teamc::Teamc;
+use crate::gen::timerc::Timerc;
 use crate::r#type::item::Item;
 use crate::r#type::liquid::Liquid;
-
 use crate::world::block::Block;
 
 pub static BULLET_DAMAGE_EVENT: BuildDamageEvent = BuildDamageEvent::default();
@@ -59,8 +65,6 @@ pub struct Building {
     pub y: f32,
 }
 
-impl Sized for Building {}
-
 impl Default for Building {
     fn default() -> Building {
         Building {
@@ -108,6 +112,276 @@ impl Default for Building {
     }
 }
 
+impl Entityc for Building {
+    fn is_added() -> bool {
+        todo!()
+    }
+
+    fn is_local() -> bool {
+        todo!()
+    }
+
+    fn is_null() -> bool {
+        todo!()
+    }
+
+    fn is_remote() -> bool {
+        todo!()
+    }
+
+    fn serialize() -> bool {
+        todo!()
+    }
+
+    fn class_id() -> i32 {
+        todo!()
+    }
+
+    fn id() -> i32 {
+        todo!()
+    }
+
+    fn add() {
+        todo!()
+    }
+
+    fn after_read() {
+        todo!()
+    }
+
+    fn id_id(id: i32) {
+        todo!()
+    }
+
+    fn read(read: Reads) {
+        todo!()
+    }
+
+    fn remove() {
+        todo!()
+    }
+
+    fn update() {
+        todo!()
+    }
+
+    fn write(write: Writes) {
+        todo!()
+    }
+}
+
+impl Healthc for Building {
+    fn damage_pierce(amount: f32) {
+        todo!()
+    }
+
+    fn damage_pierce_amount(amount: f32, with_effect: bool) {
+        todo!()
+    }
+
+    fn heal_fract(amount: f32) {
+        todo!()
+    }
+
+    fn heal_amount(amount: f32) {
+        todo!()
+    }
+
+    fn damaged() -> bool {
+        todo!()
+    }
+
+    fn dead() -> bool {
+        todo!()
+    }
+
+    fn is_valid() -> bool {
+        todo!()
+    }
+
+    fn health() -> f32 {
+        todo!()
+    }
+
+    fn healthf() -> f32 {
+        todo!()
+    }
+
+    fn hit_time() -> f32 {
+        todo!()
+    }
+
+    fn max_health() -> f32 {
+        todo!()
+    }
+
+    fn clamp_health() {
+        todo!()
+    }
+
+    fn damage(amount: f32) {
+        todo!()
+    }
+
+    fn damage_amount(amount: f32, with_effect: bool) {
+        todo!()
+    }
+
+    fn damage_continuous(amount: f32) {
+        todo!()
+    }
+
+    fn damage_continuous_pierce(amount: f32) {
+        todo!()
+    }
+
+    fn dead_dead(dead: bool) {
+        todo!()
+    }
+
+    fn heal() {
+        todo!()
+    }
+
+    fn health_health(health: f32) {
+        todo!()
+    }
+
+    fn hit_time_hit_time(hit_time: f32) {
+        todo!()
+    }
+
+    fn kill() {
+        todo!()
+    }
+
+    fn killed() {
+        todo!()
+    }
+
+    fn max_health_max_health(max_health: f32) {
+        todo!()
+    }
+
+    fn update() {
+        todo!()
+    }
+}
+
+impl Posc for Building {
+    fn floor_on() -> Floor {
+        todo!()
+    }
+
+    fn build_on() -> Building {
+        todo!()
+    }
+
+    fn on_solid() -> bool {
+        todo!()
+    }
+
+    fn get_x() -> f32 {
+        todo!()
+    }
+
+    fn get_y() -> f32 {
+        todo!()
+    }
+
+    fn x() -> f32 {
+        todo!()
+    }
+
+    fn y() -> f32 {
+        todo!()
+    }
+
+    fn tile_x() -> i32 {
+        todo!()
+    }
+
+    fn tile_y() -> i32 {
+        todo!()
+    }
+
+    fn block_on() -> Block {
+        todo!()
+    }
+
+    fn tile_on() -> Tile {
+        todo!()
+    }
+
+    fn set(pos: Position) {
+        todo!()
+    }
+
+    fn set_x(x: f32, y: f32) {
+        todo!()
+    }
+
+    fn trns(pos: Position) {
+        todo!()
+    }
+
+    fn trns_x(x: f32, y: f32) {
+        todo!()
+    }
+
+    fn x_x(x: f32) {
+        todo!()
+    }
+
+    fn y_y(y: f32) {
+        todo!()
+    }
+}
+
+impl Teamc for Building {
+    fn in_fog_to(viewer: Team) -> bool {
+        todo!()
+    }
+
+    fn cheating() -> bool {
+        todo!()
+    }
+
+    fn team() -> Team {
+        todo!()
+    }
+
+    fn closest_core() -> CoreBuild {
+        todo!()
+    }
+
+    fn closest_enemy_core() -> CoreBuild {
+        todo!()
+    }
+
+    fn core() -> CoreBuild {
+        todo!()
+    }
+
+    fn team_team(team: Team) {
+        todo!()
+    }
+}
+
+impl Timerc for Building {
+    fn timer() -> Interval {
+        todo!()
+    }
+
+    fn timer_index(index: i32, time: f32) -> bool {
+        todo!()
+    }
+
+    fn timer_timer(timer: Interval) {
+        todo!()
+    }
+}
+
 impl Buildingc for Building {
     fn warmup() -> f32 {
         todo!()
@@ -142,14 +416,6 @@ impl Buildingc for Building {
     }
 
     fn put(item: Item) -> bool {
-        todo!()
-    }
-
-    fn dump() -> bool {
-        todo!()
-    }
-
-    fn dump(todump: Item) -> bool {
         todo!()
     }
 
@@ -450,6 +716,14 @@ impl Buildingc for Building {
     }
 
     fn take_payload() -> Payload {
+        todo!()
+    }
+
+    fn dump() -> bool {
+        todo!()
+    }
+
+    fn dump_todump(todump: Item) -> bool {
         todo!()
     }
 

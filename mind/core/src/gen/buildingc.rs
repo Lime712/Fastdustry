@@ -60,7 +60,7 @@ pub trait Buildingc : QuadTreeObject + Sized + Entityc + Healthc + Posc + Teamc 
 
     /// Try dumping a specific item near the building.
     /// @param todump Item to dump. Can be null to dump anything.
-    fn dump(todump: Item) -> bool;
+    fn dump_todump(todump: Item) -> bool;
 
     /// @param outputDir output liquid direction relative to rotation, or -1 to use any direction.
     fn dump_liquid(liquid: Liquid, scaling: f32, output_dir: i32);
@@ -266,7 +266,7 @@ pub trait Buildingc : QuadTreeObject + Sized + Entityc + Healthc + Posc + Teamc 
     fn version() -> u8;
 
     /// Returns whether a hand cursor should be shown over this block.
-    fn get_cursor() -> Graphics.Cursor;
+    fn get_cursor() -> Cursor;
 
     /// Returns whether this config menu should show when the specified player taps it.
     fn should_show_configure(player: Player) -> bool;

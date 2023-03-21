@@ -1,27 +1,29 @@
+use std::cmp::{max, min};
 use std::collections::HashSet;
 
 pub fn get_comment(mut s: &str) -> (&str, &str) {
     // get the comment
-    let comment = if let Some(start) = advance_to_next_char(s, '/') {
-        // println!("\nstart: {}", start);
-        // skip the first 2 *
+    match get_comment_option(s) {
+        Some((comment, s)) => (comment, s),
+        None => ("", s),
+    }
+}
+
+pub fn get_comment_option(mut s: &str) -> Option<(&str, &str)> {
+    // get the comment
+    let comment = if let Some(start) = advance_to_next_string(s, "/**") {
         s = &s[start + 3..];
-        // print_s(s);
-        // save to comment until / occurs
-        let end = advance_to_next_string(&s[0..], "*/").unwrap();
-        let comment = &s[0..end - 2];
-        // println!("end: {}: {}", end, s.char_indices().nth(end).unwrap().1);
+        let end = match advance_to_next_string(&s[0..], "*/") {
+            Some(end) => end,
+            None => return None,
+        };
+        let comment = &s[0..end - 1];
         s = &s[end + 2..];
-        // print_s(s);
-        // println!("comment: {}", comment);
         comment
     } else {
-        ""
+        return None;
     };
-    // s = &s.trim();
-    // s = skip(s, '*');
-    // s = skip(s, '/');
-    (comment, s)
+    Some((comment, s))
 }
 
 pub fn convert_to_rust_type(s: &str) -> String {
@@ -161,7 +163,7 @@ pub fn advance_to_next_string_or_string(s: &str, string: &str, string2: &str) ->
 pub fn print_s(s: &str) {
     let b = {
         let mut v = String::new();
-        for i in 0..30 {
+        for i in 0..min(s.len() - 1, 30) {
             v.push(s.char_indices().nth(i).unwrap().1);
         }
         v

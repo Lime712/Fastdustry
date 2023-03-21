@@ -1,10 +1,5 @@
 /// Interface for {@link mindustry.entities.comp.EntityComp}
 pub trait Entityc {
-    /// Replaced with `this` after code generation.
-    fn extends_entityc>_t_self() -> <T;
-
-    fn t_as() -> <T>;
-
     fn is_added() -> bool;
 
     fn is_local() -> bool;
