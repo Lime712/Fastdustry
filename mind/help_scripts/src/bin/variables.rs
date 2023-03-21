@@ -3,112 +3,20 @@ use convert_case::Casing;
 use help_scripts::scanner::{advance_to_next_string, convert_to_rust_type};
 
 fn main() {
-    let s = "public static final EventType.BuildDamageEvent BULLET_DAMAGE_EVENT = new BuildDamageEvent();
+    let s = "private static final int windowSize = 3;
+    private static final Interval flowTimer = new Interval(2);
+    private static final float pollScl = 20f;
 
-  public static final float HIT_DURATION = 9.0F;
+    private static WindowedMean[] cacheFlow;
+    private static float[] cacheSums;
+    private static float[] displayFlow;
+    private static final Bits cacheBits = new Bits();
 
-  public static final float RECENT_DAMAGE_TIME = 60.0F * 5.0F;
+    private float[] liquids = new float[content.liquids().size];
+    private Liquid current = content.liquid(0);
 
-  public static int SLEEPING_ENTITIES = 0;
-
-  public static final EventType.BuildTeamChangeEvent TEAM_CHANGE_EVENT = new BuildTeamChangeEvent();
-
-  public static final Seq<Building> TEMP_BUILDS = new Seq<>();
-
-  public static final float TIME_TO_SLEEP = 60.0F * 1;
-
-  public static final ObjectSet<Building> TMP_TILES = new ObjectSet<>();
-
-  protected transient boolean added;
-
-  public transient Block block;
-
-  public transient int cdump;
-
-  public transient boolean dead;
-
-  protected transient float dumpAccum;
-
-  public transient float efficiency;
-
-  public transient boolean enabled = true;
-
-  public transient float heal_suppression_time = -1.0F;
-
-  public float health;
-
-  public transient float hit_time;
-
-  public transient int id = EntityGroup.nextId();
-
-  protected transient int index__all = -1;
-
-  protected transient int index__build = -1;
-
-  protected transient boolean initialized;
-
-  @Nullable
-  public ItemModule items;
-
-  public transient String last_accessed;
-
-  protected transient float lastDamageTime = -RECENT_DAMAGE_TIME;
-
-  @Nullable
-  public transient Building last_disabler;
-
-  public transient float last_heal_time = -120.0F * 10.0F;
-
-  @Nullable
-  public LiquidModule liquids;
-
-  public transient float max_health = 1.0F;
-
-  public transient float optional_efficiency;
-
-  public transient float payload_rotation;
-
-  public transient float potential_efficiency;
-
-  @Nullable
-  public PowerModule power;
-
-  public transient Seq<Building> proximity = new Seq<>(6);
-
-  public transient int rotation;
-
-  protected transient float sleepTime;
-
-  protected transient boolean sleeping;
-
-  @Nullable
-  protected transient SoundLoop sound;
-
-  public Team team = Team.derelict;
-
-  public transient Tile tile;
-
-  protected transient float timeScale = 1.0F;
-
-  protected transient float timeScaleDuration;
-
-  public transient Interval timer = new Interval(6);
-
-  public transient long visible_flags;
-
-  public transient float visual_liquid;
-
-  public transient boolean was_damaged;
-
-  public transient boolean was_visible;
-
-  @Annotations.SyncField(true)
-  @Annotations.SyncLocal
-  public float x;
-
-  @Annotations.SyncField(true)
-  @Annotations.SyncLocal
-  public float y;";
+    private @Nullable WindowedMean[] flow;
+";
 
     let mut statics = "".to_string();
     let mut struct_vars = "".to_string();

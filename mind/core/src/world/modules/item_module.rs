@@ -1,3 +1,4 @@
+use std::cmp::min;
 use bit_set::BitSet;
 
 use arc::arc_core::math::windowed_mean::WindowedMean;
@@ -218,7 +219,32 @@ impl ItemModule {
             self.add_item_amount(vars::CONTENT.item(i), other.items[i]);
         }
     }
-    pub fn handle_flow(&mut self, item: Item, amount: i32) {
 
+    pub fn handle_flow(&mut self, item: Item, amount: i32) {
+        if !self.flow.is_none() {
+            unsafe { CACHE_SUMS[item.id() as usize] += amount as f32; }
+        }
+    }
+
+    pub fn undo_flow(&mut self, item: Item, amount: i32) {
+        if !self.flow.is_none() {
+            unsafe { CACHE_SUMS[item.id() as usize] -= amount as f32; }
+        }
+    }
+
+    pub fn remove(&mut self, item: Item, mut amount: i32) {
+        amount = min(amount, self.items[item.id() as usize]);
+
+        self.items[item.id() as usize] -= amount;
+        self.total -= amount;
+    }
+
+    pub fn remove_stack(&mut self, stack: ItemStack) {
+        self.remove(stack.item, stack.amount);
+    }
+
+    pub fn clear(&mut self) {
+        self.items = vec![0; self.items.len()];
+        self.total = 0;
     }
 }

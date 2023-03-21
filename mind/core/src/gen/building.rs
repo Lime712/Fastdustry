@@ -12,6 +12,7 @@ use crate::gen::timerc::Timerc;
 use crate::r#type::item::Item;
 use crate::r#type::liquid::Liquid;
 use crate::world::block::Block;
+use crate::world::modules::item_module::ItemModule;
 
 pub static BULLET_DAMAGE_EVENT: BuildDamageEvent = BuildDamageEvent::default();
 pub static HIT_DURATION: f32 = 9.0;

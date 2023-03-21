@@ -13,6 +13,9 @@ use crate::r#type::item::Item;
 use std::collections::HashSet;
 use arc::arc_core::math::geom::vec2::Vec2;
 use std::u8;
+use crate::gen::building::Building;
+use crate::world::modules::item_module::ItemModule;
+
 /// Interface for {@link mindustry.entities.comp.BuildingComp}
 pub trait Buildingc : QuadTreeObject + Sized + Entityc + Healthc + Posc + Teamc + Timerc + Controllable + Senseable + Displayable {
     /// # Returns
