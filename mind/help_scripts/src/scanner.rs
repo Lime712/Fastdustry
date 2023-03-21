@@ -46,38 +46,30 @@ pub fn convert_to_rust_type(s: &str) -> String {
         "byte" => "u8",
         "short" => "i16",
         _ => s,
-    }.parse().unwrap()
+    }.to_string()
 }
 
 fn skip_whitespace(s: &str) -> &str {
-    let mut i = 0;
-    for ch in s.chars() {
-        if ch != ' ' {
-            return &s[i..];
-        }
-        i += 1;
+    match s.find(' ') {
+        Some(i) => &s[i..],
+        _ => "",
     }
-    ""
 }
 
 pub fn skip_whitespace_and_newline(s: &str) -> &str {
-    let mut i = 0;
-    for ch in s.chars() {
-        if ch != ' ' && ch != '\r' && ch != '\t' && ch != '\n' {
+    for (i, ch) in s.char_indices() {
+        if matches!(ch, ' ' | '\r' | '\t' | '\n') {
             return &s[i..];
         }
-        i += 1;
     }
     ""
 }
 
 pub fn skip(s: &str, c: char) -> &str {
-    let mut i = 0;
-    for ch in s.chars() {
+    for (i, ch) in s.char_indices() {
         if ch != c {
             return &s[i..];
         }
-        i += 1;
     }
     ""
 }
@@ -87,12 +79,7 @@ fn advance_n(s: &str, n: usize) -> &str {
 }
 
 pub fn advance_to_next_char(s: &str, c: char) -> Option<usize> {
-    for (i, ch) in s.char_indices() {
-        if ch == c {
-            return Some(i);
-        }
-    }
-    None
+    s.find(c)
 }
 
 pub fn next_char(s: &str) -> Option<char> {
@@ -100,62 +87,15 @@ pub fn next_char(s: &str) -> Option<char> {
 }
 
 pub fn next_string(s: &str) -> Option<&str> {
-    let mut i = 0;
-    for ch in s.chars() {
-        if ch == ' ' {
-            return Some(&s[..i]);
-        }
-        i += 1;
-    }
-    None
+    s.find(' ').map(|i| &s[..i])
 }
 
 pub fn advance_to_next_string(s: &str, string: &str) -> Option<usize> {
-    for (i, ch) in s.char_indices() {
-        if ch == string.chars().next().unwrap() {
-            let mut j = 0;
-            for ch in s[i..].chars() {
-                if ch != string.chars().nth(j).unwrap() {
-                    break;
-                }
-                j += 1;
-                if j == string.len() {
-                    return Some(i);
-                }
-            }
-        }
-    }
-    None
+    s.find(string)
 }
 
 pub fn advance_to_next_string_or_string(s: &str, string: &str, string2: &str) -> Option<usize> {
-    for (i, ch) in s.char_indices() {
-        if ch == string.chars().next().unwrap() {
-            let mut j = 0;
-            for ch in s[i..].chars() {
-                if ch != string.chars().nth(j).unwrap() {
-                    break;
-                }
-                j += 1;
-                if j == string.len() {
-                    return Some(i);
-                }
-            }
-        }
-        if ch == string2.chars().next().unwrap() {
-            let mut j = 0;
-            for ch in s[i..].chars() {
-                if ch != string2.chars().nth(j).unwrap() {
-                    break;
-                }
-                j += 1;
-                if j == string2.len() {
-                    return Some(i);
-                }
-            }
-        }
-    }
-    None
+    s.find(string).or(s.find(string2))
 }
 
 pub fn print_s(s: &str) {
@@ -203,7 +143,8 @@ pub fn convert_to_imports(types: HashSet<String>) -> String {
             "Liquid" => "crate::r#type::liquid::Liquid",
             "Vec2" => "arc::arc_core::math::geom::vec2::Vec2",
             _ => "",
-        }.to_string();
+        }
+        .to_string();
         if usage != "" {
             usage = format!("use {};", usage);
             imports_string.push_str(&*usage);
@@ -213,15 +154,13 @@ pub fn convert_to_imports(types: HashSet<String>) -> String {
     imports_string
 }
 
-
 pub fn convert_to_import(s: &str) -> HashSet<String> {
     // println!("convert_to_import: {}", s);
     // we check if theres something like blablha<blabla> and if so we add the blabla to the imports
     // and we need to that recursively
-    let mut s = s.to_string();
+    let s = s.to_string();
     let mut imports = HashSet::new();
     // read the type and look if the next char is <
-    let mut i = 0;
     if let Some(start) = advance_to_next_char(&s, '<') {
         // println!("found <");
         // we found a < so we need to find the next >, should be at the end, if not well then we have a problem
@@ -229,11 +168,11 @@ pub fn convert_to_import(s: &str) -> HashSet<String> {
         // now we save the type before the < to the imports
         let ty = &s[0..start];
         // println!("ty: {}", ty);
-        imports.insert(ty.to_string());
+        imports.insert(match_import(ty.to_string()));
         // now call this function again with the type between the < and >
         let sub_imports = convert_to_import(&s[start + 1..end]);
         for i in sub_imports {
-            imports.insert(i);
+            imports.insert(match_import(i));
         }
     } else {
         // we didnt find a < so we just add the type to the imports
@@ -245,5 +184,9 @@ pub fn convert_to_import(s: &str) -> HashSet<String> {
 // converts java types to rust types
 pub fn match_import(ty: String) -> String {
     // todo: convert eg Seq to HashSet
-    ty
+    match ty.as_str() {
+        "Seq" => "HashSet",
+        ty => ty,
+    }.to_string()
 }
+
