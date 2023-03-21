@@ -50,6 +50,7 @@ fn main() {
     }
 
     println!("{}", final_code);
+    // same here
     let mut out_path = "C:\\Users\\janwi\\rust\\MindRustry\\mind\\help_scripts\\output\\comments.rs";
     std::fs::write(out_path, final_code).unwrap();
 }
