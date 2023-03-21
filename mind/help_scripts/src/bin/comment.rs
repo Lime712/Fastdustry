@@ -1,9 +1,17 @@
 use help_scripts::scanner::{get_comment, get_comment_option, print_s};
 
 fn main() {
-    // todo: change this, ill do it today evening
-    let path = "~\\mindustryServer\\v7\\mods\\Mindustry\\core\\src\\mindustry\\world\\modules\\ItemModule.java";
-    let mut s = &*std::fs::read_to_string(path).unwrap();
+    // usage: <name> <input_file> <output_file>
+    let args: Vec<String> = std::env::args().collect();
+    if args.len() != 3 {
+        println!(
+            "Usage: {} <input_file> <output_file>",
+            args[0].split("\\").last().unwrap()
+        );
+        return;
+    }
+    let input_path = &args[1];
+    let mut s = &*std::fs::read_to_string(input_path).unwrap();
     let max = 20;
     let mut i = 0;
     let mut final_code = String::new();
@@ -50,7 +58,6 @@ fn main() {
     }
 
     println!("{}", final_code);
-    // same here
-    let out_path = "~\\rust\\MindRustry\\mind\\help_scripts\\output\\comments.rs";
-    std::fs::write(out_path, final_code).unwrap();
+    let output_path = &args[2];
+    std::fs::write(output_path, final_code).unwrap();
 }
