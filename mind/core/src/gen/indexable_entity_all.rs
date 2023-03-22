@@ -1,3 +1,3 @@
 pub trait IndexableEntityAll {
-    fn set_index_all(index: i32);
+    fn set_index_all(&mut self, index: i32);
 }

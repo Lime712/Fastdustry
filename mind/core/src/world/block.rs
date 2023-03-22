@@ -1,11 +1,14 @@
 use std::any::Any;
 use std::collections::HashMap;
 use crate::entities::bullet::bullet_type::BulletType;
+use crate::gen::building::Building;
 use crate::r#type::category::Category;
 use crate::r#type::item::Item;
 use crate::r#type::item_stack::ItemStack;
 use crate::r#type::liquid::Liquid;
 use crate::world::blocks::attributes::Attributes;
+use crate::world::consumer::Consume;
+use crate::world::consumer::consume_power::ConsumePower;
 use crate::world::meta::block_enums::{BlockFlag, BlockGroup, Env};
 use crate::world::meta::build_visibility::BuildVisibility;
 
@@ -308,7 +311,7 @@ pub struct Block {
     /// Consumption filters
     pub item_filter: Vec<bool>, pub liquid_filter: Vec<bool>,
     /// Array of consumers used by this block. Only populated after init()
-    pub consumers: Vec<Consume>, pub optional_consumers: Vec<Consume>, pub non_optional_consumers: Vec<Consume>, pub update_consumers: Vec<Consume>,
+    pub consumers: Vec<dyn Consume>, pub optional_consumers: Vec<Consume>, pub non_optional_consumers: Vec<Consume>, pub update_consumers: Vec<Consume>,
     /// Set to true if this block has any consumers in its array
     pub has_consumers: bool,
     /// The single power consumer, if applicable

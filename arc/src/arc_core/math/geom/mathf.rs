@@ -13,7 +13,8 @@ pub const DEGREES_TO_RADIANS: f32 = PI / 180.0;
 pub const DEG_RAD: f32 = DEGREES_TO_RADIANS;
 pub const DOUBLE_DEG_RAD: f64 = 0.017453292519943295;
 pub const DOUBLE_RAD_DEG: f64 = 57.29577951308232;
-pub const SIN_BITS: i32 = 14; // 16KB. Adjust for accuracy.
+pub const SIN_BITS: i32 = 14;
+// 16KB. Adjust for accuracy.
 pub const SIN_MASK: i32 = !(-1 << SIN_BITS);
 pub const SIN_COUNT: i32 = SIN_MASK + 1;
 
@@ -32,11 +33,16 @@ pub fn clamp(value: f32, min: f32, max: f32) -> f32 {
     }
 }
 
-pub fn zero(f: f32, tolerance: Option<f32>) ->bool {
+pub fn zero(f: f32, tolerance: Option<f32>) -> bool {
     f.abs() < tolerance.unwrap_or(FLOAT_ROUNDING_ERROR)
 }
 
 /// Mod function that works properly for negative numbers.
 pub fn modulo(x: i32, n: i32) -> i32 {
     ((x % n) + n) % n
+}
+
+/// Returns true if a is nearly equal to b. The function uses the default floating error tolerance.
+pub fn equal(a: f32, b: f32, tolerance: Option<f32>) -> bool {
+    (a - b).abs() <= if tolerance.is_none() { FLOAT_ROUNDING_ERROR } else { tolerance.unwrap() }
 }

@@ -1,6 +1,8 @@
 use std::collections::{HashMap, HashSet};
 
 use crate::world::meta::stat::{Stat, StatCat, StatValue};
+use crate::world::meta::stat_unit::StatUnit;
+use crate::world::meta::stat_values;
 
 #[derive(Debug, Clone)]
 pub struct Stats {
@@ -31,6 +33,10 @@ impl Stats {
 
     pub fn add(&mut self, stat: Stat, value: StatValue) {
         self.add_cat(stat, StatCat::GENERAL, value);
+    }
+
+    pub fn add_stat_unit(&mut self, stat: Stat, value: f32, unit: StatUnit) {
+        self.add(stat, stat_values::number(value, unit));
     }
 
     pub fn add_cat(&mut self, stat: Stat, category: StatCat, value: StatValue) {

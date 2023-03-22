@@ -16,7 +16,7 @@ fn main() {
     let mut i = 0;
     let mut final_code = String::new();
     while let Some(_) = get_comment_option(s) {
-        println!("\nfound comment: ");
+        // println!("\nfound comment: ");
         // print_s(s);
         let mut c = get_comment(s).0.to_string();
         s = get_comment(s).1;

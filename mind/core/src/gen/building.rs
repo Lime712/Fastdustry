@@ -2,6 +2,7 @@ use std::collections::HashSet;
 use arc::arc_core::math::geom::position::Position;
 
 use arc::arc_core::math::geom::vec2::Vec2;
+use arc::arc_core::util::interval::Interval;
 
 use crate::gen::buildingc::Buildingc;
 use crate::gen::entityc::Entityc;
@@ -13,6 +14,8 @@ use crate::r#type::item::Item;
 use crate::r#type::liquid::Liquid;
 use crate::world::block::Block;
 use crate::world::modules::item_module::ItemModule;
+use crate::world::modules::liquid_module::LiquidModule;
+use crate::world::modules::power_module::PowerModule;
 
 pub static BULLET_DAMAGE_EVENT: BuildDamageEvent = BuildDamageEvent::default();
 pub static HIT_DURATION: f32 = 9.0;

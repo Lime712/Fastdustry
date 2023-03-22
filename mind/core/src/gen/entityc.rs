@@ -1,30 +1,30 @@
 /// Interface for {@link mindustry.entities.comp.EntityComp}
 pub trait Entityc {
-    fn is_added() -> bool;
+    fn is_added(&self) -> bool;
 
-    fn is_local() -> bool;
+    fn is_local(&self) -> bool;
 
-    fn is_null() -> bool;
+    fn is_null(&self) -> bool;
 
-    fn is_remote() -> bool;
+    fn is_remote(&self) -> bool;
 
-    fn serialize() -> bool;
+    fn serialize(&self) -> bool;
 
-    fn class_id() -> i32;
+    fn class_id(&self) -> i32;
 
-    fn id() -> i32;
+    fn id(&self) -> i32;
 
-    fn add();
+    fn add(&mut self);
 
-    fn after_read();
+    fn after_read(&self);
 
     fn id_id(id: i32);
 
-    fn read(read: Reads);
+    // fn read(read: Reads);
 
-    fn remove();
+    fn remove(&mut self);
 
-    fn update();
+    fn update(&self);
 
-    fn write(write: Writes);
+    // fn write(&selfwrite: Writes);
 }

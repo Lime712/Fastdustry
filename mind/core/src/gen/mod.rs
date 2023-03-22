@@ -59,3 +59,4 @@ pub mod indexable_entity_sync;
 pub mod indexable_entity_unit;
 pub mod indexable_entity_weather;
 pub mod building;
+pub mod power_graph_updater;
