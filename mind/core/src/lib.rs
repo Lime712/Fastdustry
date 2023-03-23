@@ -9,3 +9,4 @@ pub mod vars;
 pub mod world;
 pub mod entities;
 pub mod gen;
+pub mod net;

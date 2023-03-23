@@ -106,11 +106,11 @@ pub fn nanos() -> i64 {
 }
 
 /// return The time in milliseconds
-pub fn millis() -> i64 {
+pub fn millis() -> u128 {
     std::time::SystemTime::now()
         .duration_since(std::time::UNIX_EPOCH)
         .unwrap()
-        .as_millis() as i64
+        .as_millis()
 }
 
 pub fn nanos_to_millis(nanos: i64) -> i64 {
@@ -125,7 +125,7 @@ pub fn time_since_nanos(prev: &i64) -> i64 {
     nanos() - prev
 }
 
-pub fn time_since_millis(prev: &i64) -> i64 {
+pub fn time_since_millis(prev: &u128) -> u128 {
     millis() - prev
 }
 

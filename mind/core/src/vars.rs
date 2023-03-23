@@ -1,14 +1,16 @@
 // use crate::ctype::content_type::ContentType;
 
-use lazy_static::lazy_static;
 use std::string::ToString;
 use std::sync::Mutex;
 
-use crate::maps::map::Map;
+use lazy_static::lazy_static;
+
+use arc::{get_settings, info};
 use arc::arc_core::core::SETTINGS;
 use arc::arc_core::settings::Value;
-use arc::{get_settings, info};
+
 use crate::core::game_state::GameState;
+use crate::maps::map::Map;
 use crate::world::meta::block_enums::Env;
 
 pub static FAILED_TO_LAUNCH: bool = false;
@@ -22,6 +24,7 @@ pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 pub static mut DATA_DIRECTORY: &str = "./";
 pub static mut STATE: Option<GameState> = Some(GameState::default());
 pub static DEFAULT_ENV: Env = Env::Terrestrial;
+pub const TILESIZE: i32 = 8;
 lazy_static! {
     pub static ref CUSTOM_MAP_DIRECTORY: Mutex<String> = Mutex::new("./".to_string());
     pub static ref SAVE_DIRECTORY: Mutex<String> = Mutex::new("./".to_string());

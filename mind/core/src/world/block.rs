@@ -1,5 +1,5 @@
 use std::any::Any;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use crate::entities::bullet::bullet_type::BulletType;
 use crate::gen::building::Building;
 use crate::r#type::category::Category;
@@ -320,7 +320,7 @@ pub struct Block {
     /// Map of bars by name
     pub bar_map: HashMap<String, Func<Building, Bar>>,
     /// List for building up consumption before init()
-    pub consume_builder: Vec<Consume>,
+    pub consume_builder: Vec<dyn Consume>,
 
     // pub generated_icons: Vec<TextureRegion>,
     // pub editor_variant_regions: Vec<TextureRegion>,
@@ -331,5 +331,12 @@ pub struct Block {
     // pub customShadowRegion: TextureRegion, pub teamRegion: TextureRegion,
     // pub teamRegions: Vec<TextureRegion>, pub variantRegions: Vec<TextureRegion>, pub variantShadowRegions: Vec<TextureRegion>,
 
+    temp_files: HashSet<Tile>,
+    temp_builds: HashSet<Building>,
+
+    /// Dump timer ID.
     pub timer_dump: i32,
+    /// How often to try dumping items in ticks, e.g. 5 = 12 times/sec
+    dump_time: i32,
 }
+
