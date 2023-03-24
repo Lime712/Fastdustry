@@ -6,6 +6,7 @@ edition = "2021"
 [dependencies]
 arc = { path = "./arc" }
 
+
 [workspace]
 members = [
     "arc",
@@ -14,3 +15,6 @@ members = [
     "mind/server",
     'mind/help_scripts'
 ]
+
+[workspace.dependencies]
+readonly = "0.2" # for making things read-only
