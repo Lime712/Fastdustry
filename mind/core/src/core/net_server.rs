@@ -1,5 +1,8 @@
 use std::collections::HashSet;
 use arc::arc_core::math::geom::vec2::Vec2;
+use arc::arc_core::util::command_handler::{CommandHandler, CommandResponse};
+use arc::arc_core::util::interval::Interval;
+use crate::gen::player::Player;
 use crate::vars::TILESIZE;
 use crate::net::Administration;
 
@@ -15,8 +18,32 @@ static mut VECTOR: Vec2 = Vec2::new(0.0, 0.0);
 /// If a player goes away of their server-side coordinates by this distance, they get teleported back.
 const CORRECT_DIST: f32 = TILESIZE * 14.0;
 
-
 pub struct NetServer {
     pub admins: Administration,
-    pub client_commands: CommandHandler,
+    pub client_commands: CommandHandler, // prefix: "/"
+    pub assigner: dyn TeamAssigner,
+    /// Converts a message + NULLABLE player sender into a single string. Override for custom prefixes/suffixes.
+    pub chat_formatter: dyn ChatFormatter,
+    /// Handles an incorrect command response. Returns text that will be sent to player. Override for customisation.
+    pub invalid_handler: dyn InvalidCommandHandler,
+    closing: bool,
+    pvp_auto_paused: bool,
+    timer: Interval,
+    build_health_changed :HashSet<i32>
+    // todo: the rest
+}
+
+imp
+
+pub trait TeamAssigner {
+    fn assign(&mut self, player: &mut Player, players: &mut Vec<Player>) -> Team;
+}
+
+pub trait ChatFormatter {
+    /// return text to be placed before player name
+    fn format(&mut self, player: Option<&Player>, message: &str) -> String;
+}
+
+pub trait InvalidCommandHandler {
+    fn handle(&mut self, player: &mut Player, response: CommandResponse) -> String;
 }

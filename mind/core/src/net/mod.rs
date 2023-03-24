@@ -1,3 +1,6 @@
+pub mod net;
+pub mod packet;
+
 use std::collections::{HashMap, HashSet};
 
 use arc::arc_core::util::{RateKeeper, string};
