@@ -25,6 +25,8 @@ pub static mut DATA_DIRECTORY: &str = "./";
 pub static mut STATE: Option<GameState> = Some(GameState::default());
 pub static DEFAULT_ENV: Env = Env::Terrestrial;
 pub const TILESIZE: i32 = 8;
+/// default server port
+pub const PORT: i32 = 6567;
 lazy_static! {
     pub static ref CUSTOM_MAP_DIRECTORY: Mutex<String> = Mutex::new("./".to_string());
     pub static ref SAVE_DIRECTORY: Mutex<String> = Mutex::new("./".to_string());

@@ -1,13 +1,11 @@
 use std::collections::HashMap;
-
 use std::fmt::{Display, Formatter};
 use std::fs::File;
 use std::io::{Read, Write};
 
-use json::{object, JsonValue};
+use json::{JsonValue, object};
 
 use crate::{debug, info};
-
 use crate::arc_core::files::fi::Fi;
 use crate::arc_core::files::FType;
 use crate::arc_core::util::log::get_current_time_string;
@@ -42,6 +40,27 @@ impl Clone for Value {
             Value::Binary(b) => Value::Binary(b.clone()),
         }
     }
+}
+macro_rules! value_getters {
+        ($name:ident, $type_:ty, $variant:ident) => {
+            pub fn $name(&self) -> $type_ {
+                match self {
+                    Value::$variant(value) => (*value).clone(),
+                    _ => {
+                        panic!("Value is not a {}", stringify!($type_));
+                    }
+                }
+            }
+        }
+    }
+
+impl Value {
+    value_getters!(get_bool, bool, Bool);
+    value_getters!(get_int, i32, Int);
+    value_getters!(get_long, i64, Long);
+    value_getters!(get_float, f32, Float);
+    value_getters!(get_string, String, String);
+    value_getters!(get_binary, Vec<u8>, Binary);
 }
 
 impl Display for Value {

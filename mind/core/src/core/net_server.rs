@@ -1,6 +1,7 @@
 use std::collections::HashSet;
 use arc::arc_core::math::geom::vec2::Vec2;
 use crate::vars::TILESIZE;
+use crate::net::Administration;
 
 /// note that snapshots are compressed, so the max snapshot size here is above the typical UDP safe limit
 const MAX_SNAPSHOT_SIZE: usize = 800;
@@ -16,6 +17,6 @@ const CORRECT_DIST: f32 = TILESIZE * 14.0;
 
 
 pub struct NetServer {
-    pub admins: Admininstration,
+    pub admins: Administration,
     pub client_commands: CommandHandler,
 }
