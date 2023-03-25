@@ -18,7 +18,7 @@ pub enum ContentType {
 }
 
 impl ContentType {
-    pub(crate) fn all() -> Vec<ContentType> {
+    pub(crate) const fn all() -> Vec<ContentType> {
         vec![
             ContentType::Item,
             ContentType::Block,

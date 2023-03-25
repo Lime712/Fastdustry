@@ -2,6 +2,7 @@ use std::collections::HashSet;
 use arc::arc_core::math::geom::vec2::Vec2;
 use arc::arc_core::util::command_handler::{CommandHandler, CommandResponse};
 use arc::arc_core::util::interval::Interval;
+use crate::game::team::Team;
 use crate::gen::player::Player;
 use crate::vars::TILESIZE;
 use crate::net::Administration;
@@ -33,7 +34,33 @@ pub struct NetServer {
     // todo: the rest
 }
 
-imp
+impl Default for NetServer {
+    fn default() -> Self {
+        Self {
+            admins: Administration::default(),
+            client_commands: CommandHandler::default(),
+            assigner: |player, players| {
+                let mut team = Team::sharded(players.len());
+                if let Some(player) = player {
+                    team = player.team;
+                }
+                team
+            },
+            chat_formatter: |player, message| {
+                if let Some(player) = player {
+                    format!("[{}]: {}", player.name, message)
+                } else {
+                    format!("[SERVER]: {}", message)
+                }
+            },
+            invalid_handler: DefaultInvalidCommandHandler,
+            closing: false,
+            pvp_auto_paused: false,
+            timer: Interval::default(),
+            build_health_changed: HashSet::new(),
+        }
+    }
+}
 
 pub trait TeamAssigner {
     fn assign(&mut self, player: &mut Player, players: &mut Vec<Player>) -> Team;

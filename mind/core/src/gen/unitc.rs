@@ -21,12 +21,13 @@ use crate::gen::ranged::Ranged;
 use crate::gen::senseable::Senseable;
 use crate::gen::displayable::Displayable;
 use arc::arc_core::math::geom::vec2::Vec2;
+use crate::ctype::content::Content;
+use crate::game::team::Team;
+use crate::gen::player::Player;
+use crate::logic::sensible::LAccess;
+
 /// Interface for {@link mindustry.entities.comp.UnitComp}
 pub trait Unitc : Boundedc + Builderc + Drawc + Entityc + Flyingc + Healthc + Hitboxc + Itemsc + Minerc + Physicsc + Posc + Rotc + Shieldc + Statusc + Syncc + Teamc + Velc + Weaponsc + Ranged + Senseable + Displayable {
-    /// # Returns
-    /// a preview icon for this unit.
-    fn icon() -> TextureRegion;
-
     /// # Returns
     /// approx. square size of the physical hitbox for physics
     fn physic_size() -> f32;
@@ -196,7 +197,7 @@ pub trait Unitc : Boundedc + Builderc + Drawc + Entityc + Flyingc + Healthc + Hi
 
     fn set(def: UnitType, controller: UnitController);
 
-    fn set_type(type: UnitType);
+    fn set_type(ty: UnitType);
 
     fn shadow_alpha_shadow_alpha(shadow_alpha: f32);
 
@@ -204,7 +205,7 @@ pub trait Unitc : Boundedc + Builderc + Drawc + Entityc + Flyingc + Healthc + Hi
 
     fn trail_trail(trail: Option<Trail>);
 
-    fn type_type(type: UnitType);
+    fn type_type(ty: UnitType);
 
     fn update();
 

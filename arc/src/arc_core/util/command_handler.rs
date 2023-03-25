@@ -1,3 +1,4 @@
+use std::any::Any;
 use std::collections::HashMap;
 
 pub struct CommandHandler {
@@ -26,7 +27,7 @@ impl CommandHandler {
 
     /// Handles a message with optional extra parameters. Runs the command if successful.
     /// * return a response detailing whether the command was handled, and what went wrong, if applicable.
-    pub fn handle_message(&self, mut message: Option<String>, params: Option<Vec<Any>>) -> CommandResponse {
+    pub fn handle_message(&self, mut message: Option<String>, params: Option<Vec<dyn Any>>) -> CommandResponse {
         if message.is_none() || (!message.unwrap().starts_with(self.prefix)) {
             return CommandResponse::new(ResponseType::NoCommand, None);
         }
@@ -122,7 +123,7 @@ impl<'a> CommandResponse<'a> {
     }
 }
 
-impl Default for CommandResponse {
+impl<'a>  Default for CommandResponse<'a> {
     fn default() -> Self {
         Self {
             ty: ResponseType::NoCommand,
