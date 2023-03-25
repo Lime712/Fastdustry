@@ -7,3 +7,4 @@ edition = "2021"
 arc = { path = "../../arc" }
 lazy_static = "1.4.0"
 bit-set = "0.5.3"
+rand = "0.8.4"

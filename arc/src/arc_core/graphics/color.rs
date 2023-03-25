@@ -1,6 +1,12 @@
 use std::char::from_digit;
 use std::cmp::{max, min};
-use std::intrinsics::floorf32;
+
+pub const WHITE: Color = Color::new(1., 1., 1., 1.);
+pub const LIGHT_GRAY: Color = Color::from_rgba8888(0xbfbfbfff);
+pub const GRAY: Color = Color::from_rgba8888(0x7f7f7fff);
+pub const DARK_GRAY: Color = Color::from_rgba8888(0x3f3f3fff);
+pub const BLACK: Color = Color::new(0., 0., 0., 1.);
+pub const CLEAR: Color = Color::new(0., 0., 0., 0.);
 
 #[derive(Clone, Copy, Debug, PartialEq, Default)]
 pub struct Color {
@@ -12,13 +18,14 @@ pub struct Color {
 }
 
 impl Color {
-    pub fn new(r: f32, g: f32, b: f32, a: f32) -> Self {
+    pub const fn new(r: f32, g: f32, b: f32, a: f32) -> Self {
         let mut c = Self { tmp_hsv: [0., 0., 0.], r, g, b, a };
         c.clamp();
         c
     }
 
-    pub fn value_of(hex: String) -> Self {
+    pub const fn value_of(hex: &str) -> Self {
+        let hex = hex.to_string();
         let offset = if hex.starts_with("#") { 1 } else { 0 };
 
 
@@ -63,8 +70,16 @@ impl Color {
         return (((r * 255) as i32) << 24) | (((g * 255) as i32) << 16) | (((b * 255) as i32) << 8) | (a * 255) as i32;
     }
 
-    pub fn to_rgba8888(&self) -> i32 {
+    pub fn self_rgba8888(&self) -> i32 {
         Color::rgba8888(self.r, self.g, self.b, self.a)
+    }
+
+    pub fn from_rgba8888(value: i32) -> Color {
+        let r = ((value >> 24) & 0xff) as f32 / 255.;
+        let g = ((value >> 16) & 0xff) as f32 / 255.;
+        let b = ((value >> 8) & 0xff) as f32 / 255.;
+        let a = (value & 0xff) as f32 / 255.;
+        Color::new(r, g, b, a)
     }
 
     /// Creates a grayscale color.
@@ -87,18 +102,20 @@ impl Color {
         int_bits
     }
 
-    pub fn mul(&mut self, other: &Color) {
+    pub fn mul(&mut self, other: &Color) -> Self {
         self.r *= other.r;
         self.g *= other.g;
         self.b *= other.b;
         self.clamp();
+        *self
     }
 
-    pub fn mul_float(&mut self, other: f32) {
+    pub fn mul_float(&mut self, other: f32) -> Self {
         self.r *= other;
         self.g *= other;
         self.b *= other;
         self.clamp();
+        *self
     }
 
     pub fn mul_float_a(&mut self, other: f32) {
@@ -123,7 +140,7 @@ impl Color {
         self.clamp();
     }
 
-    pub fn clamp(&mut self) {
+    pub const fn clamp(&mut self) {
         self.r = self.r.max(0.).min(1.);
         self.g = self.g.max(0.).min(1.);
         self.b = self.b.max(0.).min(1.);
@@ -152,8 +169,9 @@ impl Color {
         self.b = b;
     }
 
-    pub fn a(&mut self, a: f32) {
+    pub fn a(&mut self, a: f32) -> Self {
         self.a = a;
+        *self
     }
 
     /// Linearly interpolates between this color and the target color by t which is in the range [0,1]. The result is stored in
