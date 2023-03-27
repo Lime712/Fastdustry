@@ -48,7 +48,9 @@ fn main() {
                 let desc = parts.collect::<Vec<&str>>().join(" ");
                 final_code += &*format!("/// * returns {}\n", desc);
                 continue;
-            } else { final_code += &*format!("/// {}\n", line.trim()); }
+            } else {
+                final_code += &*format!("/// {}\n", line.trim());
+            }
         }
         final_code += &*format!("\n");
         i += 1;

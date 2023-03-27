@@ -63,11 +63,27 @@ fn main() {
             let name = line[1].replace(";", "");
             if line.len() > 2 {
                 let value = line[3..].join(" ").replace(";", "");
-                code.push_str(&format!(" {}: {},\n", name.to_case(convert_case::Case::Camel), type_));
-                struct_init.push_str(&format!("{}: {},\n", name.to_case(convert_case::Case::Camel), value));
+                code.push_str(&format!(
+                    " {}: {},\n",
+                    name.to_case(convert_case::Case::Camel),
+                    type_
+                ));
+                struct_init.push_str(&format!(
+                    "{}: {},\n",
+                    name.to_case(convert_case::Case::Camel),
+                    value
+                ));
             } else {
-                code.push_str(&format!(" {}: {},\n", name.to_case(convert_case::Case::Camel), type_));
-                struct_init.push_str(&format!("{}: {}::default(),\n", name.to_case(convert_case::Case::Camel), type_));
+                code.push_str(&format!(
+                    " {}: {},\n",
+                    name.to_case(convert_case::Case::Camel),
+                    type_
+                ));
+                struct_init.push_str(&format!(
+                    "{}: {}::default(),\n",
+                    name.to_case(convert_case::Case::Camel),
+                    type_
+                ));
             }
             struct_vars.push_str(&code);
         }

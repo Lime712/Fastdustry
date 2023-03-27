@@ -18,7 +18,6 @@ pub const SIN_BITS: i32 = 14;
 pub const SIN_MASK: i32 = !(-1 << SIN_BITS);
 pub const SIN_COUNT: i32 = SIN_MASK + 1;
 
-
 pub fn slope(a: f32) -> f32 {
     1.0 - (a - 0.5).abs() * 2.0
 }
@@ -44,5 +43,10 @@ pub fn modulo(x: i32, n: i32) -> i32 {
 
 /// Returns true if a is nearly equal to b. The function uses the default floating error tolerance.
 pub fn equal(a: f32, b: f32, tolerance: Option<f32>) -> bool {
-    (a - b).abs() <= if tolerance.is_none() { FLOAT_ROUNDING_ERROR } else { tolerance.unwrap() }
+    (a - b).abs()
+        <= if tolerance.is_none() {
+            FLOAT_ROUNDING_ERROR
+        } else {
+            tolerance.unwrap()
+        }
 }

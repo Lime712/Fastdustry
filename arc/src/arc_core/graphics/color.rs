@@ -19,7 +19,13 @@ pub struct Color {
 
 impl Color {
     pub const fn new(r: f32, g: f32, b: f32, a: f32) -> Self {
-        let mut c = Self { tmp_hsv: [0., 0., 0.], r, g, b, a };
+        let mut c = Self {
+            tmp_hsv: [0., 0., 0.],
+            r,
+            g,
+            b,
+            a,
+        };
         c.clamp();
         c
     }
@@ -27,7 +33,6 @@ impl Color {
     pub const fn value_of(hex: &str) -> Self {
         let hex = hex.to_string();
         let offset = if hex.starts_with("#") { 1 } else { 0 };
-
 
         let r = Color::parse_hex(hex.clone(), offset, offset + 2);
         let g = Color::parse_hex(hex.clone(), offset + 2, offset + 4);
@@ -37,7 +42,12 @@ impl Color {
         } else {
             Color::parse_hex(hex.clone(), offset + 6, offset + 8)
         };
-        Self::new(r as f32 / 255., g as f32 / 255., b as f32 / 255., a as f32 / 255.)
+        Self::new(
+            r as f32 / 255.,
+            g as f32 / 255.,
+            b as f32 / 255.,
+            a as f32 / 255.,
+        )
     }
 
     pub fn parse_hex(string: String, from: usize, to: usize) -> u8 {
@@ -46,7 +56,8 @@ impl Color {
             let c = string.chars().nth(i).unwrap();
             // lets hope this is correct lmao
             // todo: definitly needs testing lmfao
-            total += from_digit(c.to_digit(16).unwrap(), 16).unwrap() as u8 * 16u8.pow((to - i - 1) as u32);
+            total += from_digit(c.to_digit(16).unwrap(), 16).unwrap() as u8
+                * 16u8.pow((to - i - 1) as u32);
         }
         total
     }
@@ -67,7 +78,10 @@ impl Color {
 
     pub fn rgba8888(r: f32, g: f32, b: f32, a: f32) -> i32 {
         // some bitwise magic i dont get (hopefully it works)
-        return (((r * 255) as i32) << 24) | (((g * 255) as i32) << 16) | (((b * 255) as i32) << 8) | (a * 255) as i32;
+        return (((r * 255) as i32) << 24)
+            | (((g * 255) as i32) << 16)
+            | (((b * 255) as i32) << 8)
+            | (a * 255) as i32;
     }
 
     pub fn self_rgba8888(&self) -> i32 {
@@ -256,7 +270,9 @@ impl Color {
     }
 
     pub fn hsv_to_rgb(mut h: f32, mut s: f32, mut v: f32) -> Color {
-        if h == 360. { h = 359. }
+        if h == 360. {
+            h = 359.
+        }
         let (mut r, mut g, mut b);
         let mut i;
         let (mut f, mut p, mut q, mut t);

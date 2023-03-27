@@ -3,14 +3,14 @@ use std::fmt::{Display, Formatter};
 use std::fs::File;
 use std::io::{Read, Write};
 
-use json::{JsonValue, object};
+use json::{object, JsonValue};
 
-use crate::{debug, info};
 use crate::arc_core::files::fi::Fi;
 use crate::arc_core::files::FType;
 use crate::arc_core::util::log::get_current_time_string;
 use crate::arc_core::util::os::get_app_data_directory;
 use crate::arc_core::util::time::millis;
+use crate::{debug, info};
 
 const TYPE_BOOL: u8 = 0;
 const TYPE_INT: u8 = 1;
@@ -42,17 +42,17 @@ impl Clone for Value {
     }
 }
 macro_rules! value_getters {
-        ($name:ident, $type_:ty, $variant:ident) => {
-            pub fn $name(&self) -> $type_ {
-                match self {
-                    Value::$variant(value) => (*value).clone(),
-                    _ => {
-                        panic!("Value is not a {}", stringify!($type_));
-                    }
+    ($name:ident, $type_:ty, $variant:ident) => {
+        pub fn $name(&self) -> $type_ {
+            match self {
+                Value::$variant(value) => (*value).clone(),
+                _ => {
+                    panic!("Value is not a {}", stringify!($type_));
                 }
             }
         }
-    }
+    };
+}
 
 impl Value {
     value_getters!(get_bool, bool, Bool);

@@ -1,10 +1,10 @@
+pub mod command_handler;
+pub mod interval;
 pub mod log;
 pub mod os;
+pub mod string;
 pub mod task_queue;
 pub mod time;
-pub mod interval;
-pub mod string;
-pub mod command_handler;
 
 /// A trait for objects that can be disposed
 pub trait Disposable {

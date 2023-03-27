@@ -2,14 +2,14 @@ use crate::arc_core::math::geom::interp::Interp;
 
 pub trait Vector<T: Vector<T>> {
     /// Returns a copy of this vector.
-    fn cpy(&self, ) -> T;
+    fn cpy(&self) -> T;
 
     /// Returns the euclidean length.
-    fn len(&self, ) -> f32;
+    fn len(&self) -> f32;
 
     /// This method is faster than `len(&self, )` because it avoids calculating a square root. It is useful for comparisons, but not for getting exact lengths, as the return value is the square of the actual length.
     /// Returns the squared euclidean length.
-    fn len2(&self, ) -> f32;
+    fn len2(&self) -> f32;
 
     /// Limits the length of this vector, based on the desired maximum length.
     fn limit(&mut self, limit: f32) -> T;
@@ -35,7 +35,7 @@ pub trait Vector<T: Vector<T>> {
     fn sub(&mut self, v: T) -> T;
 
     /// Normalizes this vector. Does nothing if it is zero.
-    fn nor(&mut self, ) -> T;
+    fn nor(&mut self) -> T;
 
     /// Adds the given vector to this vector.
     fn add(&mut self, v: T) -> T;
@@ -66,16 +66,16 @@ pub trait Vector<T: Vector<T>> {
     fn interpolate(&mut self, target: T, alpha: f32, interpolator: Interp) -> T;
 
     /// Sets this vector to the unit vector with a random direction
-    fn set_to_random_direction(&mut self, ) -> T;
+    fn set_to_random_direction(&mut self) -> T;
 
     /// Returns true if this vector is a unit length vector
-    fn is_unit(&self, ) -> bool;
+    fn is_unit(&self) -> bool;
 
     /// Returns true if this vector is a unit length vector within the given margin.
     fn is_unit_margin(&self, margin: f32) -> bool;
 
     /// Returns true if this vector is a zero vector
-    fn is_zero(&self, ) -> bool;
+    fn is_zero(&self) -> bool;
 
     /// Returns true if the length of this vector is smaller than the given margin
     fn is_zero_margin(&self, margin: f32) -> bool;
@@ -132,7 +132,7 @@ pub trait Vector<T: Vector<T>> {
     fn mul_add2(&mut self, v: T, mul_vec: T) -> T;
 
     /// Sets the components of this vector to 0
-    fn set_zero(&mut self, ) -> T;
+    fn set_zero(&mut self) -> T;
 
     fn plus(&mut self, other: T) -> T {
         self.add(other)
@@ -140,7 +140,7 @@ pub trait Vector<T: Vector<T>> {
     fn minus(&mut self, other: T) -> T {
         self.sub(other)
     }
-    fn unary_minus(&mut self, ) -> T {
+    fn unary_minus(&mut self) -> T {
         self.scl_f32(-1.0)
     }
     fn times(&mut self, other: T) -> T {

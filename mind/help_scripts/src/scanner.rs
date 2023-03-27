@@ -48,7 +48,8 @@ pub fn convert_to_rust_type(s: &str) -> String {
         "byte" => "u8",
         "short" => "i16",
         _ => s,
-    }.to_string()
+    }
+    .to_string()
 }
 
 fn skip_whitespace(s: &str) -> &str {
@@ -189,6 +190,6 @@ pub fn match_import(ty: String) -> String {
     match ty.as_str() {
         "Seq" => "HashSet",
         ty => ty,
-    }.to_string()
+    }
+    .to_string()
 }
-

@@ -4,7 +4,7 @@ use arc::arc_core::util::command_handler::{CommandHandler, CommandResponse};
 use arc::arc_core::util::interval::Interval;
 use crate::game::team::Team;
 use crate::gen::player::Player;
-use crate::vars::TILESIZE;
+use crate::vars::{STATE, TILESIZE};
 use crate::net::Administration;
 
 /// note that snapshots are compressed, so the max snapshot size here is above the typical UDP safe limit
@@ -39,12 +39,12 @@ impl Default for NetServer {
         Self {
             admins: Administration::default(),
             client_commands: CommandHandler::default(),
+            // todo fix this
             assigner: |player, players| {
-                let mut team = Team::sharded(players.len());
-                if let Some(player) = player {
-                    team = player.team;
+                if unsafe { STATE.unwrap().rules.pvp } {
+                    //find team with minimum amount of players and auto-assign player to that.
+                    let re = unsafe {STATE.teams.get_active().min}
                 }
-                team
             },
             chat_formatter: |player, message| {
                 if let Some(player) = player {

@@ -111,16 +111,8 @@ pub fn angle_dist(a: f32, b: f32) -> f32 {
     let a = a.rem_euclid(360.0);
     let b = b.rem_euclid(360.0);
     f32::min(
-        if (a - b) < 0.0 {
-            a - b + 360.0
-        } else {
-            a - b
-        },
-        if (b - a) < 0.0 {
-            b - a + 360.0
-        } else {
-            b - a
-        },
+        if (a - b) < 0.0 { a - b + 360.0 } else { a - b },
+        if (b - a) < 0.0 { b - a + 360.0 } else { b - a },
     )
 }
 
@@ -191,4 +183,3 @@ pub fn circle_vectors(points: i32, length: f32, pos: &mut dyn FnMut(f32, f32)) {
         pos(trns_x(f, length), trns_y(f, length));
     }
 }
-

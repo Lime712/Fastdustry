@@ -19,7 +19,6 @@ macro_rules! log {
     })
 }
 
-
 #[cfg(debug_assertions)]
 static mut DEBUG: bool = true;
 
@@ -75,7 +74,11 @@ pub fn log(level: LogLevel, args: fmt::Arguments) {
     let t = get_current_time_string();
     let default = "\x1B[0m".to_string();
     match level {
-        LogLevel::Debug => if unsafe { DEBUG } { println!("[{}] \x1B[36m[D] {}{}", t, args, default) },
+        LogLevel::Debug => {
+            if unsafe { DEBUG } {
+                println!("[{}] \x1B[36m[D] {}{}", t, args, default)
+            }
+        }
         LogLevel::Info => println!("[{}] [I] {}{}", t, args, default),
         LogLevel::Warn => println!("[{}] \x1B[33m[W] {}{}", t, args, default),
         LogLevel::Error => println!("[{}] \x1B[31m[E] {}{}", t, args, default),

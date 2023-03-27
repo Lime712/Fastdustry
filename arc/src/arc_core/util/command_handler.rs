@@ -27,7 +27,11 @@ impl CommandHandler {
 
     /// Handles a message with optional extra parameters. Runs the command if successful.
     /// * return a response detailing whether the command was handled, and what went wrong, if applicable.
-    pub fn handle_message(&self, mut message: Option<String>, params: Option<Vec<dyn Any>>) -> CommandResponse {
+    pub fn handle_message(
+        &self,
+        mut message: Option<String>,
+        params: Option<Vec<dyn Any>>,
+    ) -> CommandResponse {
         if message.is_none() || (!message.unwrap().starts_with(self.prefix)) {
             return CommandResponse::new(ResponseType::NoCommand, None);
         }
@@ -58,12 +62,19 @@ impl CommandHandler {
 
         loop {
             if index >= command.params.len() && !argstr.is_empty() {
-                return CommandResponse { ty: ResponseType::ManyArguments, command: Some(command), run_command: Some(commandstr) };
+                return CommandResponse {
+                    ty: ResponseType::ManyArguments,
+                    command: Some(command),
+                    run_command: Some(commandstr),
+                };
             } else if argstr.is_empty() {
                 break;
             }
 
-            if command.params[index].optional || index >= command.params.len() - 1 || command.params[index + 1].optional {
+            if command.params[index].optional
+                || index >= command.params.len() - 1
+                || command.params[index + 1].optional
+            {
                 satisfied = true;
             }
 
@@ -75,7 +86,11 @@ impl CommandHandler {
             let next = argstr.find(" ");
             if !next.is_none() {
                 if !satisfied {
-                    return CommandResponse { ty: ResponseType::FewArguments, command: Some(command), run_command: Some(commandstr) };
+                    return CommandResponse {
+                        ty: ResponseType::FewArguments,
+                        command: Some(command),
+                        run_command: Some(commandstr),
+                    };
                 }
                 result.push(argstr);
                 break;
@@ -89,13 +104,21 @@ impl CommandHandler {
         }
 
         if !satisfied && command.params.len() > 0 && !command.params[0].optional {
-            return CommandResponse { ty: ResponseType::FewArguments, command: Some(command), run_command: Some(commandstr) };
+            return CommandResponse {
+                ty: ResponseType::FewArguments,
+                command: Some(command),
+                run_command: Some(commandstr),
+            };
         }
 
         // finally run the command
         command.runner.accept(result, params);
 
-        CommandResponse { ty: ResponseType::Valid, command: Some(command), run_command: Some(commandstr) }
+        CommandResponse {
+            ty: ResponseType::Valid,
+            command: Some(command),
+            run_command: Some(commandstr),
+        }
     }
 }
 
@@ -123,7 +146,7 @@ impl<'a> CommandResponse<'a> {
     }
 }
 
-impl<'a>  Default for CommandResponse<'a> {
+impl<'a> Default for CommandResponse<'a> {
     fn default() -> Self {
         Self {
             ty: ResponseType::NoCommand,
@@ -152,7 +175,9 @@ impl<T: Entity> CommandRunner for dyn CR<T> {
     }
 }
 
-pub fn create_command_runner<T: Entity>(runner: Box<dyn Fn(Vec<String>, T)>) -> Box<dyn CommandRunner> {
+pub fn create_command_runner<T: Entity>(
+    runner: Box<dyn Fn(Vec<String>, T)>,
+) -> Box<dyn CommandRunner> {
     struct C<K: Entity> {
         runner: Box<dyn Fn(Vec<String>, K)>,
     }
@@ -206,8 +231,12 @@ impl Default for Command {
 }
 
 impl Command {
-    pub fn new(name: &'static str, param_text: &'static str,
-               description: &'static str, runner: Box<dyn CommandRunner>) -> Self {
+    pub fn new(
+        name: &'static str,
+        param_text: &'static str,
+        description: &'static str,
+        runner: Box<dyn CommandRunner>,
+    ) -> Self {
         let mut c = Self {
             name,
             param_text,

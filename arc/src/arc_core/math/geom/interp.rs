@@ -1,10 +1,9 @@
-use lazy_static::lazy_static;
 use crate::arc_core::math::geom::mathf::*;
+use lazy_static::lazy_static;
 
 pub trait Interpolation {
     fn apply(&self, a: f32) -> f32;
 }
-
 
 pub struct Interp {
     pub f: fn(f32) -> f32,
@@ -34,13 +33,12 @@ impl Pow {
 
 impl Interpolation for Pow {
     fn apply(&self, x: f32) -> f32 {
-    //     if(a <= 0.5f) return (float)Math.pow(a * 2, power) / 2;
+        //     if(a <= 0.5f) return (float)Math.pow(a * 2, power) / 2;
         //             return (float)Math.pow((a - 1) * 2, power) / (power % 2 == 0 ? -2 : 2) + 1;
         if x <= 0.5 {
             (x * 2.0).powf(self.power) / 2.0
         } else {
-            (x - 1.0) * (2.0 as f32)
-                .powf(self.power)
+            (x - 1.0) * (2.0 as f32).powf(self.power)
                 / (if self.power % 2.0 == 0.0 { -2.0 } else { 2.0 })
                 + 1.0
         }
@@ -102,14 +100,14 @@ impl Exp {
 
 impl Interpolation for Exp {
     fn apply(&self, x: f32) -> f32 {
-  //       if(a <= 0.5f) return ((float)Math.pow(value, power * (a * 2 - 1)) - min) * scale / 2;
+        //       if(a <= 0.5f) return ((float)Math.pow(value, power * (a * 2 - 1)) - min) * scale / 2;
         //             return (2 - ((float)Math.pow(value, -power * (a * 2 - 1)) - min) * scale) / 2;
         if x <= 0.5 {
             ((self.value).powf(self.power * (x * 2.0 - 1.0)) - self.min) * self.scale / 2.0
         } else {
             (2.0 - ((self.value).powf(-self.power * (x * 2.0 - 1.0)) - self.min) * self.scale) / 2.0
         }
-  }
+    }
 }
 
 pub struct ExpIn {
@@ -184,7 +182,7 @@ impl Elastic {
 
 impl Interpolation for Elastic {
     fn apply(&self, x: f32) -> f32 {
-    //     if(a <= 0.5f){
+        //     if(a <= 0.5f){
         //                 a *= 2;
         //                 return (float)Math.pow(value, power * (a - 1)) * Mathf.sin(a * bounces) * scale / 2;
         //             }
@@ -198,11 +196,10 @@ impl Interpolation for Elastic {
                 / 2.0
         } else {
             let a = 1.0 - x;
-            1.0
-                - (self.value).powf(self.power * (a * 2.0 - 1.0))
-                    * (a * 2.0 * self.bounces).sin()
-                    * self.scale
-                    / 2.0
+            1.0 - (self.value).powf(self.power * (a * 2.0 - 1.0))
+                * (a * 2.0 * self.bounces).sin()
+                * self.scale
+                / 2.0
         }
     }
 }

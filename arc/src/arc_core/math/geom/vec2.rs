@@ -3,7 +3,7 @@ use std::fmt::Display;
 use rand::random;
 
 use crate::arc_core::math::geom::interp::{Interp, Interpolation};
-use crate::arc_core::math::geom::mathf::{clamp, DEGREES_TO_RADIANS, PI, zero};
+use crate::arc_core::math::geom::mathf::{clamp, zero, DEGREES_TO_RADIANS, PI};
 use crate::arc_core::math::geom::position::Position;
 use crate::arc_core::math::geom::vector::Vector;
 
@@ -49,7 +49,7 @@ impl Vec2 {
         *self
     }
 
-    pub fn rotate(&mut self, degrees: f32) -> Vec2{
+    pub fn rotate(&mut self, degrees: f32) -> Vec2 {
         self.rotate_rad(degrees * DEGREES_TO_RADIANS)
     }
 
@@ -280,4 +280,3 @@ impl Vector<Vec2> for Vec2 {
         *self
     }
 }
-
