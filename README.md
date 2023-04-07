@@ -81,6 +81,7 @@
     - `@implSpec` becomes `# Implementation details` here
     - Sometimes its useful to include examples in the documentation, for that we use the `# Examples` section.
     - Please visit the [rust book](https://doc.rust-lang.org/book/ch14-02-publishing-to-crates-io.html#making-useful-documentation-comments) for more information about documentation comments
+    - the [`comment`](https://github.com/WMF-Industries/MindRustry/blob/Mods/mind/help_scripts/src/bin/comment.rs) script already uses the correct syntax most of the time, but still needs manual editing
 - Always try to use `&str` instead of `String` if possible, for example the names of items or teams won;t change, so they
   can be `&str` instead of `String`
 - Always try to use references in general instead of cloning the value, because that uses less ram and cpu usage, eg:
