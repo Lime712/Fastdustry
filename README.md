@@ -105,3 +105,7 @@ pub const VERSION: &str = "143.0";
 ```
 - There are utility scripts in the [`help_scripts`](https://github.com/WMF-Industries/MindRustry/tree/Mods/mind/help_scripts) folder, they are not used in the project, but they can be used to help
   with the development of the project
+
+
+### Contact
+Join our [discord server](http://discord.phoenix-network.dev) if you have any questions or suggestions
