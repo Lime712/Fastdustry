@@ -12,6 +12,7 @@ use crate::world::consumer::consume_power::ConsumePower;
 use crate::world::meta::block_enums::{BlockFlag, BlockGroup, Env};
 use crate::world::meta::build_visibility::BuildVisibility;
 
+#[derive(Clone)]
 pub struct Block {
     /// If true, buildings have an ItemModule.
     pub has_items: bool,
@@ -50,7 +51,7 @@ pub struct Block {
     pub no_side_blend: bool,
     /// Whether to display flow rate
     pub display_flow: bool,
-    /// Whether this block is visible in the editor
+    /// Whether this block is visible in the Editor
     pub in_editor: bool,
     /// The last configuration value applied to this block.
     pub last_config: Option<Box<dyn Any>>,

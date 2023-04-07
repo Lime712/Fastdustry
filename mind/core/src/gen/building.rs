@@ -3,6 +3,7 @@ use arc::arc_core::math::geom::position::Position;
 
 use arc::arc_core::math::geom::vec2::Vec2;
 use arc::arc_core::util::interval::Interval;
+use crate::game::team::{DERELICT, Team};
 
 use crate::gen::buildingc::Buildingc;
 use crate::gen::entityc::Entityc;
@@ -26,6 +27,7 @@ pub static TEMP_BUILDS: HashSet<Building> = HashSet::new();
 pub static TIME_TO_SLEEP: f32 = 60.0 * 1;
 pub static TMP_TILES: HashSet<Building> = HashSet::new();
 
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
 pub struct Building {
     added: bool,
     pub block: Block,
@@ -56,7 +58,7 @@ pub struct Building {
     pub rotation: i32,
     sleep_time: f32,
     sleeping: bool,
-    pub team: Team,
+    pub team: &'static Team,
     pub tile: Tile,
     time_scale: f32,
     time_scale_duration: f32,
@@ -101,11 +103,11 @@ impl Default for Building {
             rotation: i32::default(),
             sleep_time: f32::default(),
             sleeping: bool::default(),
-            team: Team.derelict,
+            team: &DERELICT,
             tile: Tile::default(),
             time_scale: 1.0,
             time_scale_duration: f32::default(),
-            timer: new Interval(6),
+            timer: Interval::new(6),
             visible_flags: i64::default(),
             visual_liquid: f32::default(),
             was_damaged: bool::default(),

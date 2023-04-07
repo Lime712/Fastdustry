@@ -23,7 +23,7 @@ pub static HEADLESS: bool = true;
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 pub static mut DATA_DIRECTORY: &str = "./";
 pub static mut STATE: Option<GameState> = Some(GameState::default());
-pub static DEFAULT_ENV: Env = Env::Terrestrial;
+pub const DEFAULT_ENV: Env = Env::Terrestrial;
 pub const TILESIZE: i32 = 8;
 /// default server port
 pub const PORT: i32 = 6567;

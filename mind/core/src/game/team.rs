@@ -2,13 +2,21 @@ use std::fmt::format;
 use rand::Rng;
 use arc::arc_core::graphics::{color, pal};
 use arc::arc_core::graphics::color::Color;
+use crate::game::teams::TeamData;
+use crate::vars::STATE;
 
 // todo: maybe fixing, cause idk if those const functions compile
 
-/// The 6 base teams used in the editor.
+/// The 6 base teams used in the Editor.
 pub const BASE_TEAMS: [Team; 6] = gen_base_teams();
 /// All 256 registered teams.
 pub const ALL: [Team; 256] = gen_teams();
+
+// standard teams
+pub const DERELICT: &Team = &BASE_TEAMS[0];
+pub const SHARDED: &Team = &BASE_TEAMS[1];
+pub const CRUX: &Team = &BASE_TEAMS[2];
+pub const MALIS: &Team = &BASE_TEAMS[3];
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub struct Team {
@@ -66,6 +74,10 @@ impl Team {
             i += 1;
         }
         t
+    }
+
+    pub fn data(&self) -> &mut TeamData {
+        unsafe { STATE.unwrap().teams.get(self) }
     }
 
     // todo: implement all the other methods, cause rn we dont have eg CoreBuild

@@ -43,7 +43,7 @@ impl Default for NetServer {
             assigner: |player, players| {
                 if unsafe { STATE.unwrap().rules.pvp } {
                     //find team with minimum amount of players and auto-assign player to that.
-                    let re = unsafe {STATE.teams.get_active().min}
+                    let re = unsafe {STATE.unwrap().teams.get_active().min}
                 }
             },
             chat_formatter: |player, message| {

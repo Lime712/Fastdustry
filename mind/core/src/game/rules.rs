@@ -1,5 +1,14 @@
-use crate::r#type::item_stack::ItemStack;
+use std::collections::{HashMap, HashSet};
+
+use arc::arc_core::graphics::color::Color;
+
+use crate::content::items::COPPER;
+use crate::game::game_mode::{ATTACK, EDITOR, GameMode, PVP, SANDBOX, SURVIVAL};
+use crate::game::team::{ALL, CRUX, SHARDED, Team};
+use crate::r#type::item::Item;
+use crate::r#type::item_stack::{create_item_stacks, ItemStack};
 use crate::vars;
+use crate::world::block::Block;
 use crate::world::blocks::attributes::Attributes;
 use crate::world::meta::block_enums::Env;
 
@@ -7,7 +16,7 @@ pub struct Rules {
     /// Sandbox mode: Enables infinite resources, build range and build speed.
     pub infinite_resources: bool,
     /// Team-specific rules.
-    // pub teams: Vec<TeamRules>,
+    pub teams: TeamRules,
     /// Whether the waves come automatically on a timer. If not, waves come when the play button is pressed.
     pub wave_timer: bool,
     /// Whether the waves can be manually summoned with the play button.
@@ -20,9 +29,9 @@ pub struct Rules {
     pub pvp_auto_pause: bool,
     /// Whether to pause the wave timer until ALL enemies are destroyed.
     pub wait_enemies: bool,
-    /// Determines if game mode is attack mode.
+    /// Determines if game mode is Attack mode.
     pub attack_mode: bool,
-    /// Whether this is the editor gamemode.
+    /// Whether this is the Editor gamemode.
     pub editor: bool,
     /// Whether a gameover can happen at ALL. Set this to false to implement custom gameover conditions.
     pub can_game_over: bool,
@@ -107,15 +116,83 @@ pub struct Rules {
     /// Attributes of the environment.
     pub attributes: Attributes,
     /// Spawn layout.
-    // pub spawns: Vec<SpawnGroup>,
+    pub spawns: Vec<SpawnGroup>,
     /// Starting items put in cores.
     pub loadout: Vec<ItemStack>,
+    /// Weather events that occur here.
+    pub weather: Vec<WeatherEntry>,
+    /// Blocks that cannot be placed.
+    pub banned_blocks: HashSet<&'static Block>,
+    /// Units that cannot be built.
+    pub banned_units: HashSet<UnitType>,
+    /// Reveals blocks normally hidden by build visibility.
+    pub revealed_blocks: HashSet<&'static Block>,
+    /// Unlocked content names. Only used in multiplayer when the campaign is enabled.
+    pub researched: HashSet<String>,
+    /// Block containing these items as requirements are hidden.
+    pub hidden_build_items: HashSet<Item>,
+    /// In-map objective executor.
+    pub objectives: MapObjectives,
+    /// Flags set by objectives. Used in world processors.
+    pub objective_flags: HashSet<String>,
+    /// If true, fog of war is enabled. Enemy units and buildings are hidden unless in radar view.
+    pub fog: bool,
+    /// If fog = true, this is whether static (black) fog is enabled.
+    pub static_fog: bool,
+    /// Color for static, undiscovered fog of war areas.
+    pub static_color: Color,
+    /// Color for discovered but un-monitored fog of war areas.
+    pub dynamic_color: Color,
+    /// Whether ambient lighting is enabled.
+    pub lighting: bool,
+    /// Ambient light color, used when lighting is enabled.
+    pub ambient_light: Color,
+    /// team of the player by default.
+    pub default_team: &'static Team,
+    /// team of the enemy in waves/sectors.
+    pub wave_team: &'static Team,
+    /// color of clouds that is displayed when the player is landing
+    pub cloud_color: Color,
+    /// name of the custom mode that this ruleset describes, or null.
+    pub mode_name: Option<String>,
+    /// Mission string displayed instead of wave/core counter. Null to disable.
+    pub mission: Option<String>,
+    /// Whether cores incinerate items when full, just like in the campaign.
+    pub core_incinerates: bool,
+    /// If false, borders fade out into darkness. Only use with custom backgrounds!
+    pub border_darkness: bool,
+    /// If true, the map play area is cropped based on the rectangle below.
+    pub limit_map_area: bool,
+    /// Map area limit rectangle.
+    pub limit_x: i32,
+    pub limit_y: i32,
+    pub limit_width: i32,
+    pub limit_height: i32,
+    /// If true, blocks outside the map area are disabled.
+    pub disable_outside_area: bool,
+    /// special tags for additional info.
+    pub tags: HashMap<String, String>,
+    /// Name of callback to call for background rendering in mods; see Renderer#addCustomBackground. Runs last.
+    pub custom_background_callback: Option<String>,
+    /// path to background texture with extension (e.g. "sprites/space.png")
+    pub background_texture: Option<String>,
+    /// background texture move speed scaling - bigger numbers mean slower movement. 0 to disable.
+    pub background_speed: f32,
+    /// background texture scaling factor
+    pub background_scl: f32,
+    /// background UV offsets
+    pub background_offset_x: f32,
+    pub background_offset_y: f32,
+    /// Parameters for planet rendered in the background. Cannot be changed once a map is loaded.
+    pub planet_background: Option<PlanetParams>,
 }
 
 impl Default for Rules {
-    fn default() -> Self {
+    const fn default() -> Self {
         Self {
+            // maybe not everything is correct here
             infinite_resources: false,
+            teams: TeamRules::new(),
             wave_timer: true,
             wave_sending: true,
             waves: true,
@@ -165,7 +242,191 @@ impl Default for Rules {
             drag_multiplier: 1.0,
             env: vars::DEFAULT_ENV.clone(),
             attributes: Default::default(),
-            loadout: Vec::new(),
+            spawns: vec![],
+            // was: loadout: create_item_stacks(vec![&COPPER.lock().unwrap()], vec![100]),
+            loadout: vec![],
+            weather: vec![],
+            banned_blocks: Default::default(),
+            banned_units: Default::default(),
+            revealed_blocks: Default::default(),
+            researched: Default::default(),
+            hidden_build_items: Default::default(),
+            objectives: (),
+            objective_flags: Default::default(),
+            fog: false,
+            static_fog: true,
+            static_color: Color::new(0.0, 0.0, 0.0, 1.0),
+            dynamic_color: Color::new(0.0, 0.0, 0.0, 0.5),
+            lighting: false,
+            ambient_light: Color::new(0.01, 0.01, 0.04, 0.99),
+            default_team: SHARDED,
+            wave_team: CRUX,
+            cloud_color: Color::new(0.0, 0.0, 0.0, 0.0),
+            mode_name: None,
+            mission: None,
+            core_incinerates: false,
+            border_darkness: true,
+            limit_map_area: false,
+            limit_x: 0,
+            limit_y: 0,
+            limit_width: 1,
+            limit_height: 1,
+            disable_outside_area: true,
+            tags: Default::default(),
+            custom_background_callback: None,
+            background_texture: None,
+            background_speed: 27000.0,
+            background_scl: 1.0,
+            background_offset_x: 0.1,
+            background_offset_y: 0.1,
+            planet_background: None,
         }
+    }
+}
+
+impl Rules {
+    pub fn mode(&self) -> &GameMode {
+        if self.pvp {
+            &PVP
+        } else if self.editor {
+            &EDITOR
+        } else if self.attack_mode {
+            &ATTACK
+        } else if self.infinite_resources {
+            &SANDBOX
+        } else {
+            &SURVIVAL
+        }
+    }
+
+    pub fn has_env(&self, env: i32) -> bool {
+        (self.env & env) != 0
+    }
+
+    pub fn unit_build_speed(&self, team: &Team) -> f32 {
+        self.unit_build_speed_multiplier * self.teams.get(team).unit_build_speed_multiplier
+    }
+
+    pub fn unit_cost(&self, team: &Team) -> f32 {
+        self.unit_cost_multiplier * self.teams.get(team).unit_cost_multiplier
+    }
+
+    pub fn unit_damage(&self, team: &Team) -> f32 {
+        self.unit_damage_multiplier * self.teams.get(team).unit_damage_multiplier
+    }
+
+    pub fn unit_crash_damage(&self, team: &Team) -> f32 {
+        self.unit_crash_damage_multiplier * self.teams.get(team).unit_crash_damage_multiplier
+    }
+
+    pub fn block_health(&self, team: &Team) -> f32 {
+        self.block_health_multiplier * self.teams.get(team).block_health_multiplier
+    }
+
+    pub fn block_damage(&self, team: &Team) -> f32 {
+        self.block_damage_multiplier * self.teams.get(team).block_damage_multiplier
+    }
+
+    pub fn build_cost(&self, team: &Team) -> f32 {
+        self.build_cost_multiplier * self.teams.get(team).build_cost_multiplier
+    }
+
+    pub fn build_speed(&self, team: &Team) -> f32 {
+        self.build_speed_multiplier * self.teams.get(team).build_speed_multiplier
+    }
+
+    pub fn is_banned(&self, block: &Block) -> bool {
+        self.block_whitelist != self.banned_blocks.contains(block)
+    }
+
+    pub fn is_banned_unit(&self, unit: &UnitType) -> bool {
+        self.unit_whitelist != self.banned_units.contains(unit)
+    }
+}
+
+pub struct TeamRules {
+    values: [TeamRule; ALL.len()],
+}
+
+/// A simple map for storing TeamRules in an efficient way without hashing.
+impl TeamRules {
+    pub fn new() -> Self {
+        Self {
+            values: [TeamRule::default(); ALL.len()],
+        }
+    }
+
+    pub fn get(&self, team: &Team) -> &TeamRule {
+        // should work because new() initializes all values
+        &self.values[team.id]
+    }
+
+    pub fn get_mut(&mut self, team: Team) -> &mut TeamRule {
+        &mut self.values[team as usize]
+    }
+}
+
+pub struct TeamRule {
+    /// Whether, when AI is enabled, ships should be spawned from the core. TODO remove / unnecessary?
+    pub ai_core_spawn: bool,
+    /// If true, blocks don't require power or resources.
+    pub cheat: bool,
+    /// If true, resources are not consumed when building.
+    pub infinite_resources: bool,
+    /// If true, this team has infinite unit ammo.
+    pub infinite_ammo: bool,
+    /// Enables "RTS" unit AI.
+    pub rts_ai: bool,
+    /// Minimum size of attack squads.
+    pub rts_min_squad: i32,
+    /// Maximum size of attack squads.
+    pub rts_max_squad: i32,
+    /// Minimum "advantage" needed for a squad to attack. Higher -> more cautious.
+    pub rts_min_weight: f32,
+    /// How fast unit factories build units.
+    pub unit_build_speed_multiplier: f32,
+    /// How much damage units deal.
+    pub unit_damage_multiplier: f32,
+    /// How much damage unit crash damage deals. (Compounds with unitDamageMultiplier)
+    pub unit_crash_damage_multiplier: f32,
+    /// Multiplier of resources that units take to build.
+    pub unit_cost_multiplier: f32,
+    /// How much health blocks start with.
+    pub block_health_multiplier: f32,
+    /// How much damage blocks (turrets) deal.
+    pub block_damage_multiplier: f32,
+    /// Multiplier for building speed.
+    pub build_speed_multiplier: f32,
+}
+
+impl Default for TeamRule {
+    fn default() -> Self {
+        Self {
+            ai_core_spawn: true,
+            cheat: false,
+            infinite_resources: false,
+            infinite_ammo: false,
+            rts_ai: false,
+            rts_min_squad: 4,
+            rts_max_squad: 1000,
+            rts_min_weight: 1.2,
+            unit_build_speed_multiplier: 1.0,
+            unit_damage_multiplier: 1.0,
+            unit_crash_damage_multiplier: 1.0,
+            unit_cost_multiplier: 1.0,
+            block_health_multiplier: 1.0,
+            block_damage_multiplier: 1.0,
+            build_speed_multiplier: 1.0,
+        }
+    }
+}
+
+pub struct Player {
+    pub team: &'static Team,
+}
+
+impl Player {
+    pub fn new(team: &'static Team) -> Self {
+        Self { team }
     }
 }
