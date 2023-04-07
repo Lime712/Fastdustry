@@ -420,13 +420,3 @@ impl Default for TeamRule {
         }
     }
 }
-
-pub struct Player {
-    pub team: &'static Team,
-}
-
-impl Player {
-    pub fn new(team: &'static Team) -> Self {
-        Self { team }
-    }
-}

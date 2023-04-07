@@ -213,29 +213,3 @@ pub struct BlockPlan {
     pub config: Vec<u8>,
     pub removed: bool,
 }
-
-
-pub trait Entity {
-    fn set_id(&mut self, id: i32);
-    fn get_id(&self) -> i32;
-    fn set_x(&mut self, x: f32);
-    fn get_x(&self) -> f32;
-    fn set_y(&mut self, y: f32);
-    fn get_y(&self) -> f32;
-}
-
-pub struct Player {
-    id: i32,
-    x: f32,
-    y: f32,
-    pub name: String,
-}
-
-impl Entity for Player {
-    fn set_id(&mut self, id: i32) { self.id = id; }
-    fn get_id(&self) -> i32 { self.id }
-    fn set_x(&mut self, x: f32) { self.x = x; }
-    fn get_x(&self) -> f32 { self.x }
-    fn set_y(&mut self, y: f32) { self.y = y; }
-    fn get_y(&self) -> f32 { self.y }
-}
