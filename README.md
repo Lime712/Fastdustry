@@ -1,11 +1,32 @@
 # MindRustry
 Mindustry in rust project
 
-### Notes
-- `seq<>` in the original version are `HashSets` here
 
 ### Guide
 - `class` translates to `struct` if no class inherits from it (aka no `extends` keyword)
 - `class` translates to `trait` if it inherits from another class (aka `extends` keyword)
 - `interface` translates to `trait`
 - `arc_core` is the core of arc
+
+### TODO
+- everything
+
+### Notes
+- `seq<>` in the original version are `HashSets` here
+- always try to use `&str` instead of `String` if possible, for example the names of items or teams wont change, so they can be `&str` instead of `String`
+- always try to use references in general instead of cloning the value, because that uses less ram and cpu usage, eg: 
+```rust
+pub struct Player {
+    pub team: &'static Team,
+}
+
+impl Player {
+    pub fn new(team: &'static Team) -> Self {
+        Self { team }
+    }
+}
+```
+- try to use consts instead of statics, because they get interpreted on compile time, so they code is faster, eg:
+```rust
+pub const VERSION: &str = "143.0";
+```
