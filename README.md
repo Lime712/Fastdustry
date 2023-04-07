@@ -23,6 +23,7 @@
         pub name: String,
     }
     ```
+  The problem here is that if we have many inheritances the code for accessing the fields will be very long, eg: `meltdown.LaserTurret.PowerTurret.Turret.ReloadTurret.BaseTurret.block.range`
     - create a new `trait` that contains a getter and setter for all the fields of the super class, eg:
     ```rust
     pub trait Entity {
