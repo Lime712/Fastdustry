@@ -23,7 +23,7 @@
         pub name: String,
     }
     ```
-  The problem here is that if we have many inheritances the code for accessing the fields will be very long, eg: `meltdown.LaserTurret.PowerTurret.Turret.ReloadTurret.BaseTurret.block.range`
+  The problem here is that if we have many inheritances the code for accessing the fields will be very long, eg: `meltdown.laserTurret.powerTurret.turret.reloadTurret.baseTurret.block.range`
     - create a new `trait` that contains a getter and setter for all the fields of the super class, eg:
     ```rust
     pub trait Entity {
@@ -67,7 +67,21 @@
 ### Notes
 
 - `seq<>` in the original version are `HashSets` here
-- Always try to use `&str` instead of `String` if possible, for example the names of items or teams wont change, so they
+- `@Nullable` in the original version are `Option`s here
+- Try to implement the `Default` trait for all structs, because it's a good way to provide default values for the fields
+- #### Comments
+    - `//` is a single line comment, used for comments that are describe how something works or why something is done in a certain way, or todos
+    - `/** */` becomes `///` here. It is a documentation comment, it is used to generate documentation for the code, it is used by the `rustdoc` tool
+    - `@param` becomes `# Arguments` here
+    - `@return` becomes `# Returns` here, but don't use it too often, cause most of the time its clear what the function returns after reading the description
+    - `@see` becomes `# See also` here
+    - `@throws` becomes `# Panics` here
+    - `@deprecated` becomes `#[deprecated]` here
+    - `@implNote` becomes `# Implementation notes` here
+    - `@implSpec` becomes `# Implementation details` here
+    - Sometimes its useful to include examples in the documentation, for that we use the `# Examples` section.
+    - Please visit the [rust book](https://doc.rust-lang.org/book/ch14-02-publishing-to-crates-io.html#making-useful-documentation-comments) for more information about documentation comments
+- Always try to use `&str` instead of `String` if possible, for example the names of items or teams won;t change, so they
   can be `&str` instead of `String`
 - Always try to use references in general instead of cloning the value, because that uses less ram and cpu usage, eg:
 
@@ -88,3 +102,5 @@ impl Player {
 ```rust
 pub const VERSION: &str = "143.0";
 ```
+- There are utility scripts in the [`help_scripts`](https://github.com/WMF-Industries/MindRustry/tree/Mods/mind/help_scripts) folder, they are not used in the project, but they can be used to help
+  with the development of the project
