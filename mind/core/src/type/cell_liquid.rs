@@ -12,7 +12,7 @@ pub struct CellLiquid {
 }
 
 impl Default for CellLiquid {
-    fn default() -> Self {
+    const fn default() -> Self {
         Self {
             liquid: Liquid::default(),
             cells: 8,
@@ -26,7 +26,7 @@ impl Default for CellLiquid {
 }
 
 impl CellLiquid {
-    pub fn new(name: &'static str) -> Self {
+    pub const fn new(name: &'static str) -> Self {
         Self {
             liquid: Liquid::new(name),
             ..Default::default()

@@ -41,7 +41,7 @@ pub struct Item {
 }
 
 impl Default for Item {
-    fn default() -> Self {
+    const fn default() -> Self {
         Self {
             super_struct: UnlockableContent::default(),
             // color: Color::default(),
@@ -63,7 +63,7 @@ impl Default for Item {
 }
 
 impl Item {
-    pub fn new(name: &'static str) -> Self {
+    pub const fn new(name: &'static str) -> Self {
         Self {
             super_struct: UnlockableContent {
                 localized_name: name,

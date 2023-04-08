@@ -36,7 +36,6 @@ impl ContentLoader {
 
     pub fn create_base_content() {
         // TeamEntries.load();
-        Items::load();
         Liquids::load();
     }
 }

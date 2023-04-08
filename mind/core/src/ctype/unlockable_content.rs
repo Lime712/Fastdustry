@@ -14,8 +14,8 @@ pub struct UnlockableContent {
     /// Localized, formal name. Never null. Set to internal name if not found in bundle.
     pub localized_name: &'static str,
     /// Localized description & details. May be null.
-    pub description: String,
-    pub details: String,
+    pub description: &'static str,
+    pub details: &'static str,
     /// Whether this content is always unlocked in the tech tree.
     pub always_unlocked: bool,
     /// Whether to show the description in the research dialog preview.
@@ -39,12 +39,12 @@ pub struct UnlockableContent {
 }
 
 impl Default for UnlockableContent {
-    fn default() -> Self {
+    const fn default() -> Self {
         Self {
             stats: Stats::new(),
             localized_name: "unknown",
-            description: String::default(),
-            details: String::default(),
+            description: "unknown",
+            details: "unknown",
             always_unlocked: false,
             inline_description: false,
             hide_details: false,

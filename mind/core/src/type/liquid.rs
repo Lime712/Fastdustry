@@ -52,11 +52,11 @@ pub struct Liquid {
     /// todo
     /// If true, this liquid is hidden in most UI.
     pub hidden: bool,
-    pub can_stay_on: HashSet<Liquid>,
+    pub can_stay_on: HashSet<&'static Liquid>,
 }
 
 impl Default for Liquid {
-    fn default() -> Self {
+    const fn default() -> Self {
         Self {
             animation_frames: 50,
             animation_scale_gas: 190,
@@ -82,7 +82,7 @@ impl Default for Liquid {
 }
 
 impl Liquid {
-    pub fn new(name: &'static str) -> Self {
+    pub const fn new(name: &'static str) -> Self {
         Self {
             super_struct: UnlockableContent::new(name),
             ..Default::default()
