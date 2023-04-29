@@ -1,6 +1,6 @@
-# MindRustry
+# Fastdustry
 
-- Mindustry in rust project
+- Fastdustry is a total rewrite of mindustry in rust.
 - This version does not compile yet, because it is still in development.
 - We try to write all the code first, and then we will start to compile it.
 - The reason for that is, that it is very difficult to create a version with fewer features that compiles.
