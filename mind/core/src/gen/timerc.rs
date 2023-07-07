@@ -1,3 +1,4 @@
+use arc::arc_core::util::interval::Interval;
 use crate::gen::entityc::Entityc;
 /// Interface for {@link mindustry.entities.comp.TimerComp}
 pub trait Timerc : Entityc {

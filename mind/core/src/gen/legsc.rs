@@ -38,9 +38,9 @@ pub trait Legsc : Boundedc + Builderc + Drawc + Entityc + Flyingc + Healthc + Hi
 
     fn path_type() -> i32;
 
-    fn solidity() -> EntityCollisions.SolidPred;
+    fn solidity() -> SolidPred;
 
-    fn legs() -> Leg[];
+    fn legs() -> Vec<Leg>;
 
     fn drown_floor() -> Floor;
 
@@ -56,7 +56,7 @@ pub trait Legsc : Boundedc + Builderc + Drawc + Entityc + Flyingc + Healthc + Hi
 
     fn last_deep_floor_last_deep_floor(last_deep_floor: Floor);
 
-    fn legs_legs(legs: Leg[]);
+    fn legs_legs(legs: Vec<Leg>);
 
     fn move_space_move_space(move_space: f32);
 

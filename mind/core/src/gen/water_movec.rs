@@ -29,7 +29,7 @@ pub trait WaterMovec : Boundedc + Builderc + Drawc + Entityc + Flyingc + Healthc
 
     fn path_type() -> i32;
 
-    fn solidity() -> EntityCollisions.SolidPred;
+    fn solidity() -> SolidPred;
 
     fn add();
 

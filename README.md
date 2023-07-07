@@ -67,6 +67,7 @@
 ### Notes
 
 - `seq<>` in the original version are `HashSets` here
+- `type` in the original version are `ty`s here, because `type` is a keyword in rust
 - `@Nullable` in the original version are `Option`s here
 - Try to implement the `Default` trait for all structs, because it's a good way to provide default values for the fields
 - #### Comments

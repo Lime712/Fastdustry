@@ -1,10 +1,13 @@
+use arc::arc_core::util::interval::Interval;
 use crate::gen::drawc::Drawc;
 use crate::gen::entityc::Entityc;
 use crate::gen::posc::Posc;
 use crate::gen::timedc::Timedc;
+use crate::world::block::Block;
+
 /// Interface for {@link mindustry.entities.comp.LaunchCoreComp}
 pub trait LaunchCorec : Drawc + Entityc + Posc + Timedc {
-    fn in() -> Interval;
+    fn input() -> Interval;
 
     fn cx() -> f32;
 
@@ -16,7 +19,7 @@ pub trait LaunchCorec : Drawc + Entityc + Posc + Timedc {
 
     fn draw();
 
-    fn in_in(in: Interval);
+    fn in_in(input: Interval);
 
     fn update();
 }

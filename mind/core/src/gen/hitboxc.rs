@@ -1,3 +1,4 @@
+use arc::arc_core::func::Cons;
 use crate::gen::quad_tree_object::QuadTreeObject;
 use crate::gen::sized::Sized;
 use crate::gen::entityc::Entityc;

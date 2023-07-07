@@ -1,5 +1,8 @@
+use crate::game::team::Team;
 use crate::gen::entityc::Entityc;
 use crate::gen::posc::Posc;
+use crate::world::blocks::storage::core_block::CoreBuild;
+
 /// Interface for {@link mindustry.entities.comp.TeamComp}
 pub trait Teamc : Entityc + Posc {
     /// # Returns

@@ -1,4 +1,6 @@
 use crate::gen::entityc::Entityc;
+use crate::gen::player::Player;
+
 /// Interface for {@link mindustry.entities.comp.SyncComp}
 pub trait Syncc : Entityc {
     fn is_sync_hidden(player: Player) -> bool;

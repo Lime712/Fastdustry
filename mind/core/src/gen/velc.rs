@@ -5,7 +5,7 @@ use arc::arc_core::math::geom::vec2::Vec2;
 pub trait Velc : Entityc + Posc {
     /// # Returns
     /// function to use for check solid state. if null, no checking is done.
-    fn solidity() -> EntityCollisions.SolidPred;
+    fn solidity() -> SolidPred;
 
     /// # Returns
     /// whether this entity can exist on its current location
@@ -23,7 +23,7 @@ pub trait Velc : Entityc + Posc {
 
     fn drag_drag(drag: f32);
 
-    fn move(v: Vec2);
+    fn move2(v: Vec2);
 
     fn move_cx(cx: f32, cy: f32);
 

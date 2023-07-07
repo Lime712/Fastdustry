@@ -1,7 +1,12 @@
+use arc::arc_core::math::geom::position::Position;
 use arc::arc_core::util::interval::Interval;
+use crate::ctype::content_type::ContentType::Unit;
+use crate::game::team::Team;
+use crate::gen::building::Building;
 use crate::gen::drawc::Drawc;
 use crate::gen::entityc::Entityc;
 use crate::gen::posc::Posc;
+use crate::world::block::Block;
 
 pub const DEATH_DELAY: f32 = 60.0;
 
@@ -76,7 +81,7 @@ impl Default for Player {
             shooting: false,
             team: Team::default(),
             text_fade_time: 0.0,
-            timer: Interval::new(),
+            timer: Interval::new(0),
             typing: false,
             unit: Unit::default(),
             update_spacing: 0,
@@ -141,6 +146,16 @@ impl Entityc for Player {
     }
 }
 
+impl Position for Player {
+    fn get_x(&self) -> f32 {
+        todo!()
+    }
+
+    fn get_y(&self) -> f32 {
+        todo!()
+    }
+}
+
 impl Posc for Player {
     fn floor_on() -> Floor {
         todo!()
@@ -186,7 +201,7 @@ impl Posc for Player {
         todo!()
     }
 
-    fn set(pos: Position) {
+    fn set(pos: Box<dyn Position>) {
         todo!()
     }
 
@@ -194,7 +209,7 @@ impl Posc for Player {
         todo!()
     }
 
-    fn trns(pos: Position) {
+    fn trns(pos: Box<dyn Position>) {
         todo!()
     }
 

@@ -1,19 +1,24 @@
 use std::collections::HashSet;
+use arc::arc_core::func::Cons;
 use arc::arc_core::math::geom::position::Position;
 
 use arc::arc_core::math::geom::vec2::Vec2;
 use arc::arc_core::util::interval::Interval;
+use crate::ctype::content::Content;
 use crate::game::team::{DERELICT, Team};
 
 use crate::gen::buildingc::Buildingc;
 use crate::gen::entityc::Entityc;
 use crate::gen::healthc::Healthc;
+use crate::gen::player::Player;
 use crate::gen::posc::Posc;
 use crate::gen::teamc::Teamc;
 use crate::gen::timerc::Timerc;
+use crate::logic::sensible::LAccess;
 use crate::r#type::item::Item;
 use crate::r#type::liquid::Liquid;
 use crate::world::block::Block;
+use crate::world::blocks::storage::core_block::CoreBuild;
 use crate::world::modules::item_module::ItemModule;
 use crate::world::modules::liquid_module::LiquidModule;
 use crate::world::modules::power_module::PowerModule;
@@ -119,39 +124,39 @@ impl Default for Building {
 }
 
 impl Entityc for Building {
-    fn is_added() -> bool {
+    fn is_added(&self) -> bool {
         todo!()
     }
 
-    fn is_local() -> bool {
+    fn is_local(&self) -> bool {
         todo!()
     }
 
-    fn is_null() -> bool {
+    fn is_null(&self) -> bool {
         todo!()
     }
 
-    fn is_remote() -> bool {
+    fn is_remote(&self) -> bool {
         todo!()
     }
 
-    fn serialize() -> bool {
+    fn serialize(&self) -> bool {
         todo!()
     }
 
-    fn class_id() -> i32 {
+    fn class_id(&self) -> i32 {
         todo!()
     }
 
-    fn id() -> i32 {
+    fn id(&self) -> i32 {
         todo!()
     }
 
-    fn add() {
+    fn add(&mut self) {
         todo!()
     }
 
-    fn after_read() {
+    fn after_read(&self) {
         todo!()
     }
 
@@ -159,19 +164,11 @@ impl Entityc for Building {
         todo!()
     }
 
-    fn read(read: Reads) {
+    fn remove(&mut self) {
         todo!()
     }
 
-    fn remove() {
-        todo!()
-    }
-
-    fn update() {
-        todo!()
-    }
-
-    fn write(write: Writes) {
+    fn update(&self) {
         todo!()
     }
 }
@@ -274,6 +271,16 @@ impl Healthc for Building {
     }
 }
 
+impl Position for Building {
+    fn get_x(&self) -> f32 {
+        todo!()
+    }
+
+    fn get_y(&self) -> f32 {
+        todo!()
+    }
+}
+
 impl Posc for Building {
     fn floor_on() -> Floor {
         todo!()
@@ -319,7 +326,7 @@ impl Posc for Building {
         todo!()
     }
 
-    fn set(pos: Position) {
+    fn set(pos: Box<dyn Position>) {
         todo!()
     }
 
@@ -327,7 +334,7 @@ impl Posc for Building {
         todo!()
     }
 
-    fn trns(pos: Position) {
+    fn trns(pos: Box<dyn Position>) {
         todo!()
     }
 
@@ -422,6 +429,10 @@ impl Buildingc for Building {
     }
 
     fn put(item: Item) -> bool {
+        todo!()
+    }
+
+    fn dump_todump(todump: Item) -> bool {
         todo!()
     }
 
@@ -629,7 +640,7 @@ impl Buildingc for Building {
         todo!()
     }
 
-    fn handle_stack(item: Item, amount: i32, source: Teamc) {
+    fn handle_stack(item: Item, amount: i32, source: Box<dyn Teamc>) {
         todo!()
     }
 
@@ -661,7 +672,7 @@ impl Buildingc for Building {
         todo!()
     }
 
-    fn accept_stack(item: Item, amount: i32, source: Teamc) -> i32 {
+    fn accept_stack(item: Item, amount: i32, source: Box<dyn Teamc>) -> i32 {
         todo!()
     }
 
@@ -726,10 +737,6 @@ impl Buildingc for Building {
     }
 
     fn dump() -> bool {
-        todo!()
-    }
-
-    fn dump_todump(todump: Item) -> bool {
         todo!()
     }
 
@@ -921,11 +928,12 @@ impl Buildingc for Building {
         todo!()
     }
 
-    fn calculate_heat(side_heat: float, _: []) -> f32 {
+
+    fn calculate_heat(side_heat: Vec<f32>) -> f32 {
         todo!()
     }
 
-    fn calculate_heat_side_heat(side_heat: float, _: [], came_from: IntSet) -> f32 {
+    fn calculate_heat_side_heat(side_heat: Vec<f32>, came_from: IntSet) -> f32 {
         todo!()
     }
 
@@ -1037,7 +1045,7 @@ impl Buildingc for Building {
         todo!()
     }
 
-    fn find_closest_edge(to: Position, solid: Boolf<Tile>) -> Tile {
+    fn find_closest_edge(to: Box<dyn Position>, solid: Boolf<Tile>) -> Tile {
         todo!()
     }
 

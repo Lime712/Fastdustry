@@ -29,7 +29,7 @@ pub trait Crawlc : Boundedc + Builderc + Drawc + Entityc + Flyingc + Healthc + H
 
     fn path_type() -> i32;
 
-    fn solidity() -> EntityCollisions.SolidPred;
+    fn solidity() -> SolidPred;
 
     fn drown_floor() -> Floor;
 

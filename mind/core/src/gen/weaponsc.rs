@@ -1,3 +1,4 @@
+use arc::arc_core::math::geom::position::Position;
 use crate::gen::entityc::Entityc;
 use crate::gen::flyingc::Flyingc;
 use crate::gen::healthc::Healthc;
@@ -16,10 +17,10 @@ pub trait Weaponsc : Entityc + Flyingc + Healthc + Hitboxc + Posc + Rotc + Statu
     fn update();
 
     /// weapon mount array, never null
-    fn mounts() -> WeaponMount[];
+    fn mounts() -> Vec<WeaponMount>;
 
     /// weapon mount array, never null
-    fn mounts_mounts(mounts: WeaponMount[]);
+    fn mounts_mounts(mounts: Vec<WeaponMount>);
 
     fn can_shoot() -> bool;
 

@@ -1,5 +1,9 @@
+use arc::arc_core::math::geom::position::Position;
+use crate::gen::building::Building;
 use crate::gen::position::Position;
 use crate::gen::entityc::Entityc;
+use crate::world::block::Block;
+
 /// Interface for {@link mindustry.entities.comp.PosComp}
 pub trait Posc : Position + Entityc {
     /// Returns air if this unit is on a non-air top block.
@@ -25,11 +29,11 @@ pub trait Posc : Position + Entityc {
 
     fn tile_on() -> Tile;
 
-    fn set(pos: Position);
+    fn set(pos: dyn Position);
 
     fn set_x(x: f32, y: f32);
 
-    fn trns(pos: Position);
+    fn trns(pos: dyn Position);
 
     fn trns_x(x: f32, y: f32);
 

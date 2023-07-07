@@ -1,3 +1,4 @@
+use crate::gen::building::Building;
 use crate::gen::entityc::Entityc;
 use crate::gen::flyingc::Flyingc;
 use crate::gen::healthc::Healthc;

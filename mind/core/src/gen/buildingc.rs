@@ -13,8 +13,17 @@ use crate::r#type::item::Item;
 use std::collections::HashSet;
 use arc::arc_core::math::geom::vec2::Vec2;
 use std::u8;
+use arc::arc_core::func::Cons;
+use arc::arc_core::math::geom::position::Position;
+use crate::ctype::content::Content;
+use crate::game::team::Team;
 use crate::gen::building::Building;
+use crate::gen::player::Player;
+use crate::logic::sensible::LAccess;
+use crate::world::block::Block;
 use crate::world::modules::item_module::ItemModule;
+use crate::world::modules::liquid_module::LiquidModule;
+use crate::world::modules::power_module::PowerModule;
 
 /// Interface for {@link mindustry.entities.comp.BuildingComp}
 pub trait Buildingc : QuadTreeObject + Sized + Entityc + Healthc + Posc + Teamc + Timerc + Controllable + Senseable + Displayable {
@@ -412,9 +421,9 @@ pub trait Buildingc : QuadTreeObject + Sized + Entityc + Healthc + Posc + Teamc 
 
     fn sense_sensor(sensor: LAccess) -> f64;
 
-    fn calculate_heat(side_heat: float[]) -> f32;
+    fn calculate_heat(side_heat: Vec<f32>) -> f32;
 
-    fn calculate_heat_side_heat(side_heat: float[], came_from: IntSet) -> f32;
+    fn calculate_heat_side_heat(side_heat: Vec<f32>, came_from: IntSet) -> f32;
 
     fn get_display_efficiency() -> f32;
 
@@ -498,9 +507,9 @@ pub trait Buildingc : QuadTreeObject + Sized + Entityc + Healthc + Posc + Teamc 
 
     fn consume();
 
-    fn control(type: LAccess, p_1: f64, p_2: f64, p_3: f64, p_4: f64);
+    fn control(ty: LAccess, p_1: f64, p_2: f64, p_3: f64, p_4: f64);
 
-    fn control_type(type: LAccess, p_1: Object, p_2: f64, p_3: f64, p_4: f64);
+    fn control_type(ty: LAccess, p_1: Object, p_2: f64, p_3: f64, p_4: f64);
 
     fn created();
 

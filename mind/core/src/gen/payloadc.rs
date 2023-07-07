@@ -18,6 +18,8 @@ use crate::gen::unitc::Unitc;
 use crate::gen::velc::Velc;
 use crate::gen::weaponsc::Weaponsc;
 use std::collections::HashSet;
+use crate::gen::building::Building;
+
 /// Interface for {@link mindustry.entities.comp.PayloadComp}
 pub trait Payloadc : Boundedc + Builderc + Drawc + Entityc + Flyingc + Healthc + Hitboxc + Itemsc + Minerc + Physicsc + Posc + Rotc + Shieldc + Statusc + Syncc + Teamc + Unitc + Velc + Weaponsc {
     /// # Returns

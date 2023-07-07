@@ -1,3 +1,4 @@
+use arc::arc_core::graphics::color::Color;
 use crate::gen::childc::Childc;
 use crate::gen::drawc::Drawc;
 use crate::gen::entityc::Entityc;

@@ -1,6 +1,8 @@
 use crate::gen::entityc::Entityc;
 use crate::gen::posc::Posc;
 use crate::r#type::item::Item;
+use crate::r#type::item_stack::ItemStack;
+
 /// Interface for {@link mindustry.entities.comp.ItemsComp}
 pub trait Itemsc : Entityc + Posc {
     fn accepts_item(item: Item) -> bool;

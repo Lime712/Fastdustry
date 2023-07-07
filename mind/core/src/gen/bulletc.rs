@@ -1,3 +1,6 @@
+use arc::arc_core::func::Cons;
+use crate::entities::bullet::bullet_type::BulletType;
+use crate::gen::building::Building;
 use crate::gen::damagec::Damagec;
 use crate::gen::drawc::Drawc;
 use crate::gen::entityc::Entityc;
@@ -30,7 +33,7 @@ pub trait Bulletc : Damagec + Drawc + Entityc + Hitboxc + Ownerc + Posc + Shield
 
     fn check_under_build(build: Building, x: f32, y: f32) -> bool;
 
-    fn collides(other: Hitboxc) -> bool;
+    fn collides(other: dyn Hitboxc) -> bool;
 
     fn has_collided(id: i32) -> bool;
 
@@ -56,7 +59,7 @@ pub trait Bulletc : Damagec + Drawc + Entityc + Hitboxc + Ownerc + Posc + Shield
 
     fn data() -> Object;
 
-    fn type() -> BulletType;
+    fn ty() -> BulletType;
 
     fn absorb();
 
@@ -104,7 +107,7 @@ pub trait Bulletc : Damagec + Drawc + Entityc + Hitboxc + Ownerc + Posc + Shield
 
     fn turn(x: f32, y: f32);
 
-    fn type_type(type: BulletType);
+    fn type_type(ty: BulletType);
 
     fn update();
 }

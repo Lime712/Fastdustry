@@ -133,13 +133,13 @@ pub trait Unitc : Boundedc + Builderc + Drawc + Entityc + Flyingc + Healthc + Hi
 
     fn command() -> CommandAI;
 
-    fn abilities() -> Ability[];
+    fn abilities() -> Vec<Ability>;
 
     fn controller() -> UnitController;
 
-    fn type() -> UnitType;
+    fn ty() -> UnitType;
 
-    fn abilities_abilities(abilities: Ability[]);
+    fn abilities_abilities(abilities: Vec<Ability>);
 
     fn add();
 
@@ -147,13 +147,13 @@ pub trait Unitc : Boundedc + Builderc + Drawc + Entityc + Flyingc + Healthc + Hi
 
     fn after_sync();
 
-    fn aim_look(pos: Position);
+    fn aim_look(pos: Box<dyn Position>);
 
     fn aim_look_x(x: f32, y: f32);
 
     fn approach(vector: Vec2);
 
-    fn collision(other: Hitboxc, x: f32, y: f32);
+    fn collision(other: Box<dyn Hitboxc>, x: f32, y: f32);
 
     fn controller_next(next: UnitController);
 
