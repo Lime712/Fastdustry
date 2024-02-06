@@ -1,5 +1,5 @@
 # Fastdustry
-
+- Fork of WMF-Industries/Fastdustry (doesn't exist anymore apparently) (I might try a rewrite myself lol)
 - Fastdustry is a total rewrite of mindustry in rust.
 - This version does not compile yet, because it is still in development.
 - We try to write all the code first, and then we will start to compile it.
